@@ -75,17 +75,6 @@ git clone https://github.com/[votre-username]/mea-vita-creation.git
 
 C'est tout ! Aucune dépendance à installer.
 
-## 📧 Contact
 
-Pour toute question ou collaboration :
-- **Email** : contact@meavitacreation.com
-- **WhatsApp** : [À compléter]
-- **Instagram** : @meavitacreation
-
-## 📄 Licence
-
-© 2024 Mea Vita Création. Tous droits réservés.
-
----
 
 *Fait avec ❤️ pour célébrer l'artisanat africain*

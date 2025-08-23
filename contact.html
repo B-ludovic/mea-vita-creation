@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - François Maroquinerie</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="presentation/Logo_François_sansfond.PNG" alt="François Maroquinerie" class="logo-img">
+                <h1>FRANÇOIS MAROQUINERIE</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li class="dropdown">
+                    <a href="#collections">Collections</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="collection-wax.html">Collection Wax</a></li>
+                        <li><a href="collection-orange.html">Collection Orange</a></li>
+                        <li><a href="collection-royale.html">Collection Royale</a></li>
+                    </ul>
+                </li>
+                <li><a href="apropos.html">À Propos</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contact Hero -->
+    <section class="contact-hero">
+        <div class="container">
+            <div class="contact-hero-content">
+                <h1>Contactez-Nous</h1>
+                <p>Créons ensemble votre pièce d'exception</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <section class="contact-content">
+        <div class="container">
+            <div class="contact-grid">
+                <!-- Contact Form -->
+                <div class="contact-form-section">
+                    <h2>Parlons de Votre Projet</h2>
+                    <p>Vous avez une idée, un projet personnalisé ou des questions sur nos créations ? Nous serions ravis d'échanger avec vous.</p>
+                    
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name">Nom complet *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interest">Votre intérêt</label>
+                            <select id="interest" name="interest">
+                                <option value="">Sélectionnez...</option>
+                                <option value="collection-wax">Collection Wax</option>
+                                <option value="collection-orange">Collection Orange</option>
+                                <option value="collection-royale">Collection Royale</option>
+                                <option value="creation-personnalisee">Création personnalisée</option>
+                                <option value="information-generale">Information générale</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Votre message *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Décrivez-nous votre projet ou posez-nous vos questions..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="cta-button primary">Envoyer le message</button>
+                    </form>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="contact-info-section">
+                    <h2>Informations de Contact</h2>
+                    
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <div class="contact-icon">📧</div>
+                            <div class="contact-details">
+                                <h3>Email</h3>
+                                <p>contact@francois-maroquinerie.com</p>
+                                <span>Réponse sous 24h</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">📱</div>
+                            <div class="contact-details">
+                                <h3>WhatsApp</h3>
+                                <p>+33 X XX XX XX XX</p>
+                                <span>Messages et appels</span>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-method">
+                            <div class="contact-icon">📍</div>
+                            <div class="contact-details">
+                                <h3>Atelier</h3>
+                                <p>Sur rendez-vous uniquement</p>
+                                <span>Consultations personnalisées</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="social-section">
+                        <h3>Suivez Notre Actualité</h3>
+                        <div class="social-links-contact">
+                            <a href="#" class="social-link-item">
+                                <div class="social-icon">📷</div>
+                                <div class="social-info">
+                                    <h4>Instagram</h4>
+                                    <p>@francois.maroquinerie</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="social-link-item">
+                                <div class="social-icon">👥</div>
+                                <div class="social-info">
+                                    <h4>Facebook</h4>
+                                    <p>François Maroquinerie</p>
+                                </div>
+                            </a>
+                            
+                            <a href="#" class="social-link-item">
+                                <div class="social-icon">💬</div>
+                                <div class="social-info">
+                                    <h4>WhatsApp Business</h4>
+                                    <p>Chat direct</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- FAQ Preview -->
+                    <div class="faq-preview">
+                        <h3>Questions Fréquentes</h3>
+                        <div class="faq-item">
+                            <h4>Délais de création</h4>
+                            <p>Comptez 2 à 4 semaines selon la complexité de la pièce.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Personnalisation</h4>
+                            <p>Toutes nos créations peuvent être personnalisées.</p>
+                        </div>
+                        <div class="faq-item">
+                            <h4>Entretien</h4>
+                            <p>Conseils d'entretien fournis avec chaque création.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Process Section -->
+    <section class="contact-process">
+        <div class="container">
+            <h2>Notre Processus de Collaboration</h2>
+            <div class="process-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div class="timeline-content">
+                        <h3>Premier Contact</h3>
+                        <p>Vous nous contactez via le formulaire ou nos réseaux sociaux</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div class="timeline-content">
+                        <h3>Consultation</h3>
+                        <p>Nous échangeons sur vos goûts, besoins et budget</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div class="timeline-content">
+                        <h3>Proposition</h3>
+                        <p>Nous vous proposons des designs et matériaux adaptés</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div class="timeline-content">
+                        <h3>Création</h3>
+                        <p>Nos artisans donnent vie à votre pièce unique</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div class="timeline-content">
+                        <h3>Livraison</h3>
+                        <p>Votre création vous est livrée avec ses conseils d'entretien</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="presentation/Logo_François_sansfond.PNG" alt="François Maroquinerie" class="footer-logo">
+                    <h3>FRANÇOIS MAROQUINERIE</h3>
+                    <p>L'art de la maroquinerie africaine</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h4>Collections</h4>
+                        <ul>
+                            <li><a href="collection-wax.html">Collection Wax</a></li>
+                            <li><a href="collection-orange.html">Collection Orange</a></li>
+                            <li><a href="collection-royale.html">Collection Royale</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Informations</h4>
+                        <ul>
+                            <li><a href="apropos.html">À Propos</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="#">Conditions</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Suivez-nous</h4>
+                        <div class="social-links">
+                            <a href="#" class="social-link">Instagram</a>
+                            <a href="#" class="social-link">Facebook</a>
+                            <a href="#" class="social-link">WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 François Maroquinerie. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.querySelector('.mobile-menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            mobileToggle.classList.toggle('active');
+        });
+
+        // Form submission
+        const contactForm = document.querySelector('.contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.');
+        });
+    </script>
+</body>
+</html>

@@ -56,6 +56,20 @@
 3. **À Propos** - Histoire et processus de création
 4. **Contact** - Formulaire et informations de contact
 
+## 📱 Captures d'écran
+
+### 🏠 Page d'accueil
+![Page d'accueil](screenshots/Capture%20d'écran%202025-08-25%20à%2000.50.10.png)
+
+### 🎨 Collection Orange
+![Collection Orange](screenshots/Capture%20d'écran%202025-08-25%20à%2000.50.21.png)
+
+### 📋 Page À Propos
+![Page À Propos](screenshots/Capture%20d'écran%202025-08-25%20à%2000.50.43.png)
+
+### 📞 Page Contact
+![Page Contact](screenshots/Capture%20d'écran%202025-08-25%20à%2000.51.02.png)
+
 ## 🌟 Fonctionnalités
 
 - **Animations CSS** - Effets hover et transitions fluides

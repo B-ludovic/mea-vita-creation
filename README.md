@@ -82,7 +82,7 @@
 
 1. Clonez le repository :
 ```bash
-git clone https://github.com/[votre-username]/mea-vita-creation.git
+git clone https://github.com/B-ludovic/mea-vita-creation.git
 ```
 
 2. Ouvrez `index.html` dans votre navigateur

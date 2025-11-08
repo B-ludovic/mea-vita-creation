@@ -2,22 +2,28 @@
 // Chaque produit a son propre ensemble de photos cohérentes
 
 export const PRODUCT_IMAGES = {
-  // SAC CYLINDRE
-  'sac-cylindre-violet': [
-    '/images/sac-cylindre/sac-cylindre-violet-1.jpg',
-    '/images/sac-cylindre/sac-cylindre-violet-2.jpg',
-    '/images/sac-cylindre/sac-cylindre-violet-3.jpg',
+  // SAC CYLINDRE - Collection "Le Tambour"
+  'le-tambour-amethyste': [
+    '/images/sac-cylindre/tambour-amethyste-1.jpg',
+    '/images/sac-cylindre/tambour-amethyste-2.jpg',
+    '/images/sac-cylindre/tambour-amethyste-3.jpg',
   ],
-  'sac-cylindre-marron': [
-    '/images/sac-cylindre/sac-cylindre-wax-orange-1.jpg',
-    '/images/sac-cylindre/sac-cylindre-wax-orange-2.jpg',
-    '/images/sac-cylindre/sac-cylindre-wax-orange-3.jpg',
+  'le-tambour-dune': [
+    '/images/sac-cylindre/tambour-dune-1.jpg',
+    '/images/sac-cylindre/tambour-dune-2.jpg',
   ],
-  'sac-cylindre-wax': [
-    '/images/sac-cylindre/sac-cylindre-wax-bleu-1.jpg',
-    '/images/sac-cylindre/sac-cylindre-wax-bleu-2.jpg',
-    '/images/sac-cylindre/sac-cylindre-wax-bleu-3.jpg',
-    '/images/sac-cylindre/sac-cylindre-wax-bleu-4.jpg',
+  'le-tambour-ocean': [
+    '/images/sac-cylindre/tambour-ocean-1.jpg',
+    '/images/sac-cylindre/tambour-ocean-2.jpg',
+  ],
+  'le-tambour-solaire': [
+    '/images/sac-cylindre/tambour-solaire-1.jpg',
+  ],
+  'le-tambour-festival': [
+    '/images/sac-cylindre/tambour-festival-1.jpg',
+  ],
+  'le-tambour-mosaique': [
+    '/images/sac-cylindre/tambour-mosaique-1.jpg',
   ],
 
   // POCHETTES UNISEXE
@@ -155,16 +161,16 @@ export const getCategoryImages = (categorySlug) => {
       '/images/porte-carte/eclat-mosaique-1.jpg',
     ],
     'sac-cylindre': [
-      '/images/sac-cylindre/sac-cylindre-wax-orange-1.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-orange-2.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-orange-3.jpg',
-      '/images/sac-cylindre/sac-cylindre-violet-1.jpg',
-      '/images/sac-cylindre/sac-cylindre-violet-2.jpg',
-      '/images/sac-cylindre/sac-cylindre-violet-3.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-bleu-1.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-bleu-2.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-bleu-3.jpg',
-      '/images/sac-cylindre/sac-cylindre-wax-bleu-4.jpg',
+      '/images/sac-cylindre/tambour-amethyste-1.jpg',
+      '/images/sac-cylindre/tambour-amethyste-2.jpg',
+      '/images/sac-cylindre/tambour-amethyste-3.jpg',
+      '/images/sac-cylindre/tambour-dune-1.jpg',
+      '/images/sac-cylindre/tambour-dune-2.jpg',
+      '/images/sac-cylindre/tambour-ocean-1.jpg',
+      '/images/sac-cylindre/tambour-ocean-2.jpg',
+      '/images/sac-cylindre/tambour-solaire-1.jpg',
+      '/images/sac-cylindre/tambour-festival-1.jpg',
+      '/images/sac-cylindre/tambour-mosaique-1.jpg',
     ],
     'sac-u': [
       '/images/sac-u/sac-u-classique-1.jpg',

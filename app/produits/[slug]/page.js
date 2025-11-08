@@ -99,11 +99,19 @@ export default function ProductPage() {
                 <div className="product-detail">
                     {/* Section Image avec Carrousel */}
                     <div className="product-image-section">
-                        <ProductCarousel 
-                            images={productImages}
-                            productName={product.name}
-                            categorySlug={product.Category.slug}
-                        />
+                        {product.ProductImage && product.ProductImage.length > 0 ? (
+                            <ProductCarousel 
+                                images={product.ProductImage.map(img => img.url)}
+                                productName={product.name}
+                                categorySlug={product.Category.slug}
+                            />
+                        ) : (
+                            <ProductCarousel 
+                                images={productImages}
+                                productName={product.name}
+                                categorySlug={product.Category.slug}
+                            />
+                        )}
                     </div>
 
                     {/* Section Détails */}

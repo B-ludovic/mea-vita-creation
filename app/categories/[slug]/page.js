@@ -124,19 +124,31 @@ export default function CategoryPage() {
             <div className="products-grid">
               {products.map((product, index) => (
                 <div key={product.id} className="product-card">
+                  {/* Image du produit */}
                   <div className="product-image">
-                    <Image
-                      src={getProductImageForDisplay(product, index)}
-                      alt={product.name}
-                      width={300}
-                      height={300}
-                      className="product-img"
-                    />
+                    {product.ProductImage && product.ProductImage.length > 0 ? (
+                      <Image 
+                        src={product.ProductImage[0].url} 
+                        alt={product.ProductImage[0].alt}
+                        width={300}
+                        height={300}
+                        className="product-img"
+                      />
+                    ) : (
+                      <Image
+                        src={getProductImageForDisplay(product, index)}
+                        alt={product.name}
+                        width={300}
+                        height={300}
+                        className="product-img"
+                      />
+                    )}
                   </div>
+                  
                   <div className="product-info">
                     <h3>{product.name}</h3>
                     <p>{product.description}</p>
-                    <p className="product-price">{product.price}€</p>
+                    <p className="product-price">{product.price.toFixed(2)}€</p>
                     <Link href={`/produits/${product.slug}`}>
                       <button className="product-btn">
                         Voir les détails

@@ -82,43 +82,43 @@ export const PRODUCT_IMAGES = {
     '/images/porte-carte/eclat-mosaique-1.jpg',
   ],
 
-  // SAC U
-  'sac-u-classique': [
-    '/images/sac-u/sac-u-classique-1.jpg',
-    '/images/sac-u/sac-u-classique-2.jpg',
-    '/images/sac-u/sac-u-classique-3.jpg',
+  // SAC U - Collection "L'Arche"
+  
+  // Modèle "Besace"
+  'larche-besace-fogo': [
+    '/images/sac-u/arche-besace-fogo-1.jpg',
+    '/images/sac-u/arche-besace-fogo-2.jpg',
+    '/images/sac-u/arche-besace-fogo-3.jpg',
   ],
-  'sac-u-wax-multicolore': [
-    '/images/sac-u/sac-u-wax-gold-1.jpg',
+  'larche-besace-mosaique': [
+    '/images/sac-u/arche-besace-mosaique-1.jpg',
+    '/images/sac-u/arche-besace-mosaique-2.jpg',
   ],
-  'sac-u-wax-orange': [
-    '/images/sac-u/sac-u-wax-orange-1.jpg',
-    '/images/sac-u/sac-u-wax-orange-2.jpg',
-    '/images/sac-u/sac-u-wax-orange-3.jpg',
+  'larche-besace-cendre': [
+    '/images/sac-u/arche-besace-cendre-1.jpg',
   ],
-  'sac-u-wax-bleu': [
-    '/images/sac-u/sac-u-wax-bleu-1.jpg',
-    '/images/sac-u/sac-u-wax-bleu-2.jpg',
-    '/images/sac-u/sac-u-wax-bleu-3.jpg',
+  'larche-besace-festival': [
+    '/images/sac-u/arche-besace-festival-1.jpg',
+    '/images/sac-u/arche-besace-festival-2.jpg',
   ],
-  'sac-u-wax-gold': [
-    '/images/sac-u/sac-u-wax-vert-2.jpg',
-    '/images/sac-u/sac-u-wax-vert-3.jpg',
+  
+  // Modèle "Pochette"
+  'larche-pochette-royale': [
+    '/images/sac-u/arche-pochette-royale-1.jpg',
   ],
-  'sac-u-wax-rouge': [
-    '/images/sac-u/sac-u-wax-vert-1.jpg',
-    '/images/sac-u/sac-u-wax-violet-1.jpg',
-    '/images/sac-u/sac-u-wax-violet-2.jpg',
+  'larche-pochette-dashiki': [
+    '/images/sac-u/arche-pochette-dashiki-1.jpg',
   ],
-  'sac-u-wax-vert': [
-    '/images/sac-u/sac-u-wax-violet-1.jpg',
-    '/images/sac-u/sac-u-wax-violet-2.jpg',
+  'larche-pochette-mosaique': [
+    '/images/sac-u/arche-pochette-mosaique-1.jpg',
+    '/images/sac-u/arche-pochette-mosaique-2.jpg',
   ],
-  'sac-u-wax-jaune': [
-    '/images/sac-u/sac-u-wax-multicolore-1.jpg',
-    '/images/sac-u/sac-u-wax-multicolore-2.jpg',
-    '/images/sac-u/sac-u-wax-multicolore-3.jpg',
-    '/images/sac-u/sac-u-wax-multicolore-4.jpg',
+  'larche-pochette-festival': [
+    '/images/sac-u/arche-pochette-festival-1.jpg',
+  ],
+  'larche-pochette-fogo': [
+    '/images/sac-u/arche-pochette-fogo-1.jpg',
+    '/images/sac-u/arche-pochette-fogo-2.jpg',
   ],
 };
 
@@ -173,25 +173,21 @@ export const getCategoryImages = (categorySlug) => {
       '/images/sac-cylindre/tambour-mosaique-1.jpg',
     ],
     'sac-u': [
-      '/images/sac-u/sac-u-classique-1.jpg',
-      '/images/sac-u/sac-u-classique-2.jpg',
-      '/images/sac-u/sac-u-classique-3.jpg',
-      '/images/sac-u/sac-u-wax-gold-1.jpg',
-      '/images/sac-u/sac-u-wax-bleu-1.jpg',
-      '/images/sac-u/sac-u-wax-bleu-2.jpg',
-      '/images/sac-u/sac-u-wax-bleu-3.jpg',
-      '/images/sac-u/sac-u-wax-vert-1.jpg',
-      '/images/sac-u/sac-u-wax-vert-2.jpg',
-      '/images/sac-u/sac-u-wax-vert-3.jpg',
-      '/images/sac-u/sac-u-wax-orange-1.jpg',
-      '/images/sac-u/sac-u-wax-orange-2.jpg',
-      '/images/sac-u/sac-u-wax-orange-3.jpg',
-      '/images/sac-u/sac-u-wax-violet-1.jpg',
-      '/images/sac-u/sac-u-wax-violet-2.jpg',
-      '/images/sac-u/sac-u-wax-multicolore-1.jpg',
-      '/images/sac-u/sac-u-wax-multicolore-2.jpg',
-      '/images/sac-u/sac-u-wax-multicolore-3.jpg',
-      '/images/sac-u/sac-u-wax-multicolore-4.jpg',
+      '/images/sac-u/arche-besace-fogo-1.jpg',
+      '/images/sac-u/arche-besace-fogo-2.jpg',
+      '/images/sac-u/arche-besace-fogo-3.jpg',
+      '/images/sac-u/arche-besace-mosaique-1.jpg',
+      '/images/sac-u/arche-besace-mosaique-2.jpg',
+      '/images/sac-u/arche-besace-cendre-1.jpg',
+      '/images/sac-u/arche-besace-festival-1.jpg',
+      '/images/sac-u/arche-besace-festival-2.jpg',
+      '/images/sac-u/arche-pochette-royale-1.jpg',
+      '/images/sac-u/arche-pochette-dashiki-1.jpg',
+      '/images/sac-u/arche-pochette-mosaique-1.jpg',
+      '/images/sac-u/arche-pochette-mosaique-2.jpg',
+      '/images/sac-u/arche-pochette-festival-1.jpg',
+      '/images/sac-u/arche-pochette-fogo-1.jpg',
+      '/images/sac-u/arche-pochette-fogo-2.jpg',
     ],
   };
 

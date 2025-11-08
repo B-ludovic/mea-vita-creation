@@ -12,6 +12,8 @@ const authRoutes = require('./routes/auth');
 const categoryRoutes = require('./routes/categories');
 // Importer les routes des produits
 const productRoutes = require('./routes/products');
+// Importer les routes de paiement
+const paymentRoutes = require('./routes/payment');
 
 // Créer l'application Express
 const app = express();
@@ -40,6 +42,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/categories', categoryRoutes);
 // ROUTES DES PRODUITS
 app.use('/api/products', productRoutes);
+// ROUTES DE PAIEMENT
+app.use('/api/payment', paymentRoutes);
 
 // ROUTE D'ACCUEIL (page principale)
 app.get('/', (req, res) => {

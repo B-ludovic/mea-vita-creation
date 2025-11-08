@@ -1,0 +1,99 @@
+// Importer les modules nécessaires
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
+
+// Importer Prisma au lieu de pool
+const prisma = require('./config/prisma');
+
+// Importer les routes d'authentification
+const authRoutes = require('./routes/auth');
+// Importer les routes des catégories
+const categoryRoutes = require('./routes/categories');
+// Importer les routes des produits
+const productRoutes = require('./routes/products');
+
+// Créer l'application Express
+const app = express();
+
+// Définir le port (5000 par défaut, ou celui défini dans .env)
+const PORT = process.env.PORT || 5000;
+
+// MIDDLEWARE (fonctions qui s'exécutent avant les routes)
+
+// 1. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
+app.use(cors({
+  origin: 'http://localhost:3000', // Adresse du front-end Next.js
+  credentials: true
+}));
+
+// 2. Parser le JSON : transforme les données JSON reçues en objets JavaScript
+app.use(express.json());
+
+// 3. Parser les données URL-encoded (formulaires)
+app.use(express.urlencoded({ extended: true }));
+
+// ROUTES D'AUTHENTIFICATION
+// Toutes les routes dans authRoutes commenceront par /api/auth
+app.use('/api/auth', authRoutes);
+// ROUTES DES CATÉGORIES
+app.use('/api/categories', categoryRoutes);
+// ROUTES DES PRODUITS
+app.use('/api/products', productRoutes);
+
+// ROUTE D'ACCUEIL (page principale)
+app.get('/', (req, res) => {
+  res.json({
+    message: '🎉 Bienvenue sur l\'API Mea Vita Création',
+    version: '1.0.0',
+    endpoints: {
+      test: '/api/test',
+      testDatabase: '/api/test-db',
+      auth: {
+        register: '/api/auth/register',
+        login: '/api/auth/login'
+      }
+    },
+    status: 'running'
+  });
+});
+
+// ROUTE DE TEST (pour vérifier que le serveur fonctionne)
+app.get('/api/test', (req, res) => {
+  res.json({ 
+    message: '✅ Le serveur fonctionne !',
+    timestamp: new Date()
+  });
+});
+
+// ROUTE DE TEST DE PRISMA
+app.get('/api/test-db', async (req, res) => {
+  try {
+    // Compter le nombre d'utilisateurs dans la base
+    const userCount = await prisma.user.count();
+    
+    res.json({ 
+      message: '✅ Connexion à PostgreSQL avec Prisma réussie !',
+      userCount: userCount
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      message: '❌ Erreur de connexion à PostgreSQL',
+      error: error.message
+    });
+  }
+});
+
+// DÉMARRER LE SERVEUR
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+});
+
+// Gérer la fermeture propre
+process.on('SIGINT', async () => {
+  console.log('\nArrêt du serveur...');
+  await prisma.$disconnect();
+  server.close(() => {
+    process.exit(0);
+  });
+});

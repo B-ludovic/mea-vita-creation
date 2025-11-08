@@ -21,25 +21,35 @@ export const PRODUCT_IMAGES = {
   ],
 
   // POCHETTES UNISEXE
-  'pochette-wax-orange': [
-    '/images/pochettes-unisexe/IMG_5723.JPG',
-    '/images/pochettes-unisexe/IMG_5729.JPG',
-    '/images/pochettes-unisexe/IMG_5739.JPG',
+  
+  // Modèle "L'Atlas" (Design Asymétrique)
+  'latlas-fogo': [
+    '/images/pochettes-unisexe/atlas-fogo-1.jpg',
+    '/images/pochettes-unisexe/atlas-fogo-2.jpg',
   ],
-  'pochette-wax-bleu': [
-    '/images/pochettes-unisexe/IMG_5747.JPG',
-    '/images/pochettes-unisexe/IMG_6016.JPG',
+  'latlas-solaire': [
+    '/images/pochettes-unisexe/atlas-solaire-1.jpg',
+    '/images/pochettes-unisexe/atlas-solaire-2.jpg',
   ],
-  'pochette-wax-multicolore': [
-    '/images/pochettes-unisexe/IMG_6061.JPG',
-    '/images/pochettes-unisexe/IMG_6081.JPG',
+  'latlas-urbain': [
+    '/images/pochettes-unisexe/atlas-urbain-1.jpg',
   ],
-  'pochette-royale-bleue': [
-    '/images/pochettes-unisexe/IMG_6094.JPG',
+  'latlas-terre-et-mer': [
+    '/images/pochettes-unisexe/atlas-terre-et-mer-1.jpg',
   ],
-  'pochette-wax-rose': [
-    '/images/pochettes-unisexe/IMG_6114.JPG',
-    '/images/pochettes-unisexe/IMG_6126.JPG',
+
+  // Modèle "L'Artisan" (Design avec Dragonne)
+  'lartisan-ebene': [
+    '/images/pochettes-unisexe/artisan-ebene-1.jpg',
+    '/images/pochettes-unisexe/artisan-ebene-2.jpg',
+  ],
+  'lartisan-azur': [
+    '/images/pochettes-unisexe/artisan-azur-1.jpg',
+  ],
+
+  // Modèle "Le Cachet" (Design avec Bouton)
+  'le-cachet-ardoise': [
+    '/images/pochettes-unisexe/cachet-ardoise-1.jpg',
   ],
 
   // PORTE-CARTE
@@ -63,9 +73,12 @@ export const PRODUCT_IMAGES = {
   ],
 
   // SAC U
-  'sac-u-wax-multicolore': [
+  'sac-u-classique': [
     '/images/sac-u/IMG_4975.JPG',
     '/images/sac-u/IMG_4993.JPG',
+    '/images/sac-u/IMG_5021.JPG',
+  ],
+  'sac-u-wax-multicolore': [
     '/images/sac-u/IMG_5000.JPG',
   ],
   'sac-u-wax-orange': [
@@ -76,6 +89,8 @@ export const PRODUCT_IMAGES = {
   'sac-u-wax-bleu': [
     '/images/sac-u/IMG_5021.JPG',
     '/images/sac-u/IMG_5027.JPG',
+  ],
+  'sac-u-wax-gold': [
     '/images/sac-u/IMG_5034.JPG',
     '/images/sac-u/IMG_5041.JPG',
   ],
@@ -111,16 +126,16 @@ export const getProductMainImage = (productSlug) => {
 export const getCategoryImages = (categorySlug) => {
   const categoryImagesMap = {
     'pochettes-unisexe': [
-      '/images/pochettes-unisexe/IMG_5723.JPG',
-      '/images/pochettes-unisexe/IMG_5729.JPG',
-      '/images/pochettes-unisexe/IMG_5739.JPG',
-      '/images/pochettes-unisexe/IMG_5747.JPG',
-      '/images/pochettes-unisexe/IMG_6016.JPG',
-      '/images/pochettes-unisexe/IMG_6061.JPG',
-      '/images/pochettes-unisexe/IMG_6081.JPG',
-      '/images/pochettes-unisexe/IMG_6094.JPG',
-      '/images/pochettes-unisexe/IMG_6114.JPG',
-      '/images/pochettes-unisexe/IMG_6126.JPG',
+      '/images/pochettes-unisexe/atlas-fogo-1.jpg',
+      '/images/pochettes-unisexe/atlas-fogo-2.jpg',
+      '/images/pochettes-unisexe/atlas-solaire-1.jpg',
+      '/images/pochettes-unisexe/atlas-solaire-2.jpg',
+      '/images/pochettes-unisexe/atlas-urbain-1.jpg',
+      '/images/pochettes-unisexe/atlas-terre-et-mer-1.jpg',
+      '/images/pochettes-unisexe/artisan-ebene-1.jpg',
+      '/images/pochettes-unisexe/artisan-ebene-2.jpg',
+      '/images/pochettes-unisexe/artisan-azur-1.jpg',
+      '/images/pochettes-unisexe/cachet-ardoise-1.jpg',
     ],
     'porte-carte': [
       '/images/porte-carte/IMG_6139.JPG',

@@ -1,0 +1,12 @@
+# Dépendances
+node_modules/
+
+# Variables d'environnement (mots de passe, clés secrètes)
+.env
+
+# Logs
+*.log
+
+# Fichiers système
+.DS_Store
+/src/generated/prisma

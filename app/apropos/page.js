@@ -1,4 +1,3 @@
-// Page À Propos - Mea Vita Création
 import Image from 'next/image';
 import '../../styles/Apropos.css';
 
@@ -10,7 +9,6 @@ export const metadata = {
 export default function AProposPage() {
   return (
     <>
-      {/* Section Hero */}
       <section className="about-hero">
         <div className="container">
           <div className="about-hero-content">
@@ -20,7 +18,6 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* Section Histoire de la Marque */}
       <section className="brand-story">
         <div className="container">
           <div className="story-content">
@@ -61,7 +58,6 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* Section Nos Valeurs */}
       <section className="values-section">
         <div className="container">
           <h2>Nos Valeurs</h2>
@@ -130,13 +126,11 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* Section Processus de Création */}
       <section className="process-section">
         <div className="container">
           <h2>Notre Processus de Création</h2>
           <div className="process-steps">
             
-            {/* Étape 1 */}
             <div className="process-step">
               <div className="materials-info">
                 <div className="material-card">
@@ -197,7 +191,6 @@ export default function AProposPage() {
               </div>
             </div>
             
-            {/* Étape 2 */}
             <div className="process-step reverse">
               <div className="step-content">
                 <div className="step-number">02</div>
@@ -218,7 +211,6 @@ export default function AProposPage() {
               </div>
             </div>
             
-            {/* Étape 3 */}
             <div className="process-step">
               <div className="step-image">
                 <Image 
@@ -239,7 +231,6 @@ export default function AProposPage() {
               </div>
             </div>
             
-            {/* Étape 4 */}
             <div className="process-step reverse">
               <div className="step-content">
                 <div className="step-number">04</div>
@@ -263,7 +254,6 @@ export default function AProposPage() {
         </div>
       </section>
 
-      {/* Section Mission */}
       <section className="mission-section">
         <div className="container">
           <div className="mission-content">

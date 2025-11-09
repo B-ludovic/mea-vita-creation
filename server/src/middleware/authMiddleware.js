@@ -41,5 +41,34 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
-// Exporter le middleware
-module.exports = { authenticateToken };
+// MIDDLEWARE DE VÉRIFICATION ADMIN
+// Cette fonction vérifie si l'utilisateur connecté est un administrateur
+const isAdmin = (req, res, next) => {
+  try {
+    // Vérifier si l'utilisateur est authentifié (req.user doit être défini par authenticateToken)
+    if (!req.user) {
+      return res.status(401).json({ 
+        message: 'Accès refusé. Vous devez être connecté.' 
+      });
+    }
+
+    // Vérifier si l'utilisateur a le rôle ADMIN
+    if (req.user.role !== 'ADMIN') {
+      return res.status(403).json({ 
+        message: 'Accès refusé. Réservé aux administrateurs.' 
+      });
+    }
+
+    // Si c'est un admin, passer à la fonction suivante
+    next();
+
+  } catch (error) {
+    console.error('Erreur lors de la vérification admin:', error);
+    res.status(500).json({ 
+      message: 'Erreur serveur lors de la vérification des droits' 
+    });
+  }
+};
+
+// Exporter les middlewares
+module.exports = { authenticateToken, isAdmin };

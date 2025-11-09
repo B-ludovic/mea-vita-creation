@@ -134,6 +134,20 @@ export default function Header() {
                                     <span>Mes adresses</span>
                                 </Link>
                             </li>
+                            {user.role === 'ADMIN' && (
+                                <li>
+                                    <Link href="/admin/dashboard" className="admin-link">
+                                        <Image 
+                                            src="/satistic.png" 
+                                            alt="Administration" 
+                                            width={24}
+                                            height={24}
+                                            className="admin-icon"
+                                        />
+                                        <span>Admin</span>
+                                    </Link>
+                                </li>
+                            )}
                         </>
                     )}
                 </ul>

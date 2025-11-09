@@ -10,6 +10,9 @@ import { CartProvider } from '../contexts/CartContext';
 // Import du wrapper pour le timer d'inactivité
 import InactivityWrapper from '../components/InactivityWrapper';
 
+// Import pour détecter le pathname
+import ConditionalLayout from '../components/ConditionalLayout';
+
 // Métadonnées du site
 export const metadata = {
   title: 'Mea Vita Création - Créations Artisanales',
@@ -26,13 +29,10 @@ export default function RootLayout({ children }) {
         <CartProvider>
           {/* InactivityWrapper gère la déconnexion automatique après 20 minutes */}
           <InactivityWrapper>
-            {/* Header affiché sur toutes les pages */}
-            <Header />
-            
-            {/* Contenu de la page (change selon la page) */}
-            <main style={{ paddingTop: '100px' }}>
+            {/* ConditionalLayout gère l'affichage du Header selon la route */}
+            <ConditionalLayout>
               {children}
-            </main>
+            </ConditionalLayout>
           </InactivityWrapper>
         </CartProvider>
       </body>

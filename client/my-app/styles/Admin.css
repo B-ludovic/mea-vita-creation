@@ -1,5 +1,20 @@
 /* Dashboard Admin */
 
+/* Force le comportement normal du texte dans tout l'admin */
+.admin-layout,
+.admin-layout *,
+.admin-content,
+.admin-content *,
+.admin-header,
+.admin-header *,
+.admin-table-container,
+.admin-table-container * {
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: normal;
+    hyphens: none;
+}
+
 .admin-layout {
     display: grid;
     grid-template-columns: 250px 1fr;
@@ -11,9 +26,12 @@
     background: linear-gradient(180deg, var(--text-dark) 0%, #1a1a1a 100%);
     color: var(--white);
     padding: 2rem 0;
-    position: fixed;
+    /* REMOVED position: fixed to respect grid layout */
+    /* position: fixed; */
     width: 250px;
     height: 100vh;
+    position: sticky;
+    top: 0;
     overflow-y: auto;
 }
 
@@ -65,7 +83,8 @@
 }
 
 .admin-content {
-    margin-left: 250px;
+    /* REMOVED margin-left since we're using grid now */
+    /* margin-left: 250px; */
     padding: 2rem;
 }
 
@@ -148,11 +167,27 @@
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     overflow-x: auto;
+    min-width: 0;
+    width: 100%;
+}
+
+.admin-table-container h2 {
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: visible;
+}
+
+.admin-table-container p,
+.admin-table-container ul,
+.admin-table-container li {
+    word-break: keep-all;
+    white-space: normal;
 }
 
 .admin-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: auto;
 }
 
 .admin-table thead {
@@ -167,6 +202,7 @@
     text-transform: uppercase;
     font-size: 0.85rem;
     letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 
 .admin-table td {

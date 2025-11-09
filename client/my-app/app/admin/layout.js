@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import '../../styles/Admin.css';
+import '../../styles/variables.css'; // 1. Variables d'abord
+import '../../styles/globals.css';   // 2. Styles globaux
+import '../../styles/Admin.css';     // 3. Styles admin EN DERNIER pour surcharger
 
 export default function AdminLayout({ children }) {
   const router = useRouter();

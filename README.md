@@ -19,6 +19,17 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🥁 Sac Cylindre (Le Tambour)
 - 👜 Sac U (L'Arche)
 
+### Fonctionnalités principales
+- 🔐 **Authentification sécurisée** : Inscription, connexion, vérification email
+- 🔑 **Récupération mot de passe** : Système de reset par email
+- 🛒 **Panier intelligent** : Gestion des articles avec Context API
+- 💳 **Paiement Stripe** : Intégration complète avec webhooks
+- 📦 **Gestion commandes** : Historique et suivi des commandes
+- 📍 **Adresses multiples** : Gestion des adresses de livraison
+- 👤 **Espace admin** : Dashboard pour gérer produits, commandes et utilisateurs
+- 📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
+- 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT
+
 ---
 
 ## 🚀 Installation en local
@@ -55,6 +66,7 @@ STRIPE_SECRET_KEY=sk_test_XXXXXXXXXXXXXXXXXXXXXXXX
 STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXXXXXXXXXXXXX
 CLIENT_URL=http://localhost:3000
 JWT_SECRET=votre_cle_secrete_jwt_minimum_32_caracteres
+RESEND_API_KEY=re_XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ### 4. Configurer la base de données
@@ -109,6 +121,7 @@ stripe listen --forward-to localhost:5002/api/payment/webhook
    STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXXXXXXXXXXXXX
    CLIENT_URL=https://votre-site-frontend.onrender.com
    JWT_SECRET=votre_cle_jwt_production_securisee
+   RESEND_API_KEY=re_XXXXXXXXXXXXXXXXXXXXXXXX
    NODE_ENV=production
    ```
 
@@ -168,20 +181,89 @@ stripe listen --forward-to localhost:5002/api/payment/webhook
 francois-maroquinerie/
 ├── client/my-app/          # Frontend Next.js
 │   ├── app/                # Pages et routes
+│   │   ├── layout.js       # Layout principal
+│   │   ├── page.js         # Page d'accueil
+│   │   ├── login/          # Page de connexion
+│   │   ├── register/       # Page d'inscription
+│   │   ├── forgot-password/# Page mot de passe oublié
+│   │   ├── reset-password/ # Page réinitialisation mot de passe
+│   │   ├── verify-email/   # Page vérification email
+│   │   ├── categories/     # Pages catégories
+│   │   ├── produits/       # Pages produits
+│   │   ├── panier/         # Page panier
+│   │   ├── mes-commandes/  # Page mes commandes
+│   │   ├── mes-adresses/   # Page gestion adresses
+│   │   ├── apropos/        # Page à propos
+│   │   ├── contact/        # Page contact
+│   │   ├── success/        # Page succès paiement
+│   │   └── admin/          # Panel admin
+│   │       ├── dashboard/  # Tableau de bord
+│   │       ├── produits/   # Gestion produits
+│   │       ├── commandes/  # Gestion commandes
+│   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
-│   ├── contexts/           # Context API (Panier)
-│   ├── config/             # Configuration images
+│   │   ├── Header.jsx      # En-tête navigation
+│   │   ├── ConditionalLayout.jsx
+│   │   ├── InactivityWrapper.jsx
+│   │   └── ProductCarousel.jsx
+│   ├── contexts/           # Context API
+│   │   └── CartContext.js  # Gestion du panier
+│   ├── hooks/              # Custom hooks
+│   │   └── useInactivityTimer.js
+│   ├── config/             # Configuration
+│   │   └── productImages.js # Images produits
 │   ├── styles/             # Fichiers CSS
-│   └── public/images/      # Images produits
+│   │   ├── globals.css
+│   │   ├── variables.css
+│   │   ├── Header.css
+│   │   ├── Home.css
+│   │   ├── Auth.css
+│   │   ├── Categories.css
+│   │   ├── Product.css
+│   │   ├── Cart.css
+│   │   ├── Orders.css
+│   │   ├── Addresses.css
+│   │   ├── Admin.css
+│   │   └── ...
+│   └── public/             # Fichiers statiques
+│       └── images/         # Images produits
+│           ├── pochettes-unisexe/
+│           ├── porte-carte/
+│           ├── sac-cylindre/
+│           └── sac-u/
 │
 ├── server/                 # Backend Express
 │   ├── src/
 │   │   ├── controllers/    # Logique métier
+│   │   │   ├── authController.js
+│   │   │   ├── productController.js
+│   │   │   ├── categoryController.js
+│   │   │   ├── orderController.js
+│   │   │   ├── paymentController.js
+│   │   │   └── addressController.js
 │   │   ├── routes/         # Routes API
-│   │   ├── config/         # Config Prisma
+│   │   │   ├── auth.js
+│   │   │   ├── products.js
+│   │   │   ├── categories.js
+│   │   │   ├── orders.js
+│   │   │   ├── payment.js
+│   │   │   ├── addresses.js
+│   │   │   └── users.js
+│   │   ├── middleware/     # Middlewares
+│   │   │   ├── authMiddleware.js
+│   │   │   ├── rateLimiter.js
+│   │   │   └── sanitizer.js
+│   │   ├── services/       # Services
+│   │   │   └── emailService.js
+│   │   ├── config/         # Configuration
+│   │   │   ├── database.js
+│   │   │   └── prisma.js
 │   │   └── server.js       # Point d'entrée
-│   └── prisma/
-│       └── schema.prisma   # Schéma base de données
+│   ├── prisma/
+│   │   ├── schema.prisma   # Schéma base de données
+│   │   └── migrations/     # Migrations
+│   └── scripts/
+│       └── recover-orders.js
 │
 ├── .gitignore
 └── README.md
@@ -206,6 +288,7 @@ francois-maroquinerie/
 | `STRIPE_WEBHOOK_SECRET` | Secret webhook Stripe |
 | `CLIENT_URL` | URL du frontend |
 | `JWT_SECRET` | Clé secrète JWT (min. 32 car.) |
+| `RESEND_API_KEY` | Clé API Resend (envoi emails) |
 
 ---
 

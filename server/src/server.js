@@ -2,7 +2,6 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet'); // Protection des headers HTTP
-const mongoSanitize = require('express-mongo-sanitize'); // Protection contre NoSQL injection
 require('dotenv').config();
 
 // Importer Prisma au lieu de pool
@@ -38,19 +37,18 @@ app.use(helmet({
   contentSecurityPolicy: false, // Désactivé pour Stripe (peut être réactivé après config)
 }));
 
-// 2. Protection contre les injections NoSQL (ex: { $ne: null })
-app.use(mongoSanitize());
-
-// 3. Sanitizer personnalisé - Nettoie toutes les entrées utilisateur (XSS)
+// 2. Sanitizer personnalisé - Nettoie toutes les entrées utilisateur (XSS)
+// Note: express-mongo-sanitize supprimé car incompatible avec PostgreSQL
+// La sanitization contre les injections SQL est assurée par Prisma ORM
 app.use(sanitizeInputs);
 
-// 4. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
+// 3. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
 app.use(cors({
   origin: 'http://localhost:3000', // Adresse du front-end Next.js
   credentials: true
 }));
 
-// 5. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)
+// 4. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/payment/webhook') {
     next();
@@ -59,10 +57,10 @@ app.use((req, res, next) => {
   }
 });
 
-// 6. Parser les données URL-encoded (formulaires)
+// 5. Parser les données URL-encoded (formulaires)
 app.use(express.urlencoded({ extended: true }));
 
-// 7. Limiteur de requêtes global (protection anti spam et brute-force)
+// 6. Limiteur de requêtes global (protection anti spam et brute-force)
 // Maximum 100 requêtes par 15 minutes par IP
 app.use('/api', apiLimiter);
 

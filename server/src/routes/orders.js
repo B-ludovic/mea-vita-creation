@@ -18,21 +18,10 @@ const {
 // POST /api/orders
 router.post('/', createOrder);
 
-// ROUTE POUR RÉCUPÉRER LES COMMANDES D'UN UTILISATEUR
-// GET /api/orders/user/:userId
-router.get('/user/:userId', getUserOrders);
-
-// ROUTE POUR RÉCUPÉRER UNE COMMANDE PAR SON ID
-// GET /api/orders/:orderId
-router.get('/:orderId', getOrderById);
-
-// ROUTE POUR METTRE À JOUR LE STATUT D'UNE COMMANDE
-// PUT /api/orders/:orderId/status
-router.put('/:orderId/status', updateOrderStatus);
-
 // ROUTE POUR RÉCUPÉRER TOUTES LES COMMANDES (ADMIN UNIQUEMENT)
 // GET /api/orders/user/all
 // Cette route est protégée : seuls les administrateurs peuvent y accéder
+// ATTENTION: Cette route doit être AVANT /user/:userId sinon "all" sera traité comme un userId
 router.get('/user/all', authenticateToken, isAdmin, async (req, res) => {
   try {
     const orders = await prisma.order.findMany({
@@ -74,6 +63,18 @@ router.get('/user/all', authenticateToken, isAdmin, async (req, res) => {
     });
   }
 });
+
+// ROUTE POUR RÉCUPÉRER LES COMMANDES D'UN UTILISATEUR
+// GET /api/orders/user/:userId
+router.get('/user/:userId', getUserOrders);
+
+// ROUTE POUR RÉCUPÉRER UNE COMMANDE PAR SON ID
+// GET /api/orders/:orderId
+router.get('/:orderId', getOrderById);
+
+// ROUTE POUR METTRE À JOUR LE STATUT D'UNE COMMANDE
+// PUT /api/orders/:orderId/status
+router.put('/:orderId/status', updateOrderStatus);
 
 // Exporter le router
 module.exports = router;

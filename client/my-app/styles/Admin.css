@@ -242,6 +242,16 @@
     color: #c62828;
 }
 
+.badge.admin-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--white);
+}
+
+.badge.client-badge {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
 /* Buttons */
 .admin-btn {
     padding: 10px 20px;
@@ -267,6 +277,16 @@
     background: transparent;
     color: var(--primary-orange);
     border: 2px solid var(--primary-orange);
+}
+
+.admin-btn-user-toggle {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: var(--white);
+}
+
+.admin-btn-user-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 .admin-btn-secondary:hover {

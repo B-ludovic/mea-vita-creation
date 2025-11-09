@@ -27,6 +27,40 @@ router.get('/', getAllProducts);
 // Exemple: /api/products/category/pochettes-unisexe
 router.get('/category/:categorySlug', getProductsByCategory);
 
+// ROUTE POUR RÉCUPÉRER UN PRODUIT PAR SON ID
+// GET /api/products/id/:id
+router.get('/id/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const product = await require('../config/prisma').product.findUnique({
+      where: { id },
+      include: {
+        Category: true,
+        ProductImage: true
+      }
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Produit non trouvé'
+      });
+    }
+
+    res.json({
+      success: true,
+      product
+    });
+  } catch (error) {
+    console.error('Erreur:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
+
 // ROUTE POUR RÉCUPÉRER UN PRODUIT PAR SON SLUG
 // GET /api/products/:slug
 // Exemple: /api/products/pochette-wax-orange

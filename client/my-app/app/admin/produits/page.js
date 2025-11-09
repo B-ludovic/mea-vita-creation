@@ -62,6 +62,49 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleDelete = async (productId, productName) => {
+    // Demander confirmation avant suppression
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${productName}" ?`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Vous devez être connecté');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 403) {
+        alert('Accès refusé. Réservé aux administrateurs.');
+        router.push('/');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Produit supprimé avec succès !');
+        // Recharger la liste des produits
+        fetchProducts();
+      } else {
+        alert(data.message || 'Erreur lors de la suppression');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la suppression du produit');
+    }
+  };
+
   if (loading) {
     return (
       <div className="admin-header">
@@ -80,7 +123,10 @@ export default function AdminProductsPage() {
       <div className="admin-table-container">
         <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ margin: 0, color: 'var(--text-dark)' }}>Liste des produits</h2>
-          <button className="admin-btn admin-btn-primary">
+          <button 
+            className="admin-btn admin-btn-primary"
+            onClick={() => router.push('/admin/produits/ajouter')}
+          >
             <Image src="/validation.png" alt="" width={16} height={16} style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }} />
             Ajouter un produit
           </button>
@@ -156,6 +202,7 @@ export default function AdminProductsPage() {
                     <button 
                       className="admin-btn admin-btn-secondary"
                       style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      onClick={() => router.push(`/admin/produits/modifier/${product.id}`)}
                     >
                       <Image src="/modify.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Modifier
@@ -163,6 +210,7 @@ export default function AdminProductsPage() {
                     <button 
                       className="admin-btn admin-btn-danger"
                       style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      onClick={() => handleDelete(product.id, product.name)}
                     >
                       <Image src="/trash.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Supprimer

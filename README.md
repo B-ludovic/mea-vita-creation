@@ -1,6 +1,9 @@
+````markdown
 # 🎨 Mea Vita Création - François Maroquinerie
 
 Site e-commerce de maroquinerie artisanale avec paiement Stripe.
+
+> ⚠️ **SÉCURITÉ** : Ne jamais commiter de fichiers `.env` ou `.env.local`. Toutes les clés ci-dessous sont des exemples génériques à remplacer par vos vraies clés.
 
 ## 📋 Description du projet
 
@@ -35,7 +38,7 @@ npm install
 Créer le fichier `.env.local` dans `client/my-app/` :
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:5002
-NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_votre_cle_stripe
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ### 3. Installer le BACKEND
@@ -47,10 +50,11 @@ npm install
 Créer le fichier `.env` dans `server/` :
 ```env
 PORT=5002
-DATABASE_URL=postgresql://user:password@localhost:5432/francois_maroquinerie
-STRIPE_SECRET_KEY=sk_test_votre_cle_stripe
-STRIPE_WEBHOOK_SECRET=whsec_votre_webhook_secret
+DATABASE_URL=postgresql://username:password@localhost:5432/nom_de_votre_bdd
+STRIPE_SECRET_KEY=sk_test_XXXXXXXXXXXXXXXXXXXXXXXX
+STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXXXXXXXXXXXXX
 CLIENT_URL=http://localhost:3000
+JWT_SECRET=votre_cle_secrete_jwt_minimum_32_caracteres
 ```
 
 ### 4. Configurer la base de données
@@ -100,10 +104,11 @@ stripe listen --forward-to localhost:5002/api/payment/webhook
 4. **Variables d'environnement** (Environment) :
    ```
    PORT=5002
-   DATABASE_URL=postgresql://...  (depuis Render PostgreSQL)
-   STRIPE_SECRET_KEY=sk_live_...
-   STRIPE_WEBHOOK_SECRET=whsec_...
-   CLIENT_URL=https://votre-frontend.onrender.com
+   DATABASE_URL=postgresql://...  (URL depuis Render PostgreSQL - Internal Database URL)
+   STRIPE_SECRET_KEY=sk_live_XXXXXXXXXXXXXXXXXXXXXXXX
+   STRIPE_WEBHOOK_SECRET=whsec_XXXXXXXXXXXXXXXXXXXXXXXX
+   CLIENT_URL=https://votre-site-frontend.onrender.com
+   JWT_SECRET=votre_cle_jwt_production_securisee
    NODE_ENV=production
    ```
 
@@ -122,15 +127,15 @@ stripe listen --forward-to localhost:5002/api/payment/webhook
 
 3. **Variables d'environnement** :
    ```
-   NEXT_PUBLIC_API_URL=https://francois-maroquinerie-api.onrender.com
-   NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_live_...
+   NEXT_PUBLIC_API_URL=https://votre-api-backend.onrender.com
+   NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_live_XXXXXXXXXXXXXXXXXXXXXXXX
    NODE_ENV=production
    ```
 
 ### Webhook Stripe (production)
 
 1. Dans le **Dashboard Stripe** → Developers → Webhooks
-2. **Add endpoint** : `https://francois-maroquinerie-api.onrender.com/api/payment/webhook`
+2. **Add endpoint** : `https://votre-api-backend.onrender.com/api/payment/webhook`
 3. **Events** : Sélectionner `checkout.session.completed`
 4. Copier le **Signing secret** dans `STRIPE_WEBHOOK_SECRET`
 
@@ -200,6 +205,7 @@ francois-maroquinerie/
 | `STRIPE_SECRET_KEY` | Clé secrète Stripe |
 | `STRIPE_WEBHOOK_SECRET` | Secret webhook Stripe |
 | `CLIENT_URL` | URL du frontend |
+| `JWT_SECRET` | Clé secrète JWT (min. 32 car.) |
 
 ---
 

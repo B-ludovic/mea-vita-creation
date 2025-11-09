@@ -1,8 +1,13 @@
 /* Page d'accueil */
 
-/* Section Hero */
+/* Section Hero - Gradient de transition harmonieux */
 .hero {
-    background: linear-gradient(135deg, var(--warm-beige) 0%, var(--light-beige) 50%, var(--cream) 100%);
+    background: linear-gradient(135deg, 
+        var(--warm-beige) 0%,           /* Début comme le header */
+        var(--light-beige) 30%,          /* Transition douce */
+        var(--cream) 60%,                /* Éclaircissement */
+        rgba(218, 165, 32, 0.15) 100%   /* Touche subtile de wax-mustard */
+    );
     min-height: 80vh;
     display: flex;
     align-items: center;

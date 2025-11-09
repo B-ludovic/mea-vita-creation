@@ -53,8 +53,8 @@ model Category {
 model Order {
   id                    String      @id @default(cuid())
   orderNumber           String      @unique
-  userId                String
-  addressId             String
+  userId                String?
+  addressId             String?
   status                OrderStatus @default(PENDING)
   subtotal              Float
   shippingCost          Float       @default(0)
@@ -66,8 +66,8 @@ model Order {
   notes                 String?
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
-  Address               Address     @relation(fields: [addressId], references: [id])
-  User                  User        @relation(fields: [userId], references: [id])
+  Address               Address?    @relation(fields: [addressId], references: [id])
+  User                  User?       @relation(fields: [userId], references: [id])
   OrderItem             OrderItem[]
 }
 

@@ -17,6 +17,8 @@ const productRoutes = require('./routes/products');
 const paymentRoutes = require('./routes/payment');
 // Importer les routes des commandes
 const orderRoutes = require('./routes/orders');
+// Importer les routes des adresses
+const addressRoutes = require('./routes/addresses');
 
 // Importer le limiteur de requêtes (protection anti brute-force)
 const { apiLimiter } = require('./middleware/rateLimiter');
@@ -75,6 +77,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/payment', paymentRoutes);
 // ROUTES DES COMMANDES
 app.use('/api/orders', orderRoutes);
+// ROUTES DES ADRESSES
+app.use('/api/addresses', addressRoutes);
 
 
 // ROUTE D'ACCUEIL (page principale)

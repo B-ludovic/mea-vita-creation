@@ -24,6 +24,10 @@
 .DS_Store
 *.pem
 
+# scripts (fichiers temporaires de renommage)
+/scripts/
+**/scripts/rename-*.js
+
 # debug
 npm-debug.log*
 yarn-debug.log*

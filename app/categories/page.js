@@ -20,7 +20,7 @@ export default function CategoriesPage() {
     // Fonction pour récupérer les catégories depuis l'API
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:5002/api/categories');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
         const data = await response.json();
 
         if (data.success) {
@@ -49,11 +49,11 @@ export default function CategoriesPage() {
 
   // Fonction pour déterminer l'image selon le slug
   const getCategoryImage = (slug) => {
-    if (slug === 'pochettes-unisexe') return '/images/pochettes-unisexe/IMG_6061.JPG';
-    if (slug === 'porte-carte') return '/images/porte-carte/IMG_6168.JPG';
-    if (slug === 'sac-cylindre') return '/images/sac-cylindre/IMG_5660.JPG';
-    if (slug === 'sac-u') return '/images/sac-u/IMG_5144.JPG';
-    return '/images/pochettes-unisexe/IMG_6061.JPG'; // Par défaut
+    if (slug === 'pochettes-unisexe') return '/images/pochettes-unisexe/atlas-fogo-1.jpg';
+    if (slug === 'porte-carte') return '/images/porte-carte/eclat-amethyste-1.jpg';
+    if (slug === 'sac-cylindre') return '/images/sac-cylindre/tambour-amethyste-1.jpg';
+    if (slug === 'sac-u') return '/images/sac-u/arche-besace-fogo-1.jpg';
+    return '/images/pochettes-unisexe/atlas-fogo-1.jpg'; // Par défaut
   };
 
   // Si en cours de chargement

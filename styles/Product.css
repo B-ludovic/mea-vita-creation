@@ -20,13 +20,9 @@
 .product-main-image {
     width: 100%;
     height: 500px;
-    background: linear-gradient(135deg, var(--warm-beige), var(--light-beige));
     border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 8rem;
     box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    object-fit: cover;
 }
 
 .product-details-section {

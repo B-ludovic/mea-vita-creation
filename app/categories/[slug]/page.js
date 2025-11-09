@@ -41,8 +41,8 @@ export default function CategoryPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Récupérer les infos de la catégorie
-        const categoryResponse = await fetch(`http://localhost:5002/api/categories/${slug}`);
+        // Récupérer les informations de la catégorie
+        const categoryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}`);
         const categoryData = await categoryResponse.json();
 
         if (!categoryData.success) {
@@ -54,7 +54,7 @@ export default function CategoryPage() {
         setCategory(categoryData.category);
 
         // 2. Récupérer les produits de cette catégorie
-        const productsResponse = await fetch(`http://localhost:5002/api/products/category/${slug}`);
+        const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${slug}`);
         const productsData = await productsResponse.json();
 
         if (productsData.success) {

@@ -1,7 +1,7 @@
 // Page de confirmation après paiement réussi
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,13 +13,25 @@ export default function SuccessPage() {
   const router = useRouter();
   const sessionId = searchParams.get('session_id');
   const { clearCart } = useCart();
+  const hasCleared = useRef(false);
 
   useEffect(() => {
-    // Vider le panier après un paiement réussi
-    if (sessionId) {
+    // Vider le panier après un paiement réussi (UNE SEULE FOIS)
+    if (sessionId && !hasCleared.current) {
+      hasCleared.current = true;
+      
+      console.log('🛒 Vidage du panier après paiement réussi...');
+      
+      // Forcer le vidage du localStorage d'abord
+      localStorage.setItem('cart', JSON.stringify([]));
+      
+      // Puis vider le panier dans le contexte
       clearCart();
+      
+      console.log('✅ Panier vidé !');
     }
-  }, [sessionId, clearCart]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionId]); // On retire clearCart des dépendances
 
   return (
     <div className="success-container">

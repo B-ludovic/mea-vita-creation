@@ -4,11 +4,11 @@
 // Import des hooks et contexte
 import { useCart } from '../../contexts/CartContext';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState, useEffect } from 'react';
 
 // Import du CSS
 import '../../styles/Cart.css';
-// Import de useState pour gérer le loading
-import { useState } from 'react';
 
 export default function CartPage() {
   // Utiliser le contexte du panier
@@ -16,6 +16,37 @@ export default function CartPage() {
 
   // État pour gérer le chargement du paiement
   const [loading, setLoading] = useState(false);
+  
+  // État pour stocker les images des produits
+  const [productImages, setProductImages] = useState({});
+
+  // Charger les images depuis la BDD
+  useEffect(() => {
+    const loadImages = async () => {
+      // Pour chaque produit du panier
+      for (const item of cart) {
+        try {
+          // Appeler l'API pour récupérer le produit complet
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${item.slug}`);
+          const data = await response.json();
+          
+          // Si on a une image, la stocker
+          if (data.success && data.product.ProductImage?.length > 0) {
+            setProductImages(prev => ({
+              ...prev,
+              [item.id]: data.product.ProductImage[0].url
+            }));
+          }
+        } catch (error) {
+          console.error('Erreur chargement image:', error);
+        }
+      }
+    };
+    
+    if (cart.length > 0) {
+      loadImages();
+    }
+  }, [cart]);
 
   // Fonction pour rediriger vers Stripe
   const handleCheckout = async () => {
@@ -27,7 +58,7 @@ export default function CartPage() {
       const user = userData ? JSON.parse(userData) : null;
       
       // Appeler l'API pour créer la session Stripe
-      const response = await fetch('http://localhost:5002/api/payment/create-checkout-session', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/create-checkout-session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,8 +119,18 @@ export default function CartPage() {
           <div className="cart-items">
             {cart.map((item) => (
               <div key={item.id} className="cart-item">
-                <div className="cart-item-emoji">
-                  👜
+                <div className="cart-item-image">
+                  {productImages[item.id] ? (
+                    <Image 
+                      src={productImages[item.id]} 
+                      alt={item.name}
+                      width={80}
+                      height={80}
+                      style={{ objectFit: 'cover', borderRadius: '10px' }}
+                    />
+                  ) : (
+                    <div className="cart-item-emoji">👜</div>
+                  )}
                 </div>
 
                 <div className="cart-item-details">

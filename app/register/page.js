@@ -18,7 +18,8 @@ export default function RegisterPage() {
     firstName: '',
     lastName: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: '' // Nouveau champ pour confirmer le mot de passe
   });
   
   const [error, setError] = useState('');
@@ -38,14 +39,57 @@ export default function RegisterPage() {
     setError('');
     setLoading(true);
 
+    // Vérifier que les mots de passe correspondent
+    if (formData.password !== formData.confirmPassword) {
+      setError('Les mots de passe ne correspondent pas');
+      setLoading(false);
+      return;
+    }
+
+    // Vérifier la longueur du mot de passe
+    if (formData.password.length < 8) {
+      setError('Le mot de passe doit contenir au moins 8 caractères');
+      setLoading(false);
+      return;
+    }
+
+    // Vérifier la complexité du mot de passe
+    const hasUpperCase = /[A-Z]/.test(formData.password); // Au moins une majuscule
+    const hasLowerCase = /[a-z]/.test(formData.password); // Au moins une minuscule
+    const hasNumber = /[0-9]/.test(formData.password);     // Au moins un chiffre
+
+    if (!hasUpperCase) {
+      setError('Le mot de passe doit contenir au moins une majuscule');
+      setLoading(false);
+      return;
+    }
+
+    if (!hasLowerCase) {
+      setError('Le mot de passe doit contenir au moins une minuscule');
+      setLoading(false);
+      return;
+    }
+
+    if (!hasNumber) {
+      setError('Le mot de passe doit contenir au moins un chiffre');
+      setLoading(false);
+      return;
+    }
+
     try {
       // Appel au back-end pour créer le compte
-      const response = await fetch('http://localhost:5002/api/auth/register', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password
+          // On n'envoie PAS confirmPassword au backend, c'est juste pour la vérification côté client
+        })
       });
 
       const data = await response.json();
@@ -124,7 +168,26 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="6"
+              minLength="8"
+            />
+            <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '5px' }}>
+              • Minimum 8 caractères<br />
+              • Au moins une majuscule<br />
+              • Au moins une minuscule<br />
+              • Au moins un chiffre
+            </small>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirmer le mot de passe</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              minLength="8"
             />
           </div>
 

@@ -6,8 +6,8 @@ const prisma = require('../config/prisma');
 // Cette fonction crée une session Stripe et renvoie l'URL pour payer
 const createCheckoutSession = async (req, res) => {
     try {
-        // Récupérer les données envoyées par le front-end
-        const { items, userId } = req.body;
+        // Récupérer les données envoyées par le front-end (y compris addressId)
+        const { items, userId, addressId } = req.body;
 
         // Vérifier que les données sont présentes
         if (!items || items.length === 0) {
@@ -85,6 +85,7 @@ const createCheckoutSession = async (req, res) => {
             cancel_url: `${process.env.CLIENT_URL || 'http://localhost:3000'}/panier`,
             metadata: {
                 userId: userId || 'guest',
+                addressId: addressId || null, // 🆕 Stocker l'ID de l'adresse dans les metadata
                 items: JSON.stringify(itemsForMetadata) // Seulement id, quantity, price
             },
         });
@@ -159,16 +160,17 @@ const handleStripeWebhook = async (req, res) => {
             console.log('✅ Paiement réussi pour la session:', session.id);
 
             try {
-                // Récupérer les items depuis les metadata
+                // 🆕 Récupérer les items ET l'addressId depuis les metadata
                 const items = JSON.parse(session.metadata.items);
                 const userId = session.metadata.userId !== 'guest' ? session.metadata.userId : null;
+                const addressId = session.metadata.addressId || null;
 
                 // Créer la commande
                 const order = await prisma.order.create({
                     data: {
                         orderNumber: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
                         userId,
-                        addressId: null, // À gérer plus tard avec les adresses
+                        addressId, // 🆕 Enregistrer l'adresse de livraison
                         status: 'PAID', // Le paiement est déjà confirmé
                         subtotal: session.amount_total / 100, // Stripe envoie en centimes
                         shippingCost: 0,

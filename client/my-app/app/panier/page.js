@@ -20,6 +20,31 @@ export default function CartPage() {
   // État pour stocker les images des produits
   const [productImages, setProductImages] = useState({});
 
+  // NOUVEAUX ÉTATS POUR LA GESTION DES ADRESSES
+  // État pour stocker l'utilisateur connecté
+  const [user, setUser] = useState(null);
+  
+  // État pour stocker toutes les adresses de l'utilisateur
+  const [addresses, setAddresses] = useState([]);
+  
+  // État pour stocker l'ID de l'adresse sélectionnée
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  
+  // État pour afficher/masquer le formulaire de nouvelle adresse
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  
+  // État pour le formulaire de nouvelle adresse
+  const [newAddress, setNewAddress] = useState({
+    firstName: '',
+    lastName: '',
+    street: '',
+    city: '',
+    postalCode: '',
+    country: 'France',
+    phone: '',
+    isDefault: false
+  });
+
   // Charger les images depuis la BDD
   useEffect(() => {
     const loadImages = async () => {
@@ -48,14 +73,112 @@ export default function CartPage() {
     }
   }, [cart]);
 
+  // 🆕 FONCTION POUR CHARGER LES ADRESSES DE L'UTILISATEUR
+  const loadUserAddresses = async (userId) => {
+    try {
+      // Appel API pour récupérer les adresses
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/user/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setAddresses(data.addresses);
+        
+        // Sélectionner automatiquement l'adresse par défaut (s'il y en a une)
+        const defaultAddress = data.addresses.find(addr => addr.isDefault);
+        if (defaultAddress) {
+          setSelectedAddressId(defaultAddress.id);
+        }
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des adresses:', error);
+    }
+  };
+
+  // CHARGER L'UTILISATEUR ET SES ADRESSES
+  useEffect(() => {
+    // Récupérer l'utilisateur depuis localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      setUser(userData);
+      
+      // Pré-remplir le formulaire avec les infos de l'utilisateur
+      setNewAddress(prev => ({
+        ...prev,
+        firstName: userData.firstName || '',
+        lastName: userData.lastName || ''
+      }));
+      
+      // Charger les adresses de cet utilisateur
+      loadUserAddresses(userData.id);
+    }
+  }, []);
+
+  // FONCTION POUR CRÉER UNE NOUVELLE ADRESSE
+  const handleCreateAddress = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          ...newAddress,
+          userId: user.id
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Recharger les adresses
+        loadUserAddresses(user.id);
+        // Sélectionner la nouvelle adresse
+        setSelectedAddressId(data.address.id);
+        // Fermer le formulaire
+        setShowAddressForm(false);
+        // Réinitialiser le formulaire
+        setNewAddress({
+          firstName: user.firstName || '',
+          lastName: user.lastName || '',
+          street: '',
+          city: '',
+          postalCode: '',
+          country: 'France',
+          phone: '',
+          isDefault: false
+        });
+      } else {
+        alert(data.message || 'Erreur lors de la création de l\'adresse');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la création de l\'adresse');
+    }
+  };
+
   // Fonction pour rediriger vers Stripe
   const handleCheckout = async () => {
+    // VÉRIFIER QU'UNE ADRESSE EST SÉLECTIONNÉE (si l'utilisateur est connecté)
+    if (user && !selectedAddressId) {
+      alert('Veuillez sélectionner une adresse de livraison');
+      return; // Arrêter la fonction ici
+    }
+
     setLoading(true);
     
     try {
       // Récupérer l'utilisateur connecté
       const userData = localStorage.getItem('user');
-      const user = userData ? JSON.parse(userData) : null;
+      const userObj = userData ? JSON.parse(userData) : null;
       
       // Appeler l'API pour créer la session Stripe
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment/create-checkout-session`, {
@@ -65,7 +188,8 @@ export default function CartPage() {
         },
         body: JSON.stringify({
           items: cart,
-          userId: user?.id || null
+          userId: userObj?.id || null,
+          addressId: selectedAddressId // 🆕 Envoyer l'adresse sélectionnée
         })
       });
       
@@ -167,6 +291,142 @@ export default function CartPage() {
                 </div>
               </div>
             ))}
+
+            {/* SECTION ADRESSE DE LIVRAISON (seulement si l'utilisateur est connecté) */}
+            {user && (
+              <div className="delivery-address-section">
+                <h2>
+                  <Image 
+                    src="/location.png" 
+                    alt="Adresse" 
+                    width={24} 
+                    height={24}
+                    style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                  />
+                  Adresse de livraison
+                </h2>
+                
+                {/* Liste des adresses existantes */}
+                {addresses.length > 0 && (
+                  <div className="address-list">
+                    {addresses.map((address) => (
+                      <div 
+                        key={address.id} 
+                        className={`address-option ${selectedAddressId === address.id ? 'selected' : ''}`}
+                        onClick={() => setSelectedAddressId(address.id)}
+                      >
+                        <div className="radio-container">
+                          <input 
+                            type="radio" 
+                            name="deliveryAddress" 
+                            checked={selectedAddressId === address.id}
+                            onChange={() => setSelectedAddressId(address.id)}
+                          />
+                        </div>
+                        <div className="address-details">
+                          <p className="address-name">
+                            {address.firstName} {address.lastName}
+                            {address.isDefault && <span className="badge-default-small">Par défaut</span>}
+                          </p>
+                          <p>{address.street}</p>
+                          <p>{address.postalCode} {address.city}</p>
+                          <p>{address.country}</p>
+                          <p>{address.phone}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Bouton pour ajouter une nouvelle adresse */}
+                {!showAddressForm && (
+                  <button 
+                    className="btn-add-address-inline"
+                    onClick={() => setShowAddressForm(true)}
+                  >
+                    + Ajouter une nouvelle adresse
+                  </button>
+                )}
+
+                {/* Formulaire pour ajouter une nouvelle adresse */}
+                {showAddressForm && (
+                  <form className="new-address-form" onSubmit={handleCreateAddress}>
+                    <h3>Nouvelle adresse</h3>
+                    
+                    <div className="form-row">
+                      <input
+                        type="text"
+                        placeholder="Prénom *"
+                        value={newAddress.firstName}
+                        onChange={(e) => setNewAddress({...newAddress, firstName: e.target.value})}
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder="Nom *"
+                        value={newAddress.lastName}
+                        onChange={(e) => setNewAddress({...newAddress, lastName: e.target.value})}
+                        required
+                      />
+                    </div>
+
+                    <input
+                      type="text"
+                      placeholder="Adresse complète *"
+                      value={newAddress.street}
+                      onChange={(e) => setNewAddress({...newAddress, street: e.target.value})}
+                      required
+                    />
+
+                    <div className="form-row">
+                      <input
+                        type="text"
+                        placeholder="Ville *"
+                        value={newAddress.city}
+                        onChange={(e) => setNewAddress({...newAddress, city: e.target.value})}
+                        required
+                      />
+                      <input
+                        type="text"
+                        placeholder="Code postal *"
+                        value={newAddress.postalCode}
+                        onChange={(e) => setNewAddress({...newAddress, postalCode: e.target.value})}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-row">
+                      <input
+                        type="text"
+                        placeholder="Pays"
+                        value={newAddress.country}
+                        onChange={(e) => setNewAddress({...newAddress, country: e.target.value})}
+                      />
+                      <input
+                        type="tel"
+                        placeholder="Téléphone *"
+                        value={newAddress.phone}
+                        onChange={(e) => setNewAddress({...newAddress, phone: e.target.value})}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-actions">
+                      <button type="submit" className="btn-submit-address">
+                        Enregistrer
+                      </button>
+                      <button 
+                        type="button" 
+                        className="btn-cancel-address"
+                        onClick={() => setShowAddressForm(false)}
+                      >
+                        Annuler
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Récapitulatif */}

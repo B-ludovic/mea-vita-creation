@@ -289,6 +289,17 @@
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
+.admin-btn-promote {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    color: var(--text-dark);
+    font-weight: 500;
+}
+
+.admin-btn-promote:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(246, 211, 101, 0.4);
+}
+
 .admin-btn-secondary:hover {
     background: var(--primary-orange);
     color: var(--white);

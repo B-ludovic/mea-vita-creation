@@ -95,16 +95,10 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Succès ! On sauvegarde le token et on redirige
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        
-        // Déclencher un événement personnalisé pour notifier la connexion
-        window.dispatchEvent(new Event('userLoggedIn'));
-        
-        router.push('/'); // Redirection vers la page d'accueil
+        setError('');
+        alert(data.message + '\nVous allez recevoir un email de vérification.');
+        router.push('/login');
       } else {
-        // Erreur : on affiche le message
         setError(data.message || 'Une erreur est survenue');
       }
     } catch (err) {

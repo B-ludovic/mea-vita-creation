@@ -1,9 +1,9 @@
 // Importer les modules nécessaires
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const prisma = require('../config/prisma');
-// Importer le service d'email
-const { sendWelcomeEmail } = require('../services/emailService');
+const { sendVerificationEmail, sendWelcomeEmail } = require('../services/emailService');
 
 // FONCTION D'INSCRIPTION
 // Cette fonction crée un nouveau compte utilisateur
@@ -58,49 +58,42 @@ const register = async (req, res) => {
             });
         }
 
-        // 4. Crypter le mot de passe (on ne stocke JAMAIS le mot de passe en clair)
-        // Le "10" = nombre de tours de cryptage (plus c'est élevé, plus c'est sécurisé mais lent)
+        // 4. Crypter le mot de passe
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // 5. Créer l'utilisateur dans la base de données
+        // 5. Générer un token de vérification
+        const verificationToken = crypto.randomBytes(32).toString('hex');
+        const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+        // 6. Créer l'utilisateur dans la base de données
         const user = await prisma.user.create({
             data: {
                 email,
                 password: hashedPassword,
                 firstName,
                 lastName,
-                role: 'CLIENT' // Par défaut, c'est un utilisateur normal (pas admin)
+                role: 'CLIENT',
+                isActive: false,
+                emailVerificationToken: verificationToken,
+                emailVerificationExpires: verificationExpires
             }
         });
 
-        // 6. Créer un token JWT (jeton de connexion)
-        // Ce token prouve que l'utilisateur est connecté
-        const token = jwt.sign(
-            {
-                userId: user.id,
-                email: user.email,
-                role: user.role
-            },
-            process.env.JWT_SECRET, // Clé secrète (dans le fichier .env)
-            { expiresIn: '7d' } // Le token expire après 7 jours
-        );
+        // 7. Envoyer l'email de vérification
+        const emailResult = await sendVerificationEmail(user.email, user.firstName, verificationToken);
+        
+        if (!emailResult.success) {
+            console.error('Erreur envoi email:', emailResult.error);
+        }
 
-        // 7. Envoyer l'email de bienvenue (sans bloquer la réponse)
-        sendWelcomeEmail(user.email, user.firstName).catch(err => {
-            console.error('Erreur envoi email de bienvenue:', err);
-            // On ne bloque pas l'inscription si l'email échoue
-        });
-
-        // 7.5 Renvoyer la réponse au front-end (SANS le mot de passe !)
+        // 8. Renvoyer la réponse
         res.status(201).json({
-            message: 'Compte créé avec succès',
-            token,
+            message: 'Compte créé avec succès. Veuillez vérifier votre email pour activer votre compte.',
             user: {
                 id: user.id,
                 email: user.email,
                 firstName: user.firstName,
-                lastName: user.lastName,
-                role: user.role
+                lastName: user.lastName
             }
         });
 
@@ -139,8 +132,14 @@ const login = async (req, res) => {
             });
         }
 
+        // 4.5. Vérifier si le compte est activé
+        if (!user.isActive) {
+            return res.status(403).json({
+                message: 'Votre compte n\'est pas encore activé. Veuillez vérifier votre email.'
+            });
+        }
+
         // 5. Vérifier le mot de passe
-        // bcrypt.compare compare le mot de passe en clair avec le mot de passe crypté
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
@@ -181,8 +180,78 @@ const login = async (req, res) => {
     }
 };
 
+const verifyEmail = async (req, res) => {
+    try {
+        const { token } = req.params;
+
+        if (!token) {
+            return res.status(400).json({
+                message: 'Token manquant'
+            });
+        }
+
+        const user = await prisma.user.findUnique({
+            where: { emailVerificationToken: token }
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                message: 'Token invalide'
+            });
+        }
+
+        if (new Date() > user.emailVerificationExpires) {
+            return res.status(400).json({
+                message: 'Le lien de vérification a expiré'
+            });
+        }
+
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                isActive: true,
+                emailVerificationToken: null,
+                emailVerificationExpires: null
+            }
+        });
+
+        sendWelcomeEmail(user.email, user.firstName).catch(err => {
+            console.error('Erreur envoi email de bienvenue:', err);
+        });
+
+        const jwtToken = jwt.sign(
+            {
+                userId: user.id,
+                email: user.email,
+                role: user.role
+            },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({
+            message: 'Email vérifié avec succès',
+            token: jwtToken,
+            user: {
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: user.role
+            }
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la vérification:', error);
+        res.status(500).json({
+            message: 'Erreur serveur lors de la vérification'
+        });
+    }
+};
+
 // Exporter les fonctions pour les utiliser dans les routes
 module.exports = {
     register,
-    login
+    login,
+    verifyEmail
 };

@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Importer les fonctions du contrôleur
-const { register, login } = require('../controllers/authController');
+const { register, login, verifyEmail } = require('../controllers/authController');
 
 // Importer les limiteurs de tentatives (protection anti brute-force)
 const { loginLimiter, registerLimiter } = require('../middleware/rateLimiter');
@@ -19,6 +19,10 @@ router.post('/register', registerLimiter, register);
 // Le front-end envoie : { email, password }
 // Limiteur : Maximum 5 tentatives par 15 minutes (protection anti brute-force)
 router.post('/login', loginLimiter, login);
+
+// ROUTE DE VÉRIFICATION EMAIL
+// GET /api/auth/verify-email/:token
+router.get('/verify-email/:token', verifyEmail);
 
 // Exporter le router pour l'utiliser dans server.js
 module.exports = router;

@@ -6,9 +6,16 @@ const getUserAddresses = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    if (req.user.userId !== userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
+
     const addresses = await prisma.address.findMany({
       where: { userId },
-      orderBy: { isDefault: 'desc' } // Adresse par défaut en premier
+      orderBy: { isDefault: 'desc' }
     });
 
     res.json({
@@ -30,7 +37,13 @@ const createAddress = async (req, res) => {
   try {
     const { userId, firstName, lastName, street, city, postalCode, country, phone, isDefault } = req.body;
 
-    // Si c'est une adresse par défaut, retirer le défaut des autres
+    if (req.user.userId !== userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
+
     if (isDefault) {
       await prisma.address.updateMany({
         where: { userId },
@@ -38,7 +51,6 @@ const createAddress = async (req, res) => {
       });
     }
 
-    // Créer la nouvelle adresse
     const address = await prisma.address.create({
       data: {
         userId,
@@ -73,7 +85,6 @@ const updateAddress = async (req, res) => {
     const { addressId } = req.params;
     const { firstName, lastName, street, city, postalCode, country, phone, isDefault } = req.body;
 
-    // Récupérer l'adresse pour avoir le userId
     const existingAddress = await prisma.address.findUnique({
       where: { id: addressId }
     });
@@ -85,7 +96,13 @@ const updateAddress = async (req, res) => {
       });
     }
 
-    // Si c'est une adresse par défaut, retirer le défaut des autres
+    if (req.user.userId !== existingAddress.userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
+
     if (isDefault) {
       await prisma.address.updateMany({
         where: { 
@@ -130,6 +147,24 @@ const deleteAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
 
+    const existingAddress = await prisma.address.findUnique({
+      where: { id: addressId }
+    });
+
+    if (!existingAddress) {
+      return res.status(404).json({
+        success: false,
+        message: 'Adresse non trouvée'
+      });
+    }
+
+    if (req.user.userId !== existingAddress.userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
+
     await prisma.address.delete({
       where: { id: addressId }
     });
@@ -153,7 +188,6 @@ const setDefaultAddress = async (req, res) => {
   try {
     const { addressId } = req.params;
 
-    // Récupérer l'adresse pour avoir le userId
     const address = await prisma.address.findUnique({
       where: { id: addressId }
     });
@@ -165,13 +199,18 @@ const setDefaultAddress = async (req, res) => {
       });
     }
 
-    // Retirer le défaut de toutes les adresses de l'utilisateur
+    if (req.user.userId !== address.userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
+
     await prisma.address.updateMany({
       where: { userId: address.userId },
       data: { isDefault: false }
     });
 
-    // Définir cette adresse comme défaut
     const updatedAddress = await prisma.address.update({
       where: { id: addressId },
       data: { isDefault: true }

@@ -16,7 +16,7 @@ const {
 
 // ROUTE POUR CRÉER UNE COMMANDE
 // POST /api/orders
-router.post('/', createOrder);
+router.post('/', authenticateToken, createOrder);
 
 // ROUTE POUR RÉCUPÉRER TOUTES LES COMMANDES (ADMIN UNIQUEMENT)
 // GET /api/orders/user/all
@@ -70,11 +70,11 @@ router.get('/user/:userId', getUserOrders);
 
 // ROUTE POUR RÉCUPÉRER UNE COMMANDE PAR SON ID
 // GET /api/orders/:orderId
-router.get('/:orderId', getOrderById);
+router.get('/:orderId', authenticateToken, getOrderById);
 
-// ROUTE POUR METTRE À JOUR LE STATUT D'UNE COMMANDE
+// ROUTE POUR METTRE À JOUR LE STATUT D'UNE COMMANDE (ADMIN UNIQUEMENT)
 // PUT /api/orders/:orderId/status
-router.put('/:orderId/status', updateOrderStatus);
+router.put('/:orderId/status', authenticateToken, isAdmin, updateOrderStatus);
 
 // Exporter le router
 module.exports = router;

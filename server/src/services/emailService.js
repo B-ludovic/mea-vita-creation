@@ -3,13 +3,56 @@ const { Resend } = require('resend');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// FONCTION POUR ENVOYER UN EMAIL DE BIENVENUE
+const sendVerificationEmail = async (userEmail, userName, verificationToken) => {
+  try {
+    const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
+
+    const { data, error } = await resend.emails.send({
+      from: 'François Maroquinerie <onboarding@resend.dev>',
+      to: [userEmail],
+      subject: 'Vérifiez votre adresse email',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1 style="color: #FF6B35;">Bienvenue sur Méa Vita Création</h1>
+          <p>Bonjour ${userName},</p>
+          <p>Merci de vous être inscrit. Pour activer votre compte, veuillez cliquer sur le bouton ci-dessous :</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${verificationUrl}" 
+               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+                      color: white; 
+                      padding: 15px 35px; 
+                      text-decoration: none; 
+                      border-radius: 50px;
+                      display: inline-block;">
+              Vérifier mon email
+            </a>
+          </div>
+          <p style="color: #666; font-size: 14px;">
+            Ce lien est valable pendant 24 heures.<br>
+            Si vous n'avez pas créé de compte, ignorez cet email.
+          </p>
+        </div>
+      `
+    });
+
+    if (error) {
+      console.error('Erreur envoi email:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    return { success: false, error };
+  }
+};
+
 const sendWelcomeEmail = async (userEmail, userName) => {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'François Maroquinerie <onboarding@resend.dev>', // Email par défaut de Resend (pour les tests)
+      from: 'Mea Vita Création <onboarding@resend.dev>',
       to: [userEmail],
-      subject: 'Bienvenue chez François Maroquinerie !',
+      subject: 'Bienvenue chez Mea Vita Création !',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="text-align: center; margin-bottom: 20px;">
@@ -35,7 +78,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
           </div>
           <p style="color: #666; font-size: 14px;">
             À très bientôt,<br>
-            L'équipe François Maroquinerie
+            L'équipe Mea Vita Création
           </p>
         </div>
       `
@@ -167,6 +210,7 @@ const sendOrderConfirmationEmail = async (userEmail, userName, order) => {
 
 // Exporter les fonctions
 module.exports = {
+  sendVerificationEmail,
   sendWelcomeEmail,
   sendOrderConfirmationEmail
 };

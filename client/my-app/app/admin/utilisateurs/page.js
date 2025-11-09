@@ -50,6 +50,49 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleToggleActive = async (userId, currentStatus, userEmail) => {
+    const action = currentStatus ? 'désactiver' : 'activer';
+    
+    if (!confirm(`Voulez-vous vraiment ${action} le compte de "${userEmail}" ?`)) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Vous devez être connecté');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/toggle-active`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.status === 403) {
+        alert('Accès refusé. Réservé aux administrateurs.');
+        router.push('/');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert(data.message || 'Statut modifié avec succès');
+        fetchUsers();
+      } else {
+        alert(data.message || 'Erreur lors de la modification du statut');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Erreur lors de la modification du statut');
+    }
+  };
+
   const handleToggleRole = async (userId, currentRole, userEmail) => {
     const newRole = currentRole === 'ADMIN' ? 'CLIENT' : 'ADMIN';
     const action = newRole === 'ADMIN' ? 'promouvoir en administrateur' : 'rétrograder en client';
@@ -160,6 +203,7 @@ export default function AdminUsersPage() {
               <th>Nom</th>
               <th>Email</th>
               <th>Rôle</th>
+              <th>Statut</th>
               <th>Commandes</th>
               <th>Inscription</th>
               <th>Actions</th>
@@ -177,6 +221,11 @@ export default function AdminUsersPage() {
                     {user.role === 'ADMIN' ? 'Administrateur' : 'Client'}
                   </span>
                 </td>
+                <td>
+                  <span className={`badge ${user.isActive ? 'success' : 'danger'}`}>
+                    {user.isActive ? 'Actif' : 'Inactif'}
+                  </span>
+                </td>
                 <td style={{ textAlign: 'center' }}>
                   {user._count.Order}
                 </td>
@@ -184,27 +233,41 @@ export default function AdminUsersPage() {
                   {new Date(user.createdAt).toLocaleDateString('fr-FR')}
                 </td>
                 <td>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button 
                       className="admin-btn admin-btn-user-toggle"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      onClick={() => handleToggleActive(user.id, user.isActive, user.email)}
+                    >
+                      <Image 
+                        src={user.isActive ? "/desactiver.png" : "/validation.png"} 
+                        alt="" 
+                        width={12} 
+                        height={12} 
+                        style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} 
+                      />
+                      {user.isActive ? 'Désactiver' : 'Activer'}
+                    </button>
+                    <button 
+                      className="admin-btn admin-btn-promote"
+                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
                       onClick={() => handleToggleRole(user.id, user.role, user.email)}
                     >
                       <Image 
-                        src={user.role === 'ADMIN' ? "/utilisateurs.png" : "/satistic.png"} 
+                        src={user.role === 'ADMIN' ? "/retrograder.png" : "/promouvoir.png"} 
                         alt="" 
-                        width={14} 
-                        height={14} 
+                        width={12} 
+                        height={12} 
                         style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} 
                       />
                       {user.role === 'ADMIN' ? 'Rétrograder' : 'Promouvoir'}
                     </button>
                     <button 
                       className="admin-btn admin-btn-danger"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
                       onClick={() => handleDelete(user.id, user.email, user.role)}
                     >
-                      <Image src="/trash.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/trash.png" alt="" width={12} height={12} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Supprimer
                     </button>
                   </div>

@@ -17,6 +17,7 @@ router.get('/', authenticateToken, isAdmin, async (req, res) => {
         firstName: true,
         lastName: true,
         role: true,
+        isActive: true,
         createdAt: true,
         _count: {
           select: {
@@ -104,6 +105,55 @@ router.put('/:id/role', authenticateToken, isAdmin, async (req, res) => {
 
   } catch (error) {
     console.error('Erreur lors de la modification du rôle:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
+
+// ROUTE POUR ACTIVER/DÉSACTIVER UN UTILISATEUR (ADMIN UNIQUEMENT)
+// PUT /api/users/:id/toggle-active
+router.put('/:id/toggle-active', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        isActive: !user.isActive,
+        emailVerificationToken: null,
+        emailVerificationExpires: null
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        role: true,
+        isActive: true
+      }
+    });
+
+    res.json({
+      success: true,
+      message: `Utilisateur ${updatedUser.isActive ? 'activé' : 'désactivé'} avec succès`,
+      user: updatedUser
+    });
+
+  } catch (error) {
+    console.error('Erreur lors de la modification du statut:', error);
     res.status(500).json({
       success: false,
       message: 'Erreur serveur'

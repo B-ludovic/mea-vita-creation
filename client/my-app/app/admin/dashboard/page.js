@@ -41,9 +41,16 @@ export default function AdminDashboard() {
         });
         const productsData = await productsRes.json();
 
+        // Récupérer les utilisateurs
+        const usersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+          headers
+        });
+        const usersData = await usersRes.json();
+
         // Calculer les statistiques
         const orders = ordersData.orders || [];
         const products = productsData.products || [];
+        const users = usersData.users || [];
 
         const totalRevenue = orders.reduce((sum, order) => sum + order.totalAmount, 0);
 
@@ -51,7 +58,7 @@ export default function AdminDashboard() {
           totalOrders: orders.length,
           totalRevenue: totalRevenue,
           totalProducts: products.length,
-          totalUsers: 0 // À implémenter si besoin
+          totalUsers: users.length
         });
 
       } catch (error) {
@@ -76,7 +83,7 @@ export default function AdminDashboard() {
     <>
       <div className="admin-header">
         <h1>Dashboard</h1>
-        <p>Vue d'ensemble de votre boutique</p>
+        <p>Vue d&apos;ensemble de votre boutique</p>
       </div>
 
       {/* Cartes de statistiques */}

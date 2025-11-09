@@ -253,7 +253,14 @@ export default function CartPage() {
                       style={{ objectFit: 'cover', borderRadius: '10px' }}
                     />
                   ) : (
-                    <div className="cart-item-emoji">👜</div>
+                    <div className="cart-item-image-placeholder">
+                      <Image 
+                        src="/shopping.png" 
+                        alt="Produit" 
+                        width={50} 
+                        height={50}
+                      />
+                    </div>
                   )}
                 </div>
 

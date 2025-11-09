@@ -45,7 +45,7 @@ export default function HomePage() {
             <div className="category-card">
               <div className="category-image">
                 <Image 
-                  src="/images/pochettes-unisexe/IMG_6081.JPG" 
+                  src="/images/pochettes-unisexe/atlas-solaire-1.jpg" 
                   alt="Pochettes Unisexe" 
                   width={400} 
                   height={300}
@@ -68,7 +68,7 @@ export default function HomePage() {
             <div className="category-card">
               <div className="category-image">
                 <Image 
-                  src="/images/porte-carte/IMG_6175.JPG" 
+                  src="/images/porte-carte/eclat-solaire-1.jpg" 
                   alt="Porte-Carte" 
                   width={400} 
                   height={300}
@@ -91,7 +91,7 @@ export default function HomePage() {
             <div className="category-card">
               <div className="category-image">
                 <Image 
-                  src="/images/sac-cylindre/IMG_5654.JPG" 
+                  src="/images/sac-cylindre/tambour-solaire-1.jpg" 
                   alt="Sac Cylindre" 
                   width={400} 
                   height={300}
@@ -114,7 +114,7 @@ export default function HomePage() {
             <div className="category-card">
               <div className="category-image">
                 <Image 
-                  src="/images/sac-u/IMG_5133.JPG" 
+                  src="/images/sac-u/arche-besace-fogo-1.jpg" 
                   alt="Sac U" 
                   width={400} 
                   height={300}

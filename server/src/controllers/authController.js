@@ -2,6 +2,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const prisma = require('../config/prisma');
+// Importer le service d'email
+const { sendWelcomeEmail } = require('../services/emailService');
 
 // FONCTION D'INSCRIPTION
 // Cette fonction crée un nouveau compte utilisateur
@@ -83,7 +85,13 @@ const register = async (req, res) => {
             { expiresIn: '7d' } // Le token expire après 7 jours
         );
 
-        // 7. Renvoyer la réponse au front-end (SANS le mot de passe !)
+        // 7. Envoyer l'email de bienvenue (sans bloquer la réponse)
+        sendWelcomeEmail(user.email, user.firstName).catch(err => {
+            console.error('Erreur envoi email de bienvenue:', err);
+            // On ne bloque pas l'inscription si l'email échoue
+        });
+
+        // 7.5 Renvoyer la réponse au front-end (SANS le mot de passe !)
         res.status(201).json({
             message: 'Compte créé avec succès',
             token,

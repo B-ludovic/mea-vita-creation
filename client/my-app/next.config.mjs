@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    unoptimized: true, // Désactive l'optimisation d'images pour éviter les erreurs 400
+  },
 };
 
 export default nextConfig;

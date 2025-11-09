@@ -72,7 +72,7 @@ export default function Header() {
                 {/* Logo et nom du site */}
                 <Link href="/" className="logo">
                     <Image 
-                        src="/Logo_François_sansfond.PNG" 
+                        src="/Logo_Francois_sansfond.PNG" 
                         alt="Mea Vita Création Logo" 
                         width={50}
                         height={50}

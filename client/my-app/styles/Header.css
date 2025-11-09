@@ -42,7 +42,7 @@
 
 .logo h1 {
     color: var(--text-dark);
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-size: clamp(1rem, 2vw, 1.5rem);
     font-weight: 700;
     letter-spacing: 1px;
     white-space: nowrap;
@@ -51,7 +51,7 @@
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 2rem;
+    gap: 1.5rem;
     align-items: center;
     flex: 1;
     justify-content: center;
@@ -60,7 +60,7 @@
 .nav-menu a {
     color: var(--text-dark);
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
     position: relative;
     padding: 0.5rem 0;
@@ -154,8 +154,8 @@
 .user-greeting {
     color: var(--text-dark);
     font-weight: 600;
-    font-size: 0.95rem;
-    padding: 12px 24px;
+    font-size: 0.85rem;
+    padding: 10px 18px;
     background: var(--cream);
     border-radius: 50px;
     white-space: nowrap;
@@ -165,9 +165,9 @@
 }
 
 .btn-logout {
-    padding: 12px 28px;
+    padding: 10px 20px;
     border-radius: 50px;
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;

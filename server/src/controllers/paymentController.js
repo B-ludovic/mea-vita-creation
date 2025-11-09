@@ -1,6 +1,8 @@
 // Importer Stripe avec la clé secrète
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const prisma = require('../config/prisma');
+// Importer le service d'email
+const { sendOrderConfirmationEmail } = require('../services/emailService');
 
 // FONCTION POUR CRÉER UNE SESSION DE PAIEMENT STRIPE
 // Cette fonction crée une session Stripe et renvoie l'URL pour payer
@@ -192,7 +194,31 @@ const handleStripeWebhook = async (req, res) => {
 
                 console.log('✅ Commande créée:', order.orderNumber);
 
-                // Décrémenter le stock des produits
+                // Envoyer l'email de confirmation (si l'utilisateur est connecté)
+                if (userId) {
+                    const user = await prisma.user.findUnique({
+                        where: { id: userId }
+                    });
+                    
+                    if (user) {
+                        // Recharger la commande avec les relations pour l'email
+                        const orderWithDetails = await prisma.order.findUnique({
+                            where: { id: order.id },
+                            include: {
+                                OrderItem: {
+                                    include: {
+                                        Product: true
+                                    }
+                                },
+                                Address: true
+                            }
+                        });
+
+                        sendOrderConfirmationEmail(user.email, user.firstName, orderWithDetails).catch(err => {
+                            console.error('Erreur envoi email:', err);
+                        });
+                    }
+                }                // Décrémenter le stock des produits
                 for (const item of items) {
                     await prisma.product.update({
                         where: { id: item.id },

@@ -245,6 +245,12 @@ Projet : François Maroquinerie - Créations artisanales
 
 ---
 
+## 🎨 Crédits
+
+- **Icônes** : [Flaticon](https://www.flaticon.com)
+
+---
+
 ## 📄 Licence
 
 Projet privé - Tous droits réservés

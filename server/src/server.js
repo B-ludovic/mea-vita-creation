@@ -14,6 +14,8 @@ const categoryRoutes = require('./routes/categories');
 const productRoutes = require('./routes/products');
 // Importer les routes de paiement
 const paymentRoutes = require('./routes/payment');
+// Importer les routes des commandes
+const orderRoutes = require('./routes/orders');
 
 // Créer l'application Express
 const app = express();
@@ -29,8 +31,14 @@ app.use(cors({
   credentials: true
 }));
 
-// 2. Parser le JSON : transforme les données JSON reçues en objets JavaScript
-app.use(express.json());
+// 2. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)
+app.use((req, res, next) => {
+  if (req.originalUrl === '/api/payment/webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
 
 // 3. Parser les données URL-encoded (formulaires)
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +52,9 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 // ROUTES DE PAIEMENT
 app.use('/api/payment', paymentRoutes);
+// ROUTES DES COMMANDES
+app.use('/api/orders', orderRoutes);
+
 
 // ROUTE D'ACCUEIL (page principale)
 app.get('/', (req, res) => {

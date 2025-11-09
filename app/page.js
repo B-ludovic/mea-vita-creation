@@ -26,13 +26,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section Catégories */}
-      <section className="categories-section" id="categories">
+      {/* Section Catégories avec Bannière */}
+      <section className="categories-hero" id="categories">
         <div className="container">
-          <h2>Nos Catégories</h2>
-          <p className="section-subtitle">
-            Quatre univers, une même passion pour l'excellence
-          </p>
+          <div className="categories-hero-content">
+            <h2>Nos Catégories</h2>
+            <p>Quatre univers, une même passion pour l'excellence</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Grille des Catégories */}
+      <section className="categories-section">
+        <div className="container">
 
           <div className="categories-grid">
             {/* Catégorie 1 : Pochettes Unisexe */}

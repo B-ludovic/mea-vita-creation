@@ -108,6 +108,20 @@ export default function Header() {
                             <span>Panier ({getCartCount()})</span>
                         </Link>
                     </li>
+                    {user && (
+                        <li>
+                            <Link href="/mes-commandes" className="orders-link">
+                                <Image 
+                                    src="/delivery-box.png" 
+                                    alt="Mes commandes" 
+                                    width={24}
+                                    height={24}
+                                    className="orders-icon"
+                                />
+                                <span>Mes commandes</span>
+                            </Link>
+                        </li>
+                    )}
                 </ul>
 
                 {/* Affichage conditionnel selon si l'utilisateur est connecté */}

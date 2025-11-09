@@ -1,6 +1,8 @@
 // Importer les modules nécessaires
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet'); // Protection des headers HTTP
+const mongoSanitize = require('express-mongo-sanitize'); // Protection contre NoSQL injection
 require('dotenv').config();
 
 // Importer Prisma au lieu de pool
@@ -20,6 +22,9 @@ const orderRoutes = require('./routes/orders');
 // Importer le limiteur de requêtes (protection anti brute-force)
 const { apiLimiter } = require('./middleware/rateLimiter');
 
+// Importer le sanitizer (nettoyage des données contre XSS)
+const { sanitizeInputs } = require('./middleware/sanitizer');
+
 // Créer l'application Express
 const app = express();
 
@@ -28,13 +33,24 @@ const PORT = process.env.PORT || 5000;
 
 // MIDDLEWARE (fonctions qui s'exécutent avant les routes)
 
-// 1. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
+// 1. Helmet - Sécurise les headers HTTP
+app.use(helmet({
+  contentSecurityPolicy: false, // Désactivé pour Stripe (peut être réactivé après config)
+}));
+
+// 2. Protection contre les injections NoSQL (ex: { $ne: null })
+app.use(mongoSanitize());
+
+// 3. Sanitizer personnalisé - Nettoie toutes les entrées utilisateur (XSS)
+app.use(sanitizeInputs);
+
+// 4. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
 app.use(cors({
   origin: 'http://localhost:3000', // Adresse du front-end Next.js
   credentials: true
 }));
 
-// 2. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)
+// 5. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)
 app.use((req, res, next) => {
   if (req.originalUrl === '/api/payment/webhook') {
     next();
@@ -43,10 +59,10 @@ app.use((req, res, next) => {
   }
 });
 
-// 3. Parser les données URL-encoded (formulaires)
+// 6. Parser les données URL-encoded (formulaires)
 app.use(express.urlencoded({ extended: true }));
 
-// 4. Limiteur de requêtes global (protection anti spam et brute-force)
+// 7. Limiteur de requêtes global (protection anti spam et brute-force)
 // Maximum 100 requêtes par 15 minutes par IP
 app.use('/api', apiLimiter);
 

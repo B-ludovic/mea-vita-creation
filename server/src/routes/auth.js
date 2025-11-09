@@ -5,15 +5,20 @@ const router = express.Router();
 // Importer les fonctions du contrôleur
 const { register, login } = require('../controllers/authController');
 
+// Importer les limiteurs de tentatives (protection anti brute-force)
+const { loginLimiter, registerLimiter } = require('../middleware/rateLimiter');
+
 // ROUTE D'INSCRIPTION
 // POST /api/auth/register
 // Le front-end envoie : { email, password, firstName, lastName }
-router.post('/register', register);
+// Limiteur : Maximum 10 tentatives par heure
+router.post('/register', registerLimiter, register);
 
 // ROUTE DE CONNEXION
 // POST /api/auth/login
 // Le front-end envoie : { email, password }
-router.post('/login', login);
+// Limiteur : Maximum 5 tentatives par 15 minutes (protection anti brute-force)
+router.post('/login', loginLimiter, login);
 
 // Exporter le router pour l'utiliser dans server.js
 module.exports = router;

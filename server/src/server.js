@@ -17,6 +17,9 @@ const paymentRoutes = require('./routes/payment');
 // Importer les routes des commandes
 const orderRoutes = require('./routes/orders');
 
+// Importer le limiteur de requêtes (protection anti brute-force)
+const { apiLimiter } = require('./middleware/rateLimiter');
+
 // Créer l'application Express
 const app = express();
 
@@ -42,6 +45,10 @@ app.use((req, res, next) => {
 
 // 3. Parser les données URL-encoded (formulaires)
 app.use(express.urlencoded({ extended: true }));
+
+// 4. Limiteur de requêtes global (protection anti spam et brute-force)
+// Maximum 100 requêtes par 15 minutes par IP
+app.use('/api', apiLimiter);
 
 // ROUTES D'AUTHENTIFICATION
 // Toutes les routes dans authRoutes commenceront par /api/auth

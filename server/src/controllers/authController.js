@@ -17,6 +17,34 @@ const register = async (req, res) => {
             });
         }
 
+        // 2.5. Vérifier la complexité du mot de passe
+        if (password.length < 8) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins 8 caractères'
+            });
+        }
+
+        // Vérifier qu'il y a au moins une majuscule
+        if (!/[A-Z]/.test(password)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins une majuscule'
+            });
+        }
+
+        // Vérifier qu'il y a au moins une minuscule
+        if (!/[a-z]/.test(password)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins une minuscule'
+            });
+        }
+
+        // Vérifier qu'il y a au moins un chiffre
+        if (!/[0-9]/.test(password)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins un chiffre'
+            });
+        }
+
         // 3. Vérifier si l'email existe déjà dans la base
         const existingUser = await prisma.user.findUnique({
             where: { email }

@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  firstName  String
+  lastName   String
+  street     String
+  city       String
+  postalCode String
+  country    String   @default("France")
+  phone      String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Order      Order[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  image       String?
+  order       Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Product     Product[]
+}
+
+model Order {
+  id                    String      @id @default(cuid())
+  orderNumber           String      @unique
+  userId                String?
+  addressId             String?
+  status                OrderStatus @default(PENDING)
+  subtotal              Float
+  shippingCost          Float       @default(0)
+  taxAmount             Float       @default(0)
+  discountAmount        Float       @default(0)
+  totalAmount           Float
+  stripePaymentIntentId String?     @unique
+  promoCode             String?
+  notes                 String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  Address               Address?    @relation(fields: [addressId], references: [id])
+  User                  User?       @relation(fields: [userId], references: [id])
+  OrderItem             OrderItem[]
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  unitPrice  Float
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  Order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  Product    Product  @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id              String         @id @default(cuid())
+  name            String
+  slug            String         @unique
+  description     String?
+  price           Float
+  compareAtPrice  Float?
+  categoryId      String
+  stock           Int            @default(0)
+  sku             String?        @unique
+  width           Float?
+  height          Float?
+  depth           Float?
+  weight          Float?
+  material        String?
+  color           String?
+  metaTitle       String?
+  metaDescription String?
+  isActive        Boolean        @default(true)
+  isFeatured      Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  CartItem        CartItem[]
+  OrderItem       OrderItem[]
+  Category        Category       @relation(fields: [categoryId], references: [id])
+  ProductImage    ProductImage[]
+  WishlistItem    WishlistItem[]
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  url       String
+  alt       String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model PromoCode {
+  id             String       @id @default(cuid())
+  code           String       @unique
+  description    String?
+  discountType   DiscountType
+  discountValue  Float
+  minOrderAmount Float?
+  maxUses        Int?
+  currentUses    Int          @default(0)
+  startDate      DateTime
+  endDate        DateTime
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model User {
+  id           String         @id @default(cuid())
+  email        String         @unique
+  password     String
+  firstName    String?
+  lastName     String?
+  phone        String?
+  role         UserRole       @default(CLIENT)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Address      Address[]
+  CartItem     CartItem[]
+  Order        Order[]
+  WishlistItem WishlistItem[]
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  createdAt DateTime @default(now())
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum UserRole {
+  CLIENT
+  ADMIN
+}

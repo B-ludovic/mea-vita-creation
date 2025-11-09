@@ -1,0 +1,230 @@
+/* Page d'accueil */
+
+/* Section Hero - Gradient de transition harmonieux */
+.hero {
+    background: linear-gradient(135deg, 
+        var(--warm-beige) 0%,           /* Début comme le header */
+        var(--light-beige) 30%,          /* Transition douce */
+        var(--cream) 60%,                /* Éclaircissement */
+        rgba(218, 165, 32, 0.15) 100%   /* Touche subtile de wax-mustard */
+    );
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-content {
+    max-width: var(--container-width);
+    margin: 0 auto;
+    padding: 0 2rem;
+    z-index: 2;
+}
+
+.hero h2 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.hero h3 {
+    color: var(--primary-orange);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    color: var(--text-light);
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Bannière Catégories - Gradient Wax Chaleureux */
+.categories-hero {
+    background: linear-gradient(135deg, var(--wax-mustard), var(--wax-amber));
+    padding: 100px 0 60px;
+    text-align: center;
+    color: var(--white);
+}
+
+.categories-hero-content h2 {
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    color: var(--white);
+}
+
+.categories-hero-content p {
+    font-size: 1.3rem;
+    opacity: 0.95;
+    font-weight: 300;
+}
+
+/* Section Catégories */
+.categories-section {
+    padding: var(--section-padding);
+    background: var(--white);
+}
+
+.categories-section h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.section-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.category-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.category-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.category-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-placeholder {
+    transform: scale(1.1);
+}
+
+.category-placeholder.pochettes {
+    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+}
+
+.category-placeholder.portes-carte {
+    background: linear-gradient(135deg, var(--primary-teal), var(--primary-gold));
+}
+
+.category-placeholder.sac-cylindre {
+    background: linear-gradient(135deg, var(--royal-purple), var(--royal-blue));
+}
+
+.category-placeholder.sac-u {
+    background: linear-gradient(135deg, var(--accent-orange), var(--primary-gold));
+}
+
+.category-info {
+    padding: 2rem;
+}
+
+.category-info h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.category-info p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.category-link {
+    color: var(--primary-orange);
+    font-weight: 600;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.category-link:hover {
+    color: var(--secondary-orange);
+    text-decoration: underline;
+}
+
+/* Section Savoir-Faire */
+.craftsmanship-section {
+    padding: var(--section-padding);
+    background: linear-gradient(135deg, var(--cream), var(--light-beige));
+    text-align: center;
+}
+
+.craftsmanship-section h2 {
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.craftsmanship-section p {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    line-height: 1.8;
+}
+
+.craft-features {
+    list-style: none;
+    max-width: 600px;
+    margin: 2rem auto;
+    text-align: left;
+}
+
+.craft-features li {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 60vh;
+        text-align: center;
+    }
+    
+    .hero-content {
+        padding: 2rem 1rem;
+    }
+    
+    .hero p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+}

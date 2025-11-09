@@ -1,0 +1,37 @@
+/* Variables CSS - Couleurs et styles de Mea Vita Création */
+
+:root {
+    /* Couleurs principales - Orange */
+    --primary-orange: #FF6B35;
+    --secondary-orange: #FF8C42;
+    --accent-orange: #FFA726;
+    
+    /* Couleurs secondaires */
+    --primary-teal: #008B8B;
+    --primary-gold: #FFD700;
+    --wax-mustard: #DAA520;  /* Nouvelle couleur Wax chaleureux */
+    --wax-amber: #FF8C42;    /* Nouvelle couleur Orange ambré */
+    
+    /* Couleurs Royales */
+    --royal-purple: #4B0082;
+    --royal-blue: #191970;
+    --navy-blue: #000080;
+    
+    /* Couleurs neutres */
+    --cream: #F5F5DC;
+    --warm-beige: #D2B48C;
+    --light-beige: #F5DEB3;
+    --dark-brown: #8B4513;
+    --text-dark: #2C2C2C;
+    --text-light: #666;
+    --white: #FFFFFF;
+    
+    /* Typographie */
+    --font-primary: 'Playfair Display', serif;
+    --font-secondary: 'Lato', sans-serif;
+    
+    /* Espacements */
+    --container-width: 1200px;
+    --section-padding: 80px 0;
+    --element-gap: 2rem;
+}

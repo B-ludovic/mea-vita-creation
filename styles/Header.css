@@ -87,20 +87,23 @@
 }
 
 /* Style pour le lien panier avec icône */
-.cart-link {
+.cart-link,
+.orders-link {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.cart-icon {
+.cart-icon,
+.orders-icon {
     width: 24px;
     height: 24px;
     object-fit: contain;
     transition: transform 0.3s ease;
 }
 
-.cart-link:hover .cart-icon {
+.cart-link:hover .cart-icon,
+.orders-link:hover .orders-icon {
     transform: scale(1.1);
 }
 

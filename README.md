@@ -1,36 +1,250 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Mea Vita Création - François Maroquinerie
 
-## Getting Started
+Site e-commerce de maroquinerie artisanale avec paiement Stripe.
 
-First, run the development server:
+## 📋 Description du projet
 
+Application full-stack pour la vente de créations en maroquinerie :
+- **Frontend** : Next.js 14 (App Router)
+- **Backend** : Node.js + Express
+- **Base de données** : PostgreSQL + Prisma ORM
+- **Paiement** : Stripe (avec webhooks)
+
+### Collections disponibles
+- 🎒 Pochettes Unisexe (L'Atlas, L'Artisan, Le Cachet)
+- 💳 Porte-Carte (L'Éclat)
+- 🥁 Sac Cylindre (Le Tambour)
+- 👜 Sac U (L'Arche)
+
+---
+
+## 🚀 Installation en local
+
+### 1. Cloner le projet
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/B-ludovic/mea-vita-creation.git
+cd mea-vita-creation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Installer le FRONTEND
+```bash
+cd client/my-app
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Créer le fichier `.env.local` dans `client/my-app/` :
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5002
+NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_test_votre_cle_stripe
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Installer le BACKEND
+```bash
+cd server
+npm install
+```
 
-## Learn More
+Créer le fichier `.env` dans `server/` :
+```env
+PORT=5002
+DATABASE_URL=postgresql://user:password@localhost:5432/francois_maroquinerie
+STRIPE_SECRET_KEY=sk_test_votre_cle_stripe
+STRIPE_WEBHOOK_SECRET=whsec_votre_webhook_secret
+CLIENT_URL=http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Configurer la base de données
+```bash
+# Dans le dossier server/
+npx prisma generate
+npx prisma db push
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 5. Lancer le projet
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Terminal 1 - Backend** :
+```bash
+cd server
+npm run dev
+# Serveur sur http://localhost:5002
+```
 
-## Deploy on Vercel
+**Terminal 2 - Frontend** :
+```bash
+cd client/my-app
+npm run dev
+# Site sur http://localhost:3000
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Terminal 3 - Stripe Webhook (optionnel)** :
+```bash
+cd server
+stripe listen --forward-to localhost:5002/api/payment/webhook
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📦 Déploiement sur Render
+
+### Backend (Web Service)
+
+1. **Créer un nouveau Web Service** sur Render
+2. **Connecter votre repo GitHub** : `B-ludovic/mea-vita-creation`
+3. **Configuration** :
+   - **Name** : `francois-maroquinerie-api`
+   - **Root Directory** : `server`
+   - **Build Command** : `npm install && npx prisma generate`
+   - **Start Command** : `npm start`
+   - **Instance Type** : Free
+
+4. **Variables d'environnement** (Environment) :
+   ```
+   PORT=5002
+   DATABASE_URL=postgresql://...  (depuis Render PostgreSQL)
+   STRIPE_SECRET_KEY=sk_live_...
+   STRIPE_WEBHOOK_SECRET=whsec_...
+   CLIENT_URL=https://votre-frontend.onrender.com
+   NODE_ENV=production
+   ```
+
+5. **Ajouter une base de données PostgreSQL** :
+   - Dans Render, créer une nouvelle **PostgreSQL Database**
+   - Copier l'**Internal Database URL** dans `DATABASE_URL`
+
+### Frontend (Static Site ou Web Service)
+
+1. **Créer un nouveau Web Service** sur Render
+2. **Configuration** :
+   - **Name** : `francois-maroquinerie-front`
+   - **Root Directory** : `client/my-app`
+   - **Build Command** : `npm install && npm run build`
+   - **Start Command** : `npm start`
+
+3. **Variables d'environnement** :
+   ```
+   NEXT_PUBLIC_API_URL=https://francois-maroquinerie-api.onrender.com
+   NEXT_PUBLIC_STRIPE_PUBLIC_KEY=pk_live_...
+   NODE_ENV=production
+   ```
+
+### Webhook Stripe (production)
+
+1. Dans le **Dashboard Stripe** → Developers → Webhooks
+2. **Add endpoint** : `https://francois-maroquinerie-api.onrender.com/api/payment/webhook`
+3. **Events** : Sélectionner `checkout.session.completed`
+4. Copier le **Signing secret** dans `STRIPE_WEBHOOK_SECRET`
+
+---
+
+## 🛠️ Technologies utilisées
+
+### Frontend
+- Next.js 14 (App Router)
+- React 19
+- Stripe.js
+- CSS Modules
+
+### Backend
+- Node.js + Express
+- Prisma ORM
+- PostgreSQL
+- Stripe API
+- Cors
+
+### Déploiement
+- Render (Backend + Frontend + PostgreSQL)
+- Stripe (Paiements)
+
+---
+
+## 📂 Structure du projet
+
+```
+francois-maroquinerie/
+├── client/my-app/          # Frontend Next.js
+│   ├── app/                # Pages et routes
+│   ├── components/         # Composants React
+│   ├── contexts/           # Context API (Panier)
+│   ├── config/             # Configuration images
+│   ├── styles/             # Fichiers CSS
+│   └── public/images/      # Images produits
+│
+├── server/                 # Backend Express
+│   ├── src/
+│   │   ├── controllers/    # Logique métier
+│   │   ├── routes/         # Routes API
+│   │   ├── config/         # Config Prisma
+│   │   └── server.js       # Point d'entrée
+│   └── prisma/
+│       └── schema.prisma   # Schéma base de données
+│
+├── .gitignore
+└── README.md
+```
+
+---
+
+## 🔑 Variables d'environnement
+
+### Frontend (`.env.local`)
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_API_URL` | URL de l'API backend |
+| `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` | Clé publique Stripe |
+
+### Backend (`.env`)
+| Variable | Description |
+|----------|-------------|
+| `PORT` | Port du serveur (5002) |
+| `DATABASE_URL` | URL PostgreSQL |
+| `STRIPE_SECRET_KEY` | Clé secrète Stripe |
+| `STRIPE_WEBHOOK_SECRET` | Secret webhook Stripe |
+| `CLIENT_URL` | URL du frontend |
+
+---
+
+## 📝 Scripts disponibles
+
+### Frontend
+```bash
+npm run dev      # Lancer en développement
+npm run build    # Build pour production
+npm start        # Lancer en production
+```
+
+### Backend
+```bash
+npm run dev      # Lancer avec nodemon
+npm start        # Lancer en production
+```
+
+---
+
+## 🐛 Debug
+
+### Le panier ne se vide pas après paiement
+- Vérifier que le webhook Stripe est configuré
+- Vérifier les logs Stripe : `stripe listen --forward-to localhost:5002/api/payment/webhook`
+
+### Erreur de connexion à la BDD
+- Vérifier que PostgreSQL est démarré
+- Vérifier le `DATABASE_URL` dans `.env`
+- Lancer `npx prisma db push`
+
+### Images ne s'affichent pas
+- Vérifier que les images sont dans `client/my-app/public/images/`
+- Vérifier les chemins dans `config/productImages.js`
+
+---
+
+## 👨‍💻 Auteur
+
+**Ludovic** - [B-ludovic](https://github.com/B-ludovic)
+
+Projet : François Maroquinerie - Créations artisanales
+
+---
+
+## 📄 Licence
+
+Projet privé - Tous droits réservés

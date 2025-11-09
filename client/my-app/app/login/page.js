@@ -111,8 +111,13 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-footer">
-          Vous n'avez pas de compte ?{' '}
-          <Link href="/register">S'inscrire</Link>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <Link href="/forgot-password" style={{ fontWeight: '600' }}>
+              Mot de passe oublié ?
+            </Link>
+          </div>
+          Vous n&apos;avez pas de compte ?{' '}
+          <Link href="/register">S&apos;inscrire</Link>
         </div>
       </div>
     </div>

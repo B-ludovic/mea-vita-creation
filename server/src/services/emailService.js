@@ -208,9 +208,55 @@ const sendOrderConfirmationEmail = async (userEmail, userName, order) => {
   }
 };
 
+// FONCTION POUR ENVOYER UN EMAIL DE RÉINITIALISATION DE MOT DE PASSE
+const sendPasswordResetEmail = async (userEmail, userName, resetToken) => {
+  try {
+    const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
+
+    const { data, error } = await resend.emails.send({
+      from: 'Mea Vita Création <onboarding@resend.dev>',
+      to: [userEmail],
+      subject: 'Réinitialisation de votre mot de passe',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h1 style="color: #FF6B35;">Réinitialisation de mot de passe</h1>
+          <p>Bonjour ${userName},</p>
+          <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetUrl}" 
+               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+                      color: white; 
+                      padding: 15px 35px; 
+                      text-decoration: none; 
+                      border-radius: 50px;
+                      display: inline-block;">
+              Réinitialiser mon mot de passe
+            </a>
+          </div>
+          <p style="color: #666; font-size: 14px;">
+            Ce lien est valable pendant 1 heure.<br>
+            Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.
+          </p>
+        </div>
+      `
+    });
+
+    if (error) {
+      console.error('Erreur envoi email:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    return { success: false, error };
+  }
+};
+
 // Exporter les fonctions
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
-  sendOrderConfirmationEmail
+  sendOrderConfirmationEmail,
+  sendPasswordResetEmail
 };

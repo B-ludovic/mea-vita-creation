@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const prisma = require('../config/prisma');
-const { sendVerificationEmail, sendWelcomeEmail } = require('../services/emailService');
+const { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/emailService');
 
 // FONCTION D'INSCRIPTION
 // Cette fonction crée un nouveau compte utilisateur
@@ -249,9 +249,146 @@ const verifyEmail = async (req, res) => {
     }
 };
 
+// FONCTION POUR DEMANDER LA RÉINITIALISATION DU MOT DE PASSE
+const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                message: 'Email requis'
+            });
+        }
+
+        // Chercher l'utilisateur
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        // Pour des raisons de sécurité, on renvoie toujours le même message
+        // même si l'email n'existe pas (pour éviter l'énumération d'emails)
+        if (!user) {
+            return res.json({
+                message: 'Si cet email existe, un lien de réinitialisation a été envoyé.'
+            });
+        }
+
+        // Générer un token de réinitialisation
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+
+        // Sauvegarder le token dans la base
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                resetPasswordToken: resetToken,
+                resetPasswordExpires: resetExpires
+            }
+        });
+
+        // Envoyer l'email
+        const emailResult = await sendPasswordResetEmail(user.email, user.firstName, resetToken);
+        
+        if (!emailResult.success) {
+            console.error('Erreur envoi email:', emailResult.error);
+        }
+
+        res.json({
+            message: 'Si cet email existe, un lien de réinitialisation a été envoyé.'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la demande de réinitialisation:', error);
+        res.status(500).json({
+            message: 'Erreur serveur'
+        });
+    }
+};
+
+// FONCTION POUR RÉINITIALISER LE MOT DE PASSE
+const resetPassword = async (req, res) => {
+    try {
+        const { token, newPassword } = req.body;
+
+        if (!token || !newPassword) {
+            return res.status(400).json({
+                message: 'Token et nouveau mot de passe requis'
+            });
+        }
+
+        // Vérifier la complexité du mot de passe
+        if (newPassword.length < 8) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins 8 caractères'
+            });
+        }
+
+        if (!/[A-Z]/.test(newPassword)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins une majuscule'
+            });
+        }
+
+        if (!/[a-z]/.test(newPassword)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins une minuscule'
+            });
+        }
+
+        if (!/[0-9]/.test(newPassword)) {
+            return res.status(400).json({
+                message: 'Le mot de passe doit contenir au moins un chiffre'
+            });
+        }
+
+        // Chercher l'utilisateur avec ce token
+        const user = await prisma.user.findUnique({
+            where: { resetPasswordToken: token }
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                message: 'Token invalide ou expiré'
+            });
+        }
+
+        // Vérifier si le token n'a pas expiré
+        if (new Date() > user.resetPasswordExpires) {
+            return res.status(400).json({
+                message: 'Le lien de réinitialisation a expiré'
+            });
+        }
+
+        // Hasher le nouveau mot de passe
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Mettre à jour le mot de passe et supprimer le token
+        await prisma.user.update({
+            where: { id: user.id },
+            data: {
+                password: hashedPassword,
+                resetPasswordToken: null,
+                resetPasswordExpires: null
+            }
+        });
+
+        res.json({
+            message: 'Mot de passe réinitialisé avec succès'
+        });
+
+    } catch (error) {
+        console.error('Erreur lors de la réinitialisation:', error);
+        res.status(500).json({
+            message: 'Erreur serveur'
+        });
+    }
+};
+
 // Exporter les fonctions pour les utiliser dans les routes
 module.exports = {
     register,
     login,
-    verifyEmail
+    verifyEmail,
+    forgotPassword,
+    resetPassword
 };

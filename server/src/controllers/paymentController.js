@@ -17,6 +17,45 @@ const createCheckoutSession = async (req, res) => {
             });
         }
 
+        // VALIDATION DU STOCK DES PRODUITS
+        // On vérifie que chaque produit du panier est encore disponible
+        const stockErrors = []; // Tableau pour stocker les erreurs
+
+        // On parcourt chaque produit du panier un par un
+        for (const item of items) {
+            // 1. Récupérer le produit depuis la base de données
+            const product = await prisma.product.findUnique({
+                where: { id: item.id } // Chercher par ID
+            });
+
+            // Vérifier si le produit existe toujours
+            if (!product) {
+                stockErrors.push(`Le produit "${item.name}" n'existe plus`);
+                continue; // Passer au produit suivant
+            }
+
+            // Vérifier le stock disponible
+            if (product.stock < item.quantity) {
+                // Si stock = 0 → rupture totale
+                if (product.stock === 0) {
+                    stockErrors.push(`"${item.name}" est en rupture de stock`);
+                }
+                // Si stock > 0 mais insuffisant
+                else {
+                    stockErrors.push(`"${item.name}" : seulement ${product.stock} disponible(s) (vous en demandez ${item.quantity})`);
+                }
+            }
+        }
+
+        // Si on a trouvé des erreurs, on arrête ici
+        if (stockErrors.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Stock insuffisant',
+                errors: stockErrors // On renvoie la liste des problèmes
+            });
+        }
+
         // Transformer les items du panier au format Stripe
         const lineItems = items.map((item) => ({
             price_data: {
@@ -186,6 +225,6 @@ const handleStripeWebhook = async (req, res) => {
 // Exporter les fonctions
 module.exports = {
     createCheckoutSession,
-    verifyPayment, 
+    verifyPayment,
     handleStripeWebhook
 };

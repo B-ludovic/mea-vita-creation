@@ -20,15 +20,17 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 👜 Sac U (L'Arche)
 
 ### Fonctionnalités principales
-- 🔐 **Authentification sécurisée** : Inscription, connexion, vérification email
-- 🔑 **Récupération mot de passe** : Système de reset par email
-- 🛒 **Panier intelligent** : Gestion des articles avec Context API
-- 💳 **Paiement Stripe** : Intégration complète avec webhooks
-- 📦 **Gestion commandes** : Historique et suivi des commandes
+- 🔐 **Authentification sécurisée** : Inscription, connexion, vérification email, JWT côté client et serveur
+- 🔑 **Récupération mot de passe** : Système de reset par email avec token sécurisé
+- 🛒 **Panier intelligent** : Gestion des articles avec validation de stock en temps réel
+- 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
+- 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
-- 👤 **Espace admin** : Dashboard pour gérer produits, commandes et utilisateurs
+- 👤 **Espace admin protégé** : Dashboard avec vérification JWT, gestion produits/commandes/utilisateurs
 - 📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
-- 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT
+- 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
+- 📊 **Stock en temps réel** : Mise à jour instantanée du stock après ajout au panier
+- 🚫 **Protection stock** : Impossible d'acheter plus que le stock disponible
 
 ---
 
@@ -78,6 +80,15 @@ npx prisma db push
 
 ### 5. Lancer le projet
 
+**Option 1 - Lancement automatique (recommandé)** :
+```bash
+# À la racine du projet
+npm run dev
+# Lance automatiquement : Frontend + Backend + Stripe CLI
+```
+
+**Option 2 - Lancement manuel (3 terminaux)** :
+
 **Terminal 1 - Backend** :
 ```bash
 cd server
@@ -92,11 +103,13 @@ npm run dev
 # Site sur http://localhost:3000
 ```
 
-**Terminal 3 - Stripe Webhook (optionnel)** :
+**Terminal 3 - Stripe Webhook** :
 ```bash
-cd server
 stripe listen --forward-to localhost:5002/api/payment/webhook
+# ⚠️ OBLIGATOIRE pour que les commandes soient créées
 ```
+
+> **💡 Important** : Sans Stripe CLI en écoute, les paiements réussiront mais aucune commande ne sera créée dans la BDD !
 
 ---
 
@@ -294,6 +307,14 @@ francois-maroquinerie/
 
 ## 📝 Scripts disponibles
 
+### Racine du projet
+```bash
+npm run dev          # Lance Frontend + Backend + Stripe CLI (avec concurrently)
+npm run dev:client   # Lance uniquement le frontend
+npm run dev:server   # Lance uniquement le backend
+npm run dev:stripe   # Lance uniquement Stripe CLI
+```
+
 ### Frontend
 ```bash
 npm run dev      # Lancer en développement
@@ -312,17 +333,31 @@ npm start        # Lancer en production
 ## 🐛 Debug
 
 ### Le panier ne se vide pas après paiement
-- Vérifier que le webhook Stripe est configuré
-- Vérifier les logs Stripe : `stripe listen --forward-to localhost:5002/api/payment/webhook`
+- ✅ Vérifier que le webhook Stripe est configuré
+- ✅ **IMPORTANT** : Vérifier que Stripe CLI écoute : `stripe listen --forward-to localhost:5002/api/payment/webhook`
+- ✅ Vérifier les logs dans le terminal Stripe pour voir les événements reçus
+- ✅ En production, vérifier le webhook dans le dashboard Stripe
+
+### "Stock insuffisant" alors qu'il y a du stock
+- ✅ Vérifier que le produit dans le panier a le bon `stock` (peut être obsolète)
+- ✅ Recharger la page produit pour avoir le stock à jour depuis la BDD
+- ✅ Vider le panier et rajouter le produit
+
+### La commande n'apparaît pas dans l'admin
+- ✅ **CAUSE PRINCIPALE** : Stripe CLI n'est pas en écoute
+- ✅ Lancer `npm run dev` à la racine (lance tout automatiquement)
+- ✅ Ou lancer manuellement : `stripe listen --forward-to localhost:5002/api/payment/webhook`
+- ✅ Sans Stripe CLI, le paiement réussit mais aucune commande n'est créée
 
 ### Erreur de connexion à la BDD
-- Vérifier que PostgreSQL est démarré
-- Vérifier le `DATABASE_URL` dans `.env`
-- Lancer `npx prisma db push`
+- ✅ Vérifier que PostgreSQL est démarré
+- ✅ Vérifier le `DATABASE_URL` dans `.env`
+- ✅ Lancer `npx prisma db push`
 
 ### Images ne s'affichent pas
-- Vérifier que les images sont dans `client/my-app/public/images/`
-- Vérifier les chemins dans `config/productImages.js`
+- ✅ Vérifier que les images sont dans `client/my-app/public/images/`
+- ✅ Vérifier les chemins dans `config/productImages.js`
+- ✅ Vérifier que le backend renvoie bien `ProductImage` dans la réponse API
 
 ---
 
@@ -360,6 +395,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Webhooks Stripe pour les paiements asynchrones
 - ✅ Envoi d'emails transactionnels avec Resend
 - ✅ Gestion des erreurs et validation des données
+- ✅ Gestion automatique du stock (décrémentation après paiement)
+- ✅ Validation du stock avant création de commande
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -368,14 +405,17 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Documentation technique (README, commentaires)
 - ✅ Déploiement production sur Render
 - ✅ Testing manuel et debugging
+- ✅ Concurrently pour lancer plusieurs services en parallèle
+- ✅ Scripts npm pour automatiser le développement
 
 ### Sécurité
 - ✅ Hachage de mots de passe (bcrypt)
 - ✅ Protection CSRF et XSS
 - ✅ Rate limiting anti brute-force
 - ✅ Validation et sanitization des inputs
-- ✅ Tokens JWT avec expiration
-- ✅ Protection des routes admin
+- ✅ Tokens JWT avec expiration (frontend + backend)
+- ✅ Protection des routes admin (vérification JWT côté client)
+- ✅ Validation de stock côté client et serveur (double sécurité)
 
 ---
 

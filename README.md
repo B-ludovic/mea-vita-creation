@@ -27,10 +27,13 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
 - 👤 **Espace admin protégé** : Dashboard avec vérification JWT, gestion produits/commandes/utilisateurs
-- 📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
+- � **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
+- �📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
 - 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
 - 📊 **Stock en temps réel** : Mise à jour instantanée du stock après ajout au panier
 - 🚫 **Protection stock** : Impossible d'acheter plus que le stock disponible
+- 📱 **Design responsive** : Interface optimisée mobile/tablette/desktop avec breakpoints adaptatifs
+- 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages produits et catégories
 
 ---
 
@@ -265,7 +268,8 @@ francois-maroquinerie/
 │   │   ├── middleware/     # Middlewares
 │   │   │   ├── authMiddleware.js
 │   │   │   ├── rateLimiter.js
-│   │   │   └── sanitizer.js
+│   │   │   ├── sanitizer.js
+│   │   │   └── upload.js   # Multer config (upload images)
 │   │   ├── services/       # Services
 │   │   │   └── emailService.js
 │   │   ├── config/         # Configuration
@@ -386,6 +390,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Navigation côté client et protection de routes
 - ✅ Intégration Stripe pour les paiements
 - ✅ CSS moderne avec variables et layouts responsive
+- ✅ Media queries et breakpoints adaptatifs (1500px, 1400px, 968px, 768px, 480px)
+- ✅ Animations CSS (transitions, staggered menu burger)
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -397,6 +403,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Gestion des erreurs et validation des données
 - ✅ Gestion automatique du stock (décrémentation après paiement)
 - ✅ Validation du stock avant création de commande
+- ✅ Upload de fichiers avec Multer (images produits, 5MB max, validation MIME)
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)

@@ -127,7 +127,6 @@ stripe listen --forward-to localhost:5002/api/payment/webhook
    - **Root Directory** : `server`
    - **Build Command** : `npm install && npx prisma generate`
    - **Start Command** : `npm start`
-   - **Instance Type** : Free
 
 4. **Variables d'environnement** (Environment) :
    ```

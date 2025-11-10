@@ -24,7 +24,7 @@ const getUserAddresses = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des adresses:', error);
+    console.error('Erreur lors de la récupération des adresses:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la récupération des adresses'
@@ -71,7 +71,7 @@ const createAddress = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la création de l\'adresse:', error);
+    console.error('Erreur lors de la création de l\'adresse:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la création de l\'adresse'
@@ -134,7 +134,7 @@ const updateAddress = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la mise à jour de l\'adresse:', error);
+    console.error('Erreur lors de la mise à jour de l\'adresse:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la mise à jour de l\'adresse'
@@ -175,7 +175,7 @@ const deleteAddress = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la suppression de l\'adresse:', error);
+    console.error('Erreur lors de la suppression de l\'adresse:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la suppression de l\'adresse'
@@ -222,7 +222,7 @@ const setDefaultAddress = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la définition de l\'adresse par défaut:', error);
+    console.error('Erreur lors de la définition de l\'adresse par défaut:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la définition de l\'adresse par défaut'

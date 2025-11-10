@@ -56,7 +56,7 @@ const createOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la création de la commande:', error);
+    console.error('Erreur lors de la création de la commande:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de la création de la commande'
@@ -96,10 +96,10 @@ const getUserOrders = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des commandes:', error);
-    res.status(500).json({
+    console.error('Erreur lors de la récupération des commandes:', error.message);
+    res.status(500).json({ 
       success: false,
-      message: 'Erreur lors de la récupération des commandes'
+      message: 'Erreur serveur' 
     });
   }
 };

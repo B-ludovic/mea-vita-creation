@@ -95,7 +95,7 @@ export default function CategoryPage() {
   return (
     <>
       {/* Hero de la catégorie */}
-      <section className="category-hero">
+      <section className={`category-hero ${slug}`}>
         <div className="container">
           <h1>{category.name}</h1>
           <p>{category.description}</p>

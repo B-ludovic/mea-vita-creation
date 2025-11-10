@@ -87,7 +87,7 @@ const createCheckoutSession = async (req, res) => {
             cancel_url: `${process.env.CLIENT_URL || 'http://localhost:3000'}/panier`,
             metadata: {
                 userId: userId || 'guest',
-                addressId: addressId || null, // 🆕 Stocker l'ID de l'adresse dans les metadata
+                addressId: addressId || null, // Stocker l'ID de l'adresse dans les metadata
                 items: JSON.stringify(itemsForMetadata) // Seulement id, quantity, price
             },
         });
@@ -99,7 +99,8 @@ const createCheckoutSession = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la création de la session Stripe:', error);
+        // SÉCURITÉ : Ne pas logger les détails de paiement
+        console.error('Erreur lors de la création de la session Stripe:', error.message);
         res.status(500).json({
             success: false,
             message: 'Erreur lors de la création de la session de paiement'
@@ -130,10 +131,11 @@ const verifyPayment = async (req, res) => {
         }
 
     } catch (error) {
-        console.error('Erreur lors de la vérification du paiement:', error);
+        // SÉCURITÉ : Logger uniquement le message
+        console.error('Erreur lors de la vérification du paiement:', error.message);
         res.status(500).json({
             success: false,
-            message: 'Erreur lors de la vérification du paiement'
+            message: 'Erreur serveur'
         });
     }
 };

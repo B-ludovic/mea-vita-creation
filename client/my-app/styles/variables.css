@@ -6,6 +6,41 @@
     --secondary-orange: #FF8C42;
     --accent-orange: #FFA726;
     
+    /* Couleurs principales - Jaune Solaire Élégant (Version Améliorée) */
+    --solar-yellow-light: #FFD700;   /* Or lumineux */
+    --solar-yellow: #FFC107;         /* Jaune solaire principal */
+    --solar-yellow-dark: #FFB300;    /* Jaune ambré */
+    --solar-gradient-start: #FFDA44; /* Or doux (plus subtil) */
+    --solar-gradient-end: #FFAB00;   /* Ambre doré (plus riche) */
+    
+    /* Couleurs Terre Cuite Marocaine - Thème authentique */
+    --terracotta-light: #E67E22;     /* Orange terre cuite claire */
+    --terracotta: #D35400;           /* Terre cuite principal */
+    --terracotta-dark: #C44601;      /* Terre cuite foncé */
+    --terracotta-gradient-start: #E67E22;  /* Début gradient terre cuite */
+    --terracotta-gradient-end: #C44601;    /* Fin gradient terre cuite */
+    
+    /* Couleurs Safran Royal - Luxe des épices marocaines */
+    --saffron-light: #F39C12;        /* Safran lumineux */
+    --saffron: #E67E22;              /* Orange safran */
+    --saffron-dark: #D68910;         /* Safran profond */
+    --saffron-gradient-start: #F39C12;  /* Début gradient safran */
+    --saffron-gradient-end: #E67E22;    /* Fin gradient safran */
+    
+    /* Couleurs Ocre Désert - Sable du Sahara */
+    --ochre-light: #F4A460;          /* Ocre sable */
+    --ochre: #CD853F;                /* Ocre principal */
+    --ochre-dark: #A0522D;           /* Ocre brûlé */
+    --ochre-gradient-start: #F4A460;    /* Début gradient ocre */
+    --ochre-gradient-end: #CD853F;      /* Fin gradient ocre */
+    
+    /* Couleurs Coucher de Soleil Africain - Savane */
+    --sunset-coral: #FF6B6B;         /* Corail sunset */
+    --sunset-orange: #FF8E53;        /* Orange chaud */
+    --sunset-gold: #FFAB4C;          /* Or sunset */
+    --sunset-gradient-start: #FF8E53;   /* Début gradient sunset */
+    --sunset-gradient-end: #FFAB4C;     /* Fin gradient sunset */
+    
     /* Couleurs secondaires */
     --primary-teal: #008B8B;
     --primary-gold: #FFD700;

@@ -4,6 +4,39 @@ const cors = require('cors');
 const helmet = require('helmet'); // Protection des headers HTTP
 require('dotenv').config();
 
+
+// VALIDATION DES VARIABLES D'ENVIRONNEMENT AU DÉMARRAGE
+
+// Vérifier que toutes les variables importantes sont définies
+// Si une variable manque, le serveur s'arrête AVANT de démarrer (évite les bugs en prod)
+const requiredEnvVars = [
+  'JWT_SECRET',          // Pour signer les tokens
+  'DATABASE_URL',        // Pour se connecter à PostgreSQL
+  'STRIPE_SECRET_KEY',   // Pour les paiements
+  'CLIENT_URL'           // Pour configurer CORS
+];
+
+// Parcourir chaque variable requise
+const missingVars = [];
+requiredEnvVars.forEach(varName => {
+  if (!process.env[varName]) {
+    missingVars.push(varName); // Ajouter à la liste des variables manquantes
+  }
+});
+
+// Si des variables manquent, afficher un message clair et arrêter
+if (missingVars.length > 0) {
+  console.error('❌ ERREUR : Variables d\'environnement manquantes !');
+  console.error('   Les variables suivantes doivent être définies dans le fichier .env :');
+  missingVars.forEach(varName => {
+    console.error(`   - ${varName}`);
+  });
+  console.error('\n💡 Astuce : Copie le fichier .env.example en .env et remplis les valeurs');
+  process.exit(1); // Arrêter le serveur avec code d'erreur
+}
+
+console.log('✅ Toutes les variables d\'environnement sont présentes');
+
 // Importer Prisma au lieu de pool
 const prisma = require('./config/prisma');
 
@@ -34,11 +67,65 @@ const app = express();
 // Définir le port (5000 par défaut, ou celui défini dans .env)
 const PORT = process.env.PORT || 5000;
 
+// SÉCURITÉ : Forcer HTTPS en production
+// En production, TOUJOURS utiliser HTTPS (cadenas dans le navigateur)
+
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+    // Vérifier si la requête arrive en HTTP au lieu de HTTPS
+    // x-forwarded-proto : header ajouté par les hébergeurs (Heroku, Railway, etc.)
+    if (req.header('x-forwarded-proto') !== 'https') {
+      // Rediriger vers la version HTTPS
+      return res.redirect(`https://${req.header('host')}${req.url}`);
+    }
+    next(); // Si déjà en HTTPS, continuer normalement
+  });
+}
+
 // MIDDLEWARE (fonctions qui s'exécutent avant les routes)
 
 // 1. Helmet - Sécurise les headers HTTP
+// Content Security Policy (CSP)
+
 app.use(helmet({
-  contentSecurityPolicy: false, // Désactivé pour Stripe (peut être réactivé après config)
+  contentSecurityPolicy: {
+    directives: {
+      // defaultSrc: D'où peuvent venir les ressources par défaut
+      defaultSrc: ["'self'"], // Seulement depuis ton propre serveur
+      
+      // scriptSrc: Quels scripts JavaScript peuvent s'exécuter
+      scriptSrc: [
+        "'self'",                    // Tes propres scripts
+        "https://js.stripe.com"      // Scripts Stripe pour les paiements
+      ],
+      
+      // frameSrc: Quelles iframes peuvent être chargées (pour Stripe checkout)
+      frameSrc: [
+        "'self'", 
+        "https://js.stripe.com",
+        "https://hooks.stripe.com"
+      ],
+      
+      // connectSrc: À quelles API ton site peut se connecter
+      connectSrc: [
+        "'self'",                    // Ton API
+        "https://api.stripe.com"     // API Stripe
+      ],
+      
+      // imgSrc: D'où peuvent venir les images
+      imgSrc: [
+        "'self'",                    // Tes images
+        "data:",                     // Images en base64 (petites icônes)
+        "https:"                     // N'importe quelle image HTTPS (CDN, etc.)
+      ],
+      
+      // styleSrc: D'où peuvent venir les CSS
+      styleSrc: [
+        "'self'",                    // Tes CSS
+        "'unsafe-inline'"            // Autoriser les styles inline (pour React)
+      ]
+    }
+  }
 }));
 
 // 2. Sanitizer personnalisé - Nettoie toutes les entrées utilisateur (XSS)
@@ -46,10 +133,21 @@ app.use(helmet({
 // La sanitization contre les injections SQL est assurée par Prisma ORM
 app.use(sanitizeInputs);
 
-// 3. CORS : permet au front-end (localhost:3000) de communiquer avec le back-end (localhost:5000)
+// 3. CORS : permet au front-end de communiquer avec le back-end
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Adresse du front-end Next.js
-  credentials: true
+
+  // En prod: ton vrai domaine (exemple: https://francois-maroquinerie.com)
+  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  
+  // credentials: Autoriser l'envoi de cookies et tokens
+  credentials: true,
+  
+  // methods: Quelles méthodes HTTP sont autorisées
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  
+  // allowedHeaders: Quels headers peuvent être envoyés
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // 4. Parser le JSON SAUF pour le webhook Stripe (qui a besoin du raw body)

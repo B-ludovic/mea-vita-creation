@@ -62,15 +62,15 @@ h4 {
     text-align: center;
     font-family: var(--font-secondary);
     letter-spacing: 0.5px;
-    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
-    color: var(--white);
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+    color: var(--text-dark);
+    box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--secondary-orange), var(--accent-orange));
+    background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
 .btn-secondary {

@@ -6,6 +6,51 @@
     text-align: center;
 }
 
+/* Gradients spécifiques pour chaque catégorie */
+/* Pochettes Unisexe - Terre Cuite Marocaine */
+.category-hero.pochettes-unisexe {
+    background: linear-gradient(135deg, #E67E22 0%, #C44601 100%);
+}
+
+.category-hero.pochettes-unisexe h1,
+.category-hero.pochettes-unisexe p {
+    color: var(--white);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Porte-Carte - Safran Royal */
+.category-hero.porte-carte {
+    background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
+}
+
+.category-hero.porte-carte h1,
+.category-hero.porte-carte p {
+    color: var(--white);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Sac Cylindre - Ocre Désert */
+.category-hero.sac-cylindre {
+    background: linear-gradient(135deg, #F4A460 0%, #CD853F 100%);
+}
+
+.category-hero.sac-cylindre h1,
+.category-hero.sac-cylindre p {
+    color: var(--white);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Sac U - Coucher de Soleil Africain */
+.category-hero.sac-u {
+    background: linear-gradient(135deg, #FF8E53 0%, #FFAB4C 100%);
+}
+
+.category-hero.sac-u h1,
+.category-hero.sac-u p {
+    color: var(--white);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
 .category-hero h1 {
     color: var(--text-dark);
     margin-bottom: 1rem;
@@ -94,19 +139,21 @@
 .product-btn {
     width: 100%;
     padding: 12px;
-    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+    color: var(--text-dark);
     border: none;
     border-radius: 50px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
 }
 
 .product-btn:hover {
+    background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
 .no-products {

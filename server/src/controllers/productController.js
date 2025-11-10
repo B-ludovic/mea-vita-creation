@@ -45,7 +45,7 @@ const getAllProducts = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération des produits:', error);
+    console.error('Erreur lors de la récupération des produits:', error.message);
     res.status(500).json({ 
       success: false,
       message: 'Erreur serveur lors de la récupération des produits' 
@@ -127,7 +127,7 @@ const getProductBySlug = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la récupération du produit:', error);
+    console.error('Erreur lors de la récupération du produit:', error.message);
     res.status(500).json({ 
       success: false,
       message: 'Erreur serveur' 
@@ -335,15 +335,13 @@ const updateProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la mise à jour du produit:', error);
-    res.status(500).json({
+    console.error('Erreur lors de la mise à jour du produit:', error.message);
+    res.status(500).json({ 
       success: false,
-      message: 'Erreur serveur lors de la mise à jour du produit'
+      message: 'Erreur serveur lors de la mise à jour du produit' 
     });
   }
-};
-
-// FONCTION POUR SUPPRIMER UN PRODUIT
+};// FONCTION POUR SUPPRIMER UN PRODUIT
 // Cette fonction est réservée aux administrateurs uniquement
 const deleteProduct = async (req, res) => {
   try {
@@ -378,10 +376,10 @@ const deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la suppression du produit:', error);
-    res.status(500).json({
+    console.error('Erreur lors de la suppression du produit:', error.message);
+    res.status(500).json({ 
       success: false,
-      message: 'Erreur serveur lors de la suppression du produit'
+      message: 'Erreur serveur lors de la suppression du produit' 
     });
   }
 };
@@ -438,15 +436,13 @@ const addProductImage = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de l\'ajout de l\'image:', error);
-    res.status(500).json({
+    console.error('Erreur lors de l\'ajout de l\'image:', error.message);
+    res.status(500).json({ 
       success: false,
-      message: 'Erreur serveur lors de l\'ajout de l\'image'
+      message: 'Erreur serveur lors de l\'ajout de l\'image' 
     });
   }
-};
-
-// FONCTION POUR SUPPRIMER UNE IMAGE D'UN PRODUIT
+};// FONCTION POUR SUPPRIMER UNE IMAGE D'UN PRODUIT
 // Cette fonction est accessible uniquement aux administrateurs
 // Elle supprime une image d'un produit (fichier + BDD)
 const deleteProductImage = async (req, res) => {
@@ -488,15 +484,13 @@ const deleteProductImage = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Erreur lors de la suppression de l\'image:', error);
-    res.status(500).json({
+    console.error('Erreur lors de la suppression de l\'image:', error.message);
+    res.status(500).json({ 
       success: false,
-      message: 'Erreur serveur lors de la suppression de l\'image'
+      message: 'Erreur serveur lors de la suppression de l\'image' 
     });
   }
-};
-
-module.exports = {
+};module.exports = {
   getAllProducts,
   getProductsByCategory,
   getProductBySlug,

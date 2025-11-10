@@ -112,19 +112,21 @@
 
 .add-to-cart-btn {
     padding: 18px;
-    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+    color: var(--text-dark);
     border: none;
     border-radius: 50px;
     font-size: 1.2rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
 }
 
 .add-to-cart-btn:hover {
+    background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
 .add-to-cart-btn:disabled {

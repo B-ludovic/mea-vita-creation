@@ -98,8 +98,13 @@ const register = async (req, res) => {
         });
 
     } catch (error) {
+        // SÉCURITÉ : Ne jamais logger l'objet error complet (peut contenir des mots de passe)
+        // On log uniquement le message d'erreur (safe)
         console.error('Erreur lors de l\'inscription:', error.message);
-        console.error('Stack:', error.stack);
+        // En développement uniquement, on peut logger la stack pour débugger
+        if (process.env.NODE_ENV === 'development') {
+            console.error('Stack:', error.stack);
+        }
         res.status(500).json({
             message: 'Erreur serveur lors de l\'inscription'
         });
@@ -173,7 +178,8 @@ const login = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la connexion:', error);
+        // SÉCURITÉ : Logger uniquement le message, pas l'objet complet
+        console.error('Erreur lors de la connexion:', error.message);
         res.status(500).json({
             message: 'Erreur serveur lors de la connexion'
         });
@@ -242,7 +248,8 @@ const verifyEmail = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la vérification:', error);
+        // SÉCURITÉ : Logger uniquement le message
+        console.error('Erreur lors de la vérification:', error.message);
         res.status(500).json({
             message: 'Erreur serveur lors de la vérification'
         });
@@ -298,7 +305,8 @@ const forgotPassword = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la demande de réinitialisation:', error);
+        // SÉCURITÉ : Logger uniquement le message
+        console.error('Erreur lors de la demande de réinitialisation:', error.message);
         res.status(500).json({
             message: 'Erreur serveur'
         });
@@ -377,7 +385,8 @@ const resetPassword = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erreur lors de la réinitialisation:', error);
+        // SÉCURITÉ : Logger uniquement le message
+        console.error('Erreur lors de la réinitialisation:', error.message);
         res.status(500).json({
             message: 'Erreur serveur'
         });

@@ -58,6 +58,79 @@
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
 }
 
+/* Gradients spécifiques pour chaque catégorie */
+/* Pochettes Unisexe - Terre Cuite Marocaine */
+.category-card:nth-child(1) .category-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(230, 126, 34, 0.7), rgba(196, 70, 1, 0.7));
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-card:nth-child(1):hover .category-image::before {
+    opacity: 1;
+}
+
+/* Porte-Carte - Safran Royal */
+.category-card:nth-child(2) .category-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(243, 156, 18, 0.7), rgba(230, 126, 34, 0.7));
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-card:nth-child(2):hover .category-image::before {
+    opacity: 1;
+}
+
+/* Sac Cylindre - Ocre Désert */
+.category-card:nth-child(3) .category-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(244, 164, 96, 0.7), rgba(205, 133, 63, 0.7));
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-card:nth-child(3):hover .category-image::before {
+    opacity: 1;
+}
+
+/* Sac U - Coucher de Soleil Africain */
+.category-card:nth-child(4) .category-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 142, 83, 0.7), rgba(255, 171, 76, 0.7));
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.category-card:nth-child(4):hover .category-image::before {
+    opacity: 1;
+}
+
 .category-image {
     width: 100%;
     height: 300px;

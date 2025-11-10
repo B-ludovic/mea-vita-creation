@@ -34,24 +34,42 @@ export function CartProvider({ children }) {
   }, [cart]);
 
   // FONCTION : Ajouter un produit au panier
+  // Retourne true si l'ajout a réussi, false sinon
   const addToCart = useCallback((product, quantity = 1) => {
-    setCart((prevCart) => {
-      // Vérifier si le produit existe déjà dans le panier
-      const existingItem = prevCart.find((item) => item.id === product.id);
-
-      if (existingItem) {
-        // Si oui, augmenter la quantité
-        return prevCart.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      } else {
-        // Si non, ajouter le produit
-        return [...prevCart, { ...product, quantity }];
+    // Vérifier si le produit existe déjà dans le panier
+    const existingItem = cart.find((item) => item.id === product.id);
+    
+    if (existingItem) {
+      // Calculer la nouvelle quantité totale
+      const newQuantity = existingItem.quantity + quantity;
+      
+      // SÉCURITÉ : Vérifier qu'on ne dépasse pas le stock disponible
+      if (newQuantity > product.stock) {
+        alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        return false; // Échec
       }
-    });
-  }, []);
+      
+      // Si OK, augmenter la quantité
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: newQuantity }
+            : item
+        )
+      );
+      return true; // Succès
+    } else {
+      // SÉCURITÉ : Vérifier le stock avant d'ajouter un nouveau produit
+      if (quantity > product.stock) {
+        alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        return false; // Échec
+      }
+      
+      // Si OK, ajouter le produit
+      setCart((prevCart) => [...prevCart, { ...product, quantity }]);
+      return true; // Succès
+    }
+  }, [cart]);
 
   // FONCTION : Retirer un produit du panier
   const removeFromCart = useCallback((productId) => {
@@ -66,9 +84,17 @@ export function CartProvider({ children }) {
     }
 
     setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity } : item
-      )
+      prevCart.map((item) => {
+        if (item.id === productId) {
+          // SÉCURITÉ : Vérifier qu'on ne dépasse pas le stock disponible
+          if (quantity > item.stock) {
+            alert(`⚠️ Stock insuffisant ! Seulement ${item.stock} disponible(s).`);
+            return item; // Garder la quantité actuelle
+          }
+          return { ...item, quantity };
+        }
+        return item;
+      })
     );
   }, [removeFromCart]);
 

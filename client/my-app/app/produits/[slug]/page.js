@@ -64,8 +64,24 @@ export default function ProductPage() {
 
     // Fonction pour ajouter au panier
     const handleAddToCart = () => {
-        addToCart(product, quantity);
-        alert(`✅ ${quantity} x ${product.name} ajouté(s) au panier !`);
+        // addToCart retourne true si réussi, false sinon
+        const success = addToCart(product, quantity);
+        
+        // Afficher l'alerte de succès UNIQUEMENT si l'ajout a réussi
+        if (success) {
+            alert(`✅ ${quantity} x ${product.name} ajouté(s) au panier !`);
+            
+            // IMPORTANT : Mettre à jour le stock local du produit
+            // Cela permet d'afficher le bon message de stock sans recharger la page
+            setProduct(prevProduct => ({
+                ...prevProduct,
+                stock: prevProduct.stock - quantity
+            }));
+            
+            // Remettre la quantité à 1
+            setQuantity(1);
+        }
+        // Sinon, l'alerte d'erreur a déjà été affichée par addToCart()
     };
 
     // Si en cours de chargement

@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently --names \"CLIENT,SERVER,STRIPE\" --prefix-colors \"cyan,green,magenta\" \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:stripe\"",
+    "dev:client": "cd client/my-app && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:stripe": "stripe listen --forward-to localhost:5002/api/payment/webhook",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -15,6 +18,7 @@
     "react-dom": "19.2.0"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.0.1"
   }

@@ -18,7 +18,7 @@ const sendVerificationEmail = async (userEmail, userName, verificationToken) => 
           <p>Merci de vous être inscrit. Pour activer votre compte, veuillez cliquer sur le bouton ci-dessous :</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${verificationUrl}" 
-               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+               style="background: linear-gradient(135deg, #FFDA44, #FFAB00); 
                       color: white; 
                       padding: 15px 35px; 
                       text-decoration: none; 
@@ -67,7 +67,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
           </p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="http://localhost:3000/categories" 
-               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+               style="background: linear-gradient(135deg, #FFDA44, #FFAB00); 
                       color: white; 
                       padding: 15px 35px; 
                       text-decoration: none; 
@@ -176,7 +176,7 @@ const sendOrderConfirmationEmail = async (userEmail, userName, order) => {
           
           <div style="text-align: center; margin: 30px 0;">
             <a href="http://localhost:3000/mes-commandes" 
-               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+               style="background: linear-gradient(135deg, #FFDA44, #FFAB00); 
                       color: white; 
                       padding: 15px 35px; 
                       text-decoration: none; 
@@ -224,7 +224,7 @@ const sendPasswordResetEmail = async (userEmail, userName, resetToken) => {
           <p>Vous avez demandé à réinitialiser votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
           <div style="text-align: center; margin: 30px 0;">
             <a href="${resetUrl}" 
-               style="background: linear-gradient(135deg, #FF6B35, #FF8C42); 
+               style="background: linear-gradient(135deg, #FFDA44, #FFAB00); 
                       color: white; 
                       padding: 15px 35px; 
                       text-decoration: none; 

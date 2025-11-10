@@ -124,53 +124,25 @@ export default function Header() {
                     </li>
                     <li>
                         <Link href="/panier" className="cart-link" onClick={closeMenu}>
-                            <Image 
-                                src="/e-commerce.png" 
-                                alt="Panier" 
-                                width={24}
-                                height={24}
-                                className="cart-icon"
-                            />
-                            <span>Panier ({getCartCount()})</span>
+                            Panier ({getCartCount()})
                         </Link>
                     </li>
                     {user && (
                         <>
                             <li>
                                 <Link href="/mes-commandes" className="orders-link" onClick={closeMenu}>
-                                    <Image 
-                                        src="/delivery-box.png" 
-                                        alt="Mes commandes" 
-                                        width={24}
-                                        height={24}
-                                        className="orders-icon"
-                                    />
-                                    <span>Mes commandes</span>
+                                    Mes commandes
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/mes-adresses" className="addresses-link" onClick={closeMenu}>
-                                    <Image 
-                                        src="/location.png" 
-                                        alt="Mes adresses" 
-                                        width={24}
-                                        height={24}
-                                        className="addresses-icon"
-                                    />
-                                    <span>Mes adresses</span>
+                                    Mes adresses
                                 </Link>
                             </li>
                             {user.role === 'ADMIN' && (
                                 <li>
                                     <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
-                                        <Image 
-                                            src="/satistic.png" 
-                                            alt="Administration" 
-                                            width={24}
-                                            height={24}
-                                            className="admin-icon"
-                                        />
-                                        <span>Admin</span>
+                                        Admin
                                     </Link>
                                 </li>
                             )}

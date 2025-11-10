@@ -45,13 +45,13 @@ export default function ForgotPasswordPage() {
         <div className="auth-card">
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Image 
-              src="/email.png" 
+              src="/sent-mail.png" 
               alt="Email envoyé" 
               width={80} 
               height={80}
             />
           </div>
-          <h1 style={{ textAlign: 'center' }}>Email envoyé !</h1>
+          <h1 style={{ textAlign: 'center' }}>Email envoyé</h1>
           <p style={{ textAlign: 'center', color: 'var(--text-light)', marginBottom: '2rem' }}>
             Si un compte existe avec cette adresse email, vous recevrez un lien de réinitialisation.
           </p>

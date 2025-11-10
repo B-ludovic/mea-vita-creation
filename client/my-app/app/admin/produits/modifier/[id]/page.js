@@ -16,6 +16,12 @@ export default function EditProductPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
+  // États pour la gestion des images
+  const [productImages, setProductImages] = useState([]); // Images existantes
+  const [selectedFile, setSelectedFile] = useState(null); // Fichier sélectionné
+  const [uploading, setUploading] = useState(false); // État d'upload en cours
+  const [previewUrl, setPreviewUrl] = useState(''); // Preview de l'image avant upload
 
   const [formData, setFormData] = useState({
     name: '',
@@ -87,6 +93,9 @@ export default function EditProductPage() {
             stock: product.stock,
             isActive: product.isActive
           });
+          
+          // Charger les images du produit
+          setProductImages(product.ProductImage || []);
         }
       } catch (error) {
         console.error('Erreur:', error);
@@ -122,6 +131,135 @@ export default function EditProductPage() {
       ...formData,
       [name]: type === 'checkbox' ? checked : value
     });
+  };
+
+  // FONCTION POUR GÉRER LA SÉLECTION D'UNE IMAGE
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    
+    // Vérifier qu'un fichier a été sélectionné
+    if (!file) return;
+    
+    // Vérifier le type de fichier (seulement images)
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      setError('Type de fichier non autorisé. Veuillez sélectionner une image (JPG, PNG, WEBP, GIF)');
+      return;
+    }
+    
+    // Vérifier la taille du fichier (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Fichier trop volumineux. Taille maximum: 5 MB');
+      return;
+    }
+    
+    // Stocker le fichier sélectionné
+    setSelectedFile(file);
+    
+    // Créer une preview de l'image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
+    
+    setError(''); // Effacer les erreurs précédentes
+  };
+
+  // FONCTION POUR UPLOADER L'IMAGE
+  const handleImageUpload = async () => {
+    // Vérifier qu'un fichier a été sélectionné
+    if (!selectedFile) {
+      setError('Veuillez sélectionner une image');
+      return;
+    }
+    
+    setUploading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Vous devez être connecté');
+        router.push('/login');
+        return;
+      }
+      
+      // Créer un FormData pour envoyer le fichier
+      const formDataImage = new FormData();
+      formDataImage.append('image', selectedFile);
+      
+      // Envoyer le fichier au serveur
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/images`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          // NE PAS mettre 'Content-Type': 'application/json' avec FormData
+          // Le navigateur le fait automatiquement avec le bon boundary
+        },
+        body: formDataImage
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSuccess('Image ajoutée avec succès !');
+        // Ajouter la nouvelle image à la liste
+        setProductImages([...productImages, data.image]);
+        // Réinitialiser la sélection
+        setSelectedFile(null);
+        setPreviewUrl('');
+        // Effacer le message de succès après 3 secondes
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(data.message || 'Erreur lors de l\'ajout de l\'image');
+      }
+    } catch (err) {
+      console.error('Erreur:', err);
+      setError('Erreur de connexion au serveur');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // FONCTION POUR SUPPRIMER UNE IMAGE
+  const handleImageDelete = async (imageId) => {
+    // Confirmer la suppression
+    if (!confirm('Voulez-vous vraiment supprimer cette image ?')) {
+      return;
+    }
+    
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Vous devez être connecté');
+        router.push('/login');
+        return;
+      }
+      
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/images/${imageId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        setSuccess('Image supprimée avec succès !');
+        // Retirer l'image de la liste
+        setProductImages(productImages.filter(img => img.id !== imageId));
+        // Effacer le message de succès après 3 secondes
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(data.message || 'Erreur lors de la suppression de l\'image');
+      }
+    } catch (err) {
+      console.error('Erreur:', err);
+      setError('Erreur de connexion au serveur');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -300,6 +438,152 @@ export default function EditProductPage() {
               <label htmlFor="isActive" style={{ fontWeight: 'normal' }}>
                 Produit actif (visible sur le site)
               </label>
+            </div>
+          </div>
+
+          {/* SECTION GESTION DES IMAGES */}
+          <div className="form-group" style={{ marginTop: '2rem', padding: '1.5rem', background: '#f9f9f9', borderRadius: '10px' }}>
+            <h3 style={{ marginBottom: '1rem', color: 'var(--text-dark)', textAlign: 'center' }}>
+              <Image src="/camera.png" alt="" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              Gestion des images du produit
+            </h3>
+
+            {/* IMAGES EXISTANTES */}
+            {productImages.length > 0 && (
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: 'var(--text-light)' }}>
+                  Images actuelles ({productImages.length})
+                </h4>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+                  {productImages.map((image) => (
+                    <div key={image.id} style={{ 
+                      position: 'relative', 
+                      border: '2px solid var(--light-beige)', 
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      background: 'white'
+                    }}>
+                      <Image
+                        src={image.url}
+                        alt={image.altText || 'Image produit'}
+                        width={150}
+                        height={150}
+                        style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                      />
+                      {image.isPrimary && (
+                        <div style={{
+                          position: 'absolute',
+                          top: '8px',
+                          left: '8px',
+                          background: 'var(--primary-orange)',
+                          color: 'white',
+                          padding: '4px 8px',
+                          borderRadius: '5px',
+                          fontSize: '0.75rem',
+                          fontWeight: '600'
+                        }}>
+                          Principale
+                        </div>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleImageDelete(image.id)}
+                        style={{
+                          position: 'absolute',
+                          top: '8px',
+                          right: '8px',
+                          background: '#c62828',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '30px',
+                          height: '30px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '1.2rem',
+                          fontWeight: 'bold',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = '#b71c1c'}
+                        onMouseLeave={(e) => e.target.style.background = '#c62828'}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AJOUTER UNE NOUVELLE IMAGE */}
+            <div style={{ 
+              border: '2px dashed var(--light-beige)', 
+              borderRadius: '10px', 
+              padding: '1.5rem',
+              background: 'white'
+            }}>
+              <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>
+                Ajouter une nouvelle image
+              </h4>
+
+              {/* INPUT FILE */}
+              <div style={{ marginBottom: '1rem' }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  style={{
+                    padding: '10px',
+                    border: '2px solid var(--light-beige)',
+                    borderRadius: '8px',
+                    width: '100%',
+                    cursor: 'pointer'
+                  }}
+                />
+                <small style={{ display: 'block', marginTop: '0.5rem', color: 'var(--text-light)', fontSize: '0.85rem' }}>
+                  Formats acceptés: JPG, PNG, WEBP, GIF • Taille max: 5 MB
+                </small>
+              </div>
+
+              {/* PREVIEW DE L'IMAGE SÉLECTIONNÉE */}
+              {previewUrl && (
+                <div style={{ marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>Aperçu :</p>
+                  <Image
+                    src={previewUrl}
+                    alt="Aperçu"
+                    width={200}
+                    height={200}
+                    style={{ 
+                      borderRadius: '8px', 
+                      border: '2px solid var(--light-beige)',
+                      objectFit: 'cover',
+                      width: '200px',
+                      height: '200px'
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* BOUTON D'UPLOAD */}
+              <button
+                type="button"
+                onClick={handleImageUpload}
+                disabled={!selectedFile || uploading}
+                className="admin-btn admin-btn-primary"
+                style={{ width: '100%' }}
+              >
+                <Image 
+                  src="/validation.png" 
+                  alt="" 
+                  width={20} 
+                  height={20} 
+                  style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} 
+                />
+                {uploading ? 'Upload en cours...' : 'Ajouter cette image'}
+              </button>
             </div>
           </div>
 

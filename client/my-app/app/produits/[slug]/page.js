@@ -4,6 +4,7 @@
 // Import des hooks React
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 // Import du contexte panier
 import { useCart } from '../../../contexts/CartContext';
@@ -136,7 +137,16 @@ export default function ProductPage() {
                             {product.Category.name}
                         </span>
 
-                        <h1 className="product-title">{product.name}</h1>
+                        <h1 className="product-title">
+                            <Image 
+                                src="/Logo_Francois_sansfond.PNG" 
+                                alt="Logo" 
+                                width={35} 
+                                height={35} 
+                                style={{ display: 'inline-block', marginRight: '12px', verticalAlign: 'middle' }} 
+                            />
+                            {product.name}
+                        </h1>
 
                         <div className="product-price-display">
                             {product.price.toFixed(2)}€

@@ -158,10 +158,10 @@ export default function AdminOrdersPage() {
           <tbody>
             {orders.map((order) => (
               <tr key={order.id}>
-                <td>
+                <td data-label="N° Commande">
                   <strong>{order.orderNumber}</strong>
                 </td>
-                <td>
+                <td data-label="Client">
                   {order.User ? (
                     <div>
                       <div>{order.User.firstName} {order.User.lastName}</div>
@@ -173,21 +173,21 @@ export default function AdminOrdersPage() {
                     <span style={{ color: 'var(--text-light)' }}>Invité</span>
                   )}
                 </td>
-                <td>{formatDate(order.createdAt)}</td>
-                <td>
+                <td data-label="Date">{formatDate(order.createdAt)}</td>
+                <td data-label="Produits">
                   {order.OrderItem.length} article{order.OrderItem.length > 1 ? 's' : ''}
                 </td>
-                <td>
+                <td data-label="Montant">
                   <strong style={{ color: 'var(--primary-orange)' }}>
                     {order.totalAmount.toFixed(2)}€
                   </strong>
                 </td>
-                <td>
+                <td data-label="Statut">
                   <span className={`badge ${getStatusBadge(order.status)}`}>
                     {getStatusLabel(order.status)}
                   </span>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <select
                     value={order.status}
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}

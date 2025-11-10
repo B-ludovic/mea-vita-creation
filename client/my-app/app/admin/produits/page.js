@@ -147,7 +147,7 @@ export default function AdminProductsPage() {
           <tbody>
             {products.map((product) => (
               <tr key={product.id}>
-                <td>
+                <td data-label="Image">
                   {product.ProductImage && product.ProductImage.length > 0 ? (
                     <Image 
                       src={product.ProductImage[0].url} 
@@ -173,7 +173,7 @@ export default function AdminProductsPage() {
                     </div>
                   )}
                 </td>
-                <td>
+                <td data-label="Nom">
                   <div>
                     <strong>{product.name}</strong>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '4px' }}>
@@ -181,23 +181,23 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                 </td>
-                <td>{product.Category.name}</td>
-                <td>
+                <td data-label="Catégorie">{product.Category.name}</td>
+                <td data-label="Prix">
                   <strong style={{ color: 'var(--primary-orange)' }}>
                     {product.price.toFixed(2)}€
                   </strong>
                 </td>
-                <td>
+                <td data-label="Stock">
                   <span className={`badge ${product.stock === 0 ? 'danger' : product.stock < 3 ? 'warning' : 'success'}`}>
                     {product.stock} en stock
                   </span>
                 </td>
-                <td>
+                <td data-label="Statut">
                   <span className={`badge ${product.isActive ? 'success' : 'danger'}`}>
                     {product.isActive ? 'Actif' : 'Inactif'}
                   </span>
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button 
                       className="admin-btn admin-btn-secondary"

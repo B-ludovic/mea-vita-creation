@@ -387,11 +387,122 @@ const deleteProduct = async (req, res) => {
 };
 
 // Exporter les fonctions
+// FONCTION POUR AJOUTER UNE IMAGE À UN PRODUIT
+// Cette fonction est accessible uniquement aux administrateurs
+// Elle ajoute une nouvelle image à un produit existant
+const addProductImage = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    // Vérifier qu'un fichier a été uploadé
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Aucun fichier fourni'
+      });
+    }
+
+    // Vérifier que le produit existe
+    const product = await prisma.product.findUnique({
+      where: { id: productId }, // productId est déjà un String, pas besoin de parseInt
+      include: { ProductImage: true }
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Produit non trouvé'
+      });
+    }
+
+    // Construire l'URL de l'image (chemin relatif depuis /public)
+    const imageUrl = `/images/products/${req.file.filename}`;
+
+    // Déterminer si c'est la première image (sera l'image principale)
+    const isPrimary = product.ProductImage.length === 0;
+
+    // Créer l'entrée dans la base de données
+    const newImage = await prisma.productImage.create({
+      data: {
+        url: imageUrl,
+        alt: product.name, // Utiliser le nom du produit comme texte alternatif
+        order: product.ProductImage.length, // Position dans l'ordre
+        productId: productId // productId est déjà un String
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'Image ajoutée avec succès',
+      image: newImage
+    });
+
+  } catch (error) {
+    console.error('Erreur lors de l\'ajout de l\'image:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de l\'ajout de l\'image'
+    });
+  }
+};
+
+// FONCTION POUR SUPPRIMER UNE IMAGE D'UN PRODUIT
+// Cette fonction est accessible uniquement aux administrateurs
+// Elle supprime une image d'un produit (fichier + BDD)
+const deleteProductImage = async (req, res) => {
+  try {
+    const { productId, imageId } = req.params;
+
+    // Vérifier que l'image existe et appartient au bon produit
+    const image = await prisma.productImage.findFirst({
+      where: {
+        id: imageId, // imageId est déjà un String
+        productId: productId // productId est déjà un String
+      }
+    });
+
+    if (!image) {
+      return res.status(404).json({
+        success: false,
+        message: 'Image non trouvée'
+      });
+    }
+
+    // Supprimer le fichier physique
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(__dirname, '../../../client/my-app/public', image.url);
+    
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath); // Supprimer le fichier
+    }
+
+    // Supprimer l'entrée de la base de données
+    await prisma.productImage.delete({
+      where: { id: imageId } // imageId est déjà un String
+    });
+
+    res.json({
+      success: true,
+      message: 'Image supprimée avec succès'
+    });
+
+  } catch (error) {
+    console.error('Erreur lors de la suppression de l\'image:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la suppression de l\'image'
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductsByCategory,
   getProductBySlug,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  addProductImage,
+  deleteProductImage
 };

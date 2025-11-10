@@ -203,13 +203,13 @@ export default function ContactPage() {
               <div className="social-links-contact">
                 
                 {/* Instagram */}
-                <a href="#" className="social-link-item">
+                <a href="https://www.instagram.com/mv.meavita/?igsh=MTc4YjdscjA5NnQ4MA%3D%3D" target="_blank" rel="noopener noreferrer" className="social-link-item">
                   <div className="social-icon">
                     <Image src="/instagram.png" alt="Instagram" width={30} height={30} />
                   </div>
                   <div className="social-info">
                     <h4>Instagram</h4>
-                    <p>@meavita.creation</p>
+                    <p>@mv.meavita</p>
                   </div>
                 </a>
                 

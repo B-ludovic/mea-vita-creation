@@ -5,6 +5,9 @@ const router = express.Router();
 // Importer les middlewares d'authentification
 const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 
+// Importer le middleware d'upload de fichiers
+const upload = require('../middleware/upload');
+
 // Importer les fonctions du contrôleur
 const { 
   getAllProducts, 
@@ -12,7 +15,9 @@ const {
   getProductBySlug,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  addProductImage,
+  deleteProductImage
 } = require('../controllers/productController');
 
 // ROUTES PUBLIQUES (accessibles à tous)
@@ -84,6 +89,18 @@ router.put('/:id', authenticateToken, isAdmin, updateProduct);
 // DELETE /api/products/:id
 // Nécessite: authentification + rôle ADMIN
 router.delete('/:id', authenticateToken, isAdmin, deleteProduct);
+
+// ROUTE POUR AJOUTER UNE IMAGE À UN PRODUIT
+// POST /api/products/:productId/images
+// Nécessite: authentification + rôle ADMIN
+// Body: FormData avec le fichier image (clé: "image")
+// Le middleware upload.single('image') gère l'upload du fichier
+router.post('/:productId/images', authenticateToken, isAdmin, upload.single('image'), addProductImage);
+
+// ROUTE POUR SUPPRIMER UNE IMAGE D'UN PRODUIT
+// DELETE /api/products/:productId/images/:imageId
+// Nécessite: authentification + rôle ADMIN
+router.delete('/:productId/images/:imageId', authenticateToken, isAdmin, deleteProductImage);
 
 // Exporter le router
 module.exports = router;

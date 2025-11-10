@@ -102,7 +102,16 @@ export default function CategoriesPage() {
                   />
                 </div>
                 <div className="category-info">
-                  <h3>{category.name}</h3>
+                  <h3>
+                    <Image
+                      src="/Logo_Francois_sansfond.PNG"
+                      alt="Logo"
+                      width={30}
+                      height={30}
+                      style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }}
+                    />
+                    {category.name}
+                  </h3>
                   <p>{category.description}</p>
                   <Link href={`/categories/${category.slug}`} className="category-link">
                     Découvrir →

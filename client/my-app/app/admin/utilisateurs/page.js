@@ -212,27 +212,27 @@ export default function AdminUsersPage() {
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
-                <td>
+                <td data-label="Nom">
                   <strong>{user.firstName} {user.lastName}</strong>
                 </td>
-                <td>{user.email}</td>
-                <td>
+                <td data-label="Email">{user.email}</td>
+                <td data-label="Rôle">
                   <span className={`badge ${user.role === 'ADMIN' ? 'admin-badge' : 'client-badge'}`}>
                     {user.role === 'ADMIN' ? 'Administrateur' : 'Client'}
                   </span>
                 </td>
-                <td>
+                <td data-label="Statut">
                   <span className={`badge ${user.isActive ? 'success' : 'danger'}`}>
                     {user.isActive ? 'Actif' : 'Inactif'}
                   </span>
                 </td>
-                <td style={{ textAlign: 'center' }}>
+                <td data-label="Commandes" style={{ textAlign: 'center' }}>
                   {user._count.Order}
                 </td>
-                <td style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                <td data-label="Inscription" style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
                   {new Date(user.createdAt).toLocaleDateString('fr-FR')}
                 </td>
-                <td>
+                <td data-label="Actions">
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                     <button 
                       className="admin-btn admin-btn-user-toggle"

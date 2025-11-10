@@ -53,7 +53,16 @@ export default function HomePage() {
                 />
               </div>
               <div className="category-info">
-                <h3>Pochettes Unisexe</h3>
+                <h3>
+                  <Image 
+                    src="/Logo_Francois_sansfond.PNG" 
+                    alt="Logo" 
+                    width={30} 
+                    height={30} 
+                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                  />
+                  Pochettes Unisexe
+                </h3>
                 <p>
                   Élégantes et pratiques, nos pochettes s'adaptent à tous les styles. 
                   Parfaites pour vos essentiels du quotidien.
@@ -76,7 +85,16 @@ export default function HomePage() {
                 />
               </div>
               <div className="category-info">
-                <h3>Porte-Carte</h3>
+                <h3>
+                  <Image 
+                    src="/Logo_Francois_sansfond.PNG" 
+                    alt="Logo" 
+                    width={30} 
+                    height={30} 
+                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                  />
+                  Porte-Carte
+                </h3>
                 <p>
                   Compacts et raffinés, nos porte-cartes allient minimalisme et élégance. 
                   L'accessoire essentiel pour vos cartes.
@@ -99,7 +117,16 @@ export default function HomePage() {
                 />
               </div>
               <div className="category-info">
-                <h3>Sac Cylindre</h3>
+                <h3>
+                  <Image 
+                    src="/Logo_Francois_sansfond.PNG" 
+                    alt="Logo" 
+                    width={30} 
+                    height={30} 
+                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                  />
+                  Sac Cylindre
+                </h3>
                 <p>
                   Design unique et original, nos sacs cylindres se démarquent par leur forme distinctive. 
                   L'audace faite accessoire.
@@ -122,7 +149,16 @@ export default function HomePage() {
                 />
               </div>
               <div className="category-info">
-                <h3>Sac U</h3>
+                <h3>
+                  <Image 
+                    src="/Logo_Francois_sansfond.PNG" 
+                    alt="Logo" 
+                    width={30} 
+                    height={30} 
+                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                  />
+                  Sac U
+                </h3>
                 <p>
                   Spacieux et élégant, le sac U est parfait pour toutes les occasions. 
                   Votre compagnon idéal au quotidien.

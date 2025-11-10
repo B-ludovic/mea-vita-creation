@@ -20,6 +20,8 @@
     grid-template-columns: 250px 1fr;
     min-height: 100vh;
     background: #f5f5f5;
+    overflow-x: hidden; /* Empêcher le débordement horizontal */
+    width: 100%;
 }
 
 .admin-sidebar {
@@ -86,6 +88,8 @@
     /* REMOVED margin-left since we're using grid now */
     /* margin-left: 250px; */
     padding: 2rem;
+    overflow-x: hidden; /* Empêcher le débordement horizontal */
+    max-width: 100%; /* Limiter la largeur */
 }
 
 .admin-header {
@@ -169,6 +173,7 @@
     overflow-x: auto;
     min-width: 0;
     width: 100%;
+    max-width: 100%; /* Limiter la largeur au conteneur parent */
 }
 
 .admin-table-container h2 {
@@ -314,7 +319,9 @@
     background: #b71c1c;
 }
 
-/* Responsive */
+/* ========== RESPONSIVE - VERSION MOBILE ========== */
+
+/* Tablette et petits écrans */
 @media (max-width: 968px) {
     .admin-layout {
         grid-template-columns: 1fr;
@@ -324,9 +331,260 @@
         position: static;
         width: 100%;
         height: auto;
+        padding: 1.5rem 0;
     }
     
     .admin-content {
         margin-left: 0;
+        padding: 1.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    .stat-card-value {
+        font-size: 2rem;
+    }
+}
+
+/* Tablettes et écrans moyens - MODE CARTES pour les tableaux */
+@media (max-width: 1400px) {
+    /* Layout en 1 colonne sur mobile */
+    .admin-layout {
+        grid-template-columns: 1fr;
+        overflow-x: hidden; /* Empêcher le scroll horizontal */
+    }
+
+    /* Sidebar reste verticale sur mobile */
+    .admin-sidebar {
+        padding: 1.5rem 0;
+        height: auto;
+        width: 100%; /* Prendre toute la largeur */
+        position: static; /* Ne plus être sticky sur mobile */
+    }
+
+    .admin-sidebar-header {
+        padding: 0 1rem 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .admin-sidebar-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .admin-sidebar-header p {
+        font-size: 0.8rem;
+    }
+
+    /* Navigation verticale sur mobile */
+    .admin-nav {
+        list-style: none;
+    }
+
+    .admin-nav li {
+        margin-bottom: 0.5rem;
+    }
+
+    .admin-nav a {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+
+    .admin-nav a:hover,
+    .admin-nav a.active {
+        background: rgba(255,107,53,0.1);
+        color: var(--white);
+        border-left-color: var(--primary-orange);
+    }
+
+    /* Contenu admin sur mobile */
+    .admin-content {
+        padding: 1rem;
+        overflow-x: hidden; /* Empêcher le débordement */
+        max-width: 100vw; /* Ne jamais dépasser la largeur de l'écran */
+        box-sizing: border-box;
+    }
+
+    .admin-header {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .admin-header p {
+        font-size: 0.9rem;
+    }
+
+    /* Stats grid sur mobile - 1 colonne */
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    .stat-card-value {
+        font-size: 2rem;
+    }
+
+    .stat-card-icon {
+        font-size: 1.5rem;
+    }
+
+    /* Tables responsive - VERSION CARTES sur mobile */
+    .admin-table-container {
+        padding: 1rem;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .admin-table-container h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Réduire le bouton "Ajouter" sur mobile */
+    .admin-btn-primary {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+
+    /* Cacher l'en-tête du tableau sur mobile */
+    .admin-table thead {
+        display: none;
+    }
+
+    /* Transformer le tableau en cartes empilées */
+    .admin-table,
+    .admin-table tbody,
+    .admin-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table tr {
+        margin-bottom: 1rem;
+        background: #fafafa;
+        border-radius: 10px;
+        padding: 1rem;
+        border: 1px solid var(--light-beige);
+    }
+
+    /* Chaque cellule en colonne : label au-dessus, valeur en dessous */
+    .admin-table td {
+        display: block;
+        text-align: left;
+        padding: 0.75rem 0;
+        border: none;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .admin-table td:last-child {
+        border-bottom: none; /* Pas de bordure sur la dernière cellule */
+    }
+
+    /* Label affiché AU-DESSUS de la valeur */
+    .admin-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 700;
+        color: var(--text-dark);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.25rem;
+        color: var(--text-light);
+    }
+
+    /* Boutons en pleine largeur sur mobile */
+    .admin-table td .admin-btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        justify-content: center;
+    }
+
+    /* Conteneur de boutons en colonne */
+    .admin-table td > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .admin-table th {
+        font-size: 0.75rem;
+    }
+
+    /* Boutons plus petits sur mobile */
+    .admin-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+
+    .badge {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .admin-header {
+        padding: 1rem;
+    }
+
+    .admin-header h1 {
+        font-size: 1.3rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-card-value {
+        font-size: 1.8rem;
+    }
+
+    .admin-table-container {
+        padding: 0.75rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* Boutons en pleine largeur sur très petits écrans */
+    .admin-btn {
+        width: 100%;
+        justify-content: center;
     }
 }

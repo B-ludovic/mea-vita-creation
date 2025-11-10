@@ -146,7 +146,16 @@ export default function CategoryPage() {
                   </div>
                   
                   <div className="product-info">
-                    <h3>{product.name}</h3>
+                    <h3>
+                      <Image 
+                        src="/Logo_Francois_sansfond.PNG" 
+                        alt="Logo" 
+                        width={24} 
+                        height={24} 
+                        style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} 
+                      />
+                      {product.name}
+                    </h3>
                     <p>{product.description}</p>
                     <p className="product-price">{product.price.toFixed(2)}€</p>
                     <Link href={`/produits/${product.slug}`}>

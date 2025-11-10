@@ -18,6 +18,8 @@ export default function Header() {
 
     // État pour stocker l'utilisateur connecté
     const [user, setUser] = useState(null);
+    // État pour le menu burger mobile (ouvert/fermé)
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     // Utiliser le contexte du panier
     const { getCartCount } = useCart();
 
@@ -60,17 +62,30 @@ export default function Header() {
         localStorage.removeItem('user');
         setUser(null);
         
+        // Fermer le menu mobile si ouvert
+        setIsMenuOpen(false);
+        
         // Déclencher un événement personnalisé pour notifier la déconnexion
         window.dispatchEvent(new Event('userLoggedOut'));
         
         router.push('/');
     };
 
+    // Fonction pour basculer le menu burger (ouvrir/fermer)
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    // Fonction pour fermer le menu quand on clique sur un lien
+    const closeMenu = () => {
+        setIsMenuOpen(false);
+    };
+
     return (
         <header className="header">
             <nav className="nav">
                 {/* Logo et nom du site */}
-                <Link href="/" className="logo">
+                <Link href="/" className="logo" onClick={closeMenu}>
                     <Image 
                         src="/Logo_Francois_sansfond.PNG" 
                         alt="Mea Vita Création Logo" 
@@ -82,22 +97,33 @@ export default function Header() {
                     <h1>MEA VITA CRÉATION</h1>
                 </Link>
 
-                {/* Menu de navigation */}
-                <ul className="nav-menu">
+                {/* Bouton burger pour mobile (visible uniquement sur petit écran) */}
+                <button 
+                    className={`burger-button ${isMenuOpen ? 'active' : ''}`}
+                    onClick={toggleMenu}
+                    aria-label="Menu"
+                >
+                    <span className="burger-line"></span>
+                    <span className="burger-line"></span>
+                    <span className="burger-line"></span>
+                </button>
+
+                {/* Menu de navigation - s'ouvre/ferme en mode mobile */}
+                <ul className={`nav-menu ${isMenuOpen ? 'mobile-open' : ''}`}>
                     <li>
-                        <Link href="/">Accueil</Link>
+                        <Link href="/" onClick={closeMenu}>Accueil</Link>
                     </li>
                     <li>
-                        <Link href="/categories">Catégories</Link>
+                        <Link href="/categories" onClick={closeMenu}>Catégories</Link>
                     </li>
                     <li>
-                        <Link href="/apropos">À Propos</Link>
+                        <Link href="/apropos" onClick={closeMenu}>À Propos</Link>
                     </li>
                     <li>
-                        <Link href="/contact">Contact</Link>
+                        <Link href="/contact" onClick={closeMenu}>Contact</Link>
                     </li>
                     <li>
-                        <Link href="/panier" className="cart-link">
+                        <Link href="/panier" className="cart-link" onClick={closeMenu}>
                             <Image 
                                 src="/e-commerce.png" 
                                 alt="Panier" 
@@ -111,7 +137,7 @@ export default function Header() {
                     {user && (
                         <>
                             <li>
-                                <Link href="/mes-commandes" className="orders-link">
+                                <Link href="/mes-commandes" className="orders-link" onClick={closeMenu}>
                                     <Image 
                                         src="/delivery-box.png" 
                                         alt="Mes commandes" 
@@ -123,7 +149,7 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/mes-adresses" className="addresses-link">
+                                <Link href="/mes-adresses" className="addresses-link" onClick={closeMenu}>
                                     <Image 
                                         src="/location.png" 
                                         alt="Mes adresses" 
@@ -136,7 +162,7 @@ export default function Header() {
                             </li>
                             {user.role === 'ADMIN' && (
                                 <li>
-                                    <Link href="/admin/dashboard" className="admin-link">
+                                    <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
                                         <Image 
                                             src="/satistic.png" 
                                             alt="Administration" 
@@ -150,12 +176,37 @@ export default function Header() {
                             )}
                         </>
                     )}
+
+                    {/* Affichage conditionnel selon si l'utilisateur est connecté - VERSION MOBILE */}
+                    <li className="mobile-auth">
+                        {user ? (
+                            // Si connecté : afficher le nom + bouton déconnexion
+                            <div className="mobile-auth-content">
+                                <span className="user-greeting">
+                                    Bonjour {user.firstName} !
+                                </span>
+                                <button className="btn-logout" onClick={handleLogout}>
+                                    Déconnexion
+                                </button>
+                            </div>
+                        ) : (
+                            // Si non connecté : afficher les boutons connexion/inscription
+                            <div className="mobile-auth-content">
+                                <Link href="/login" onClick={closeMenu}>
+                                    <button className="btn-login">Connexion</button>
+                                </Link>
+                                <Link href="/register" onClick={closeMenu}>
+                                    <button className="btn-signup">Inscription</button>
+                                </Link>
+                            </div>
+                        )}
+                    </li>
                 </ul>
 
-                {/* Affichage conditionnel selon si l'utilisateur est connecté */}
+                {/* Affichage conditionnel selon si l'utilisateur est connecté - VERSION DESKTOP */}
                 {user ? (
                     // Si connecté : afficher le nom + bouton déconnexion
-                    <div className="auth-buttons">
+                    <div className="auth-buttons desktop-only">
                         <span className="user-greeting">
                             Bonjour {user.firstName} !
                         </span>
@@ -165,7 +216,7 @@ export default function Header() {
                     </div>
                 ) : (
                     // Si non connecté : afficher les boutons connexion/inscription
-                    <div className="auth-buttons">
+                    <div className="auth-buttons desktop-only">
                         <Link href="/login">
                             <button className="btn-login">Connexion</button>
                         </Link>

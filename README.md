@@ -330,13 +330,66 @@ npm start        # Lancer en production
 
 **Ludovic** - [B-ludovic](https://github.com/B-ludovic)
 
-Projet : François Maroquinerie - Créations artisanales
+Projet : François Maroquinerie - Créations artisanales  
+Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 
 ---
 
 ## 🎨 Crédits
 
 - **Icônes** : [Flaticon](https://www.flaticon.com)
+- **Inspiration & apprentissage** : Communauté dev, Stack Overflow, documentation officielle
+
+---
+
+## 📚 Ce que j'ai appris sur ce projet
+
+### Frontend
+- ✅ Next.js 14 avec App Router (nouvelle architecture)
+- ✅ React Context API pour la gestion d'état
+- ✅ Hooks personnalisés (useEffect, useState, custom hooks)
+- ✅ Navigation côté client et protection de routes
+- ✅ Intégration Stripe pour les paiements
+- ✅ CSS moderne avec variables et layouts responsive
+
+### Backend
+- ✅ Architecture RESTful avec Express.js
+- ✅ Prisma ORM pour PostgreSQL (migrations, relations)
+- ✅ Authentification JWT (tokens, refresh, expiration)
+- ✅ Middlewares (auth, rate limiting, sanitization)
+- ✅ Webhooks Stripe pour les paiements asynchrones
+- ✅ Envoi d'emails transactionnels avec Resend
+- ✅ Gestion des erreurs et validation des données
+
+### DevOps & Bonnes pratiques
+- ✅ Git & GitHub (commits sémantiques, branches)
+- ✅ Variables d'environnement (.env, sécurité)
+- ✅ Gestion des secrets (API keys, tokens)
+- ✅ Documentation technique (README, commentaires)
+- ✅ Déploiement production sur Render
+- ✅ Testing manuel et debugging
+
+### Sécurité
+- ✅ Hachage de mots de passe (bcrypt)
+- ✅ Protection CSRF et XSS
+- ✅ Rate limiting anti brute-force
+- ✅ Validation et sanitization des inputs
+- ✅ Tokens JWT avec expiration
+- ✅ Protection des routes admin
+
+---
+
+## 🚧 Points d'amélioration futurs
+
+- [ ] Tests automatisés (Jest, Cypress)
+- [ ] CI/CD avec GitHub Actions
+- [ ] Upload d'images optimisé
+- [ ] Recherche avancée et filtres
+- [ ] Notifications en temps réel (WebSocket)
+- [ ] Analytics et monitoring
+- [ ] Mode sombre / thème personnalisable
+- [ ] Internationalisation 
+- [ ] PWA (Progressive Web App)
 
 ---
 

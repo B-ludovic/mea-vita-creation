@@ -14,44 +14,78 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur est connecté et est admin
-    const userData = localStorage.getItem('user');
-    
-    if (!userData) {
-      router.push('/login');
-      return;
-    }
+    // Fonction pour vérifier l'authentification et les droits admin
+    const checkAdminAccess = async () => {
+      try {
+        // Récupérer le token depuis localStorage
+        const token = localStorage.getItem('token');
+        const userData = localStorage.getItem('user');
 
-    const parsedUser = JSON.parse(userData);
-    
-    // Vérifier si c'est un admin
-    if (parsedUser.role !== 'ADMIN') {
-      router.push('/');
-      return;
-    }
+        // Si pas de token ou pas de user, rediriger vers login
+        if (!token || !userData) {
+          console.log('Pas de token ou de données utilisateur');
+          router.push('/login');
+          return;
+        }
 
-    setUser(parsedUser);
-    setLoading(false);
+        const parsedUser = JSON.parse(userData);
+        
+        // Vérifier le rôle dans localStorage (première vérification)
+        if (parsedUser.role !== 'ADMIN') {
+          console.log('Utilisateur non-admin détecté');
+          router.push('/');
+          return;
+        }
+
+        // NOUVELLE SÉCURITÉ : Vérifier le token JWT auprès du backend
+        // Cela empêche quelqu'un de modifier localStorage pour se faire passer pour admin
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        // Si le token est invalide ou expiré, le backend renverra 401 ou 403
+        if (!response.ok) {
+          console.error('Token invalide ou expiré:', response.status);
+          
+          // Nettoyer le localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          // Rediriger vers login avec un message
+          setError('Session expirée. Veuillez vous reconnecter.');
+          setTimeout(() => router.push('/login'), 2000);
+          return;
+        }
+
+        // Si tout est OK, afficher l'interface admin
+        console.log('Accès admin autorisé');
+        setUser(parsedUser);
+        setLoading(false);
+
+      } catch (error) {
+        console.error('Erreur lors de la vérification:', error);
+        
+        // En cas d'erreur, nettoyer et rediriger
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        
+        setError('Erreur de connexion. Redirection...');
+        setTimeout(() => router.push('/login'), 2000);
+      }
+    };
+
+    checkAdminAccess();
   }, [router]);
 
-  if (loading) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        minHeight: '100vh' 
-      }}>
-        <h2>Chargement...</h2>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null;
-  }
+  // Ne rien afficher tant que la vérification n'est pas terminée
+  if (loading || !user) return null;
 
   return (
     <div className="admin-layout">

@@ -10,13 +10,14 @@ const getAllProducts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const skip = (page - 1) * limit;
 
-    // Récupérer tous les produits actifs avec leurs catégories
+    // Récupérer tous les produits actifs avec leurs catégories ET leurs images
     const products = await prisma.product.findMany({
       where: {
         isActive: true
       },
       include: {
-        Category: true  // Inclure les infos de la catégorie
+        Category: true,      // Inclure les infos de la catégorie
+        ProductImage: true   // Inclure les images du produit pour l'affichage
       },
       orderBy: {
         createdAt: 'desc'  // Les plus récents en premier
@@ -70,14 +71,15 @@ const getProductsByCategory = async (req, res) => {
       });
     }
 
-    // Récupérer les produits de cette catégorie
+    // Récupérer les produits de cette catégorie avec leurs images
     const products = await prisma.product.findMany({
       where: {
         categoryId: category.id,
         isActive: true
       },
       include: {
-        Category: true
+        Category: true,      // Inclure la catégorie
+        ProductImage: true   // Inclure les images pour l'affichage
       },
       orderBy: {
         createdAt: 'desc'

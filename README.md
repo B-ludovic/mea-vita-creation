@@ -26,14 +26,15 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
-- 👤 **Espace admin protégé** : Dashboard avec vérification JWT, gestion produits/commandes/utilisateurs
-- � **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
-- �📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
+- 👤 **Espace admin protégé** : Dashboard avec vérification JWT, gestion produits/commandes/utilisateurs/catégories
+- 🖼️ **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
+- 📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
 - 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
 - 📊 **Stock en temps réel** : Mise à jour instantanée du stock après ajout au panier
-- 🚫 **Protection stock** : Impossible d'acheter plus que le stock disponible
+- 🚫 **Protection stock** : Impossible d'acheter plus que le stock disponible, affichage "Rupture de stock"
 - 📱 **Design responsive** : Interface optimisée mobile/tablette/desktop avec breakpoints adaptatifs
 - 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages produits et catégories
+- ✨ **UX moderne** : Système de modals élégants avec animations pour toutes les notifications
 
 ---
 
@@ -218,18 +219,21 @@ francois-maroquinerie/
 │   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
 │   │   ├── Header.jsx      # En-tête navigation
+│   │   ├── Modal.jsx       # Composant modal réutilisable
 │   │   ├── ConditionalLayout.jsx
 │   │   ├── InactivityWrapper.jsx
 │   │   └── ProductCarousel.jsx
 │   ├── contexts/           # Context API
 │   │   └── CartContext.js  # Gestion du panier
 │   ├── hooks/              # Custom hooks
+│   │   ├── useModal.js     # Hook pour gérer les modals
 │   │   └── useInactivityTimer.js
 │   ├── config/             # Configuration
 │   │   └── productImages.js # Images produits
 │   ├── styles/             # Fichiers CSS
 │   │   ├── globals.css
 │   │   ├── variables.css
+│   │   ├── Modal.css       # Styles modal avec animations
 │   │   ├── Header.css
 │   │   ├── Home.css
 │   │   ├── Auth.css
@@ -385,12 +389,14 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 ### Frontend
 - ✅ Next.js 14 avec App Router (nouvelle architecture)
 - ✅ React Context API pour la gestion d'état
-- ✅ Hooks personnalisés (useEffect, useState, custom hooks)
+- ✅ Hooks personnalisés (useEffect, useState, useModal)
 - ✅ Navigation côté client et protection de routes
 - ✅ Intégration Stripe pour les paiements
 - ✅ CSS moderne avec variables et layouts responsive
 - ✅ Media queries et breakpoints adaptatifs (1500px, 1400px, 968px, 768px, 480px)
-- ✅ Animations CSS (transitions, staggered menu burger)
+- ✅ Animations CSS (transitions, staggered menu burger, fadeIn/slideIn modals)
+- ✅ Système de modals réutilisables avec icônes PNG
+- ✅ Gestion du stock disponible en temps réel (panier + BDD)
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -422,6 +428,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Tokens JWT avec expiration (frontend + backend)
 - ✅ Protection des routes admin (vérification JWT côté client)
 - ✅ Validation de stock côté client et serveur (double sécurité)
+- ✅ Système de callback sécurisé pour alertes (useRef, pas de boucle infinie)
 
 ---
 
@@ -429,13 +436,16 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 
 - [ ] Tests automatisés (Jest, Cypress)
 - [ ] CI/CD avec GitHub Actions
-- [ ] Upload d'images optimisé
+- [ ] Compression et optimisation d'images (Sharp)
 - [ ] Recherche avancée et filtres
 - [ ] Notifications en temps réel (WebSocket)
 - [ ] Analytics et monitoring
 - [ ] Mode sombre / thème personnalisable
-- [ ] Internationalisation 
+- [ ] Internationalisation
 - [ ] PWA (Progressive Web App)
+- [ ] Gestion des stocks avec alertes admin
+- [ ] Export PDF des commandes
+- [ ] Statistiques avancées (dashboard admin)
 
 ---
 

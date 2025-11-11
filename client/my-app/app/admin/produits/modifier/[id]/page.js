@@ -4,12 +4,15 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../../../../components/Modal';
+import { useModal } from '../../../../../hooks/useModal';
 import '../../../../../styles/AdminForms.css';
 
 export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params.id;
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
 
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +32,7 @@ export default function EditProductPage() {
     description: '',
     price: '',
     categoryId: '',
-    stock: 0,
+    stock: '', // Utiliser une string vide au lieu de 0
     isActive: true
   });
 
@@ -51,7 +54,7 @@ export default function EditProductPage() {
         });
 
         if (categoriesResponse.status === 403) {
-          alert('Accès refusé. Réservé aux administrateurs.');
+          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
           router.push('/');
           return;
         }
@@ -69,13 +72,13 @@ export default function EditProductPage() {
         });
 
         if (productResponse.status === 403) {
-          alert('Accès refusé. Réservé aux administrateurs.');
+          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
           router.push('/');
           return;
         }
 
         if (productResponse.status === 404) {
-          alert('Produit non trouvé');
+          showAlert('Produit non trouvé', 'Erreur', '/annuler.png');
           router.push('/admin/produits');
           return;
         }
@@ -90,7 +93,7 @@ export default function EditProductPage() {
             description: product.description || '',
             price: product.price.toString(),
             categoryId: product.categoryId,
-            stock: product.stock,
+            stock: product.stock.toString(), // Convertir en string pour l'input
             isActive: product.isActive
           });
           
@@ -106,7 +109,8 @@ export default function EditProductPage() {
     };
 
     fetchData();
-  }, [router, productId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, productId]); // Retirer showAlert pour éviter les re-renders
 
   // Générer automatiquement le slug à partir du nom
   const handleNameChange = (e) => {
@@ -204,14 +208,13 @@ export default function EditProductPage() {
       const data = await response.json();
       
       if (data.success) {
-        setSuccess('Image ajoutée avec succès !');
+        showAlert('Image ajoutée avec succès !', 'Succès', '/validation.png');
         // Ajouter la nouvelle image à la liste
         setProductImages([...productImages, data.image]);
         // Réinitialiser la sélection
         setSelectedFile(null);
         setPreviewUrl('');
-        // Effacer le message de succès après 3 secondes
-        setTimeout(() => setSuccess(''), 3000);
+        setSuccess('');
       } else {
         setError(data.message || 'Erreur lors de l\'ajout de l\'image');
       }
@@ -225,41 +228,43 @@ export default function EditProductPage() {
 
   // FONCTION POUR SUPPRIMER UNE IMAGE
   const handleImageDelete = async (imageId) => {
-    // Confirmer la suppression
-    if (!confirm('Voulez-vous vraiment supprimer cette image ?')) {
-      return;
-    }
-    
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Vous devez être connecté');
-        router.push('/login');
-        return;
-      }
-      
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/images/${imageId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
+    // Confirmer la suppression avec Modal
+    showConfirm(
+      'Voulez-vous vraiment supprimer cette image ?',
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            router.push('/login');
+            return;
+          }
+          
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}/images/${imageId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            }
+          });
+          
+          const data = await response.json();
+          
+          if (data.success) {
+            showAlert('Image supprimée avec succès !', 'Succès', '/validation.png');
+            // Retirer l'image de la liste
+            setProductImages(productImages.filter(img => img.id !== imageId));
+            setSuccess('');
+          } else {
+            setError(data.message || 'Erreur lors de la suppression de l\'image');
+          }
+        } catch (err) {
+          console.error('Erreur:', err);
+          setError('Erreur de connexion au serveur');
         }
-      });
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setSuccess('Image supprimée avec succès !');
-        // Retirer l'image de la liste
-        setProductImages(productImages.filter(img => img.id !== imageId));
-        // Effacer le message de succès après 3 secondes
-        setTimeout(() => setSuccess(''), 3000);
-      } else {
-        setError(data.message || 'Erreur lors de la suppression de l\'image');
-      }
-    } catch (err) {
-      console.error('Erreur:', err);
-      setError('Erreur de connexion au serveur');
-    }
+      },
+      'Supprimer l\'image',
+      '/trash.png'
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -271,7 +276,7 @@ export default function EditProductPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Vous devez être connecté');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
         router.push('/login');
         return;
       }
@@ -286,7 +291,7 @@ export default function EditProductPage() {
       });
 
       if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
         router.push('/');
         return;
       }
@@ -294,10 +299,10 @@ export default function EditProductPage() {
       const data = await response.json();
 
       if (data.success) {
-        setSuccess('Produit modifié avec succès !');
+        showAlert('Produit modifié avec succès !', 'Succès', '/validation.png');
         setTimeout(() => {
           router.push('/admin/produits');
-        }, 1500);
+        }, 2000);
       } else {
         setError(data.message || 'Erreur lors de la modification du produit');
       }
@@ -607,6 +612,19 @@ export default function EditProductPage() {
           </div>
         </form>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={closeModal}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </>
   );
 }

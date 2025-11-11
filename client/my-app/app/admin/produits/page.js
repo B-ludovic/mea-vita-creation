@@ -4,11 +4,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
 
 export default function AdminProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
 
   useEffect(() => {
     fetchProducts();
@@ -20,7 +23,7 @@ export default function AdminProductsPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Vous devez être connecté');
+        showAlert('Vous devez être connecté', 'Erreur', '/annuler.png');
         router.push('/login');
         return;
       }
@@ -34,7 +37,7 @@ export default function AdminProductsPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/annuler.png');
         router.push('/');
         return;
       }
@@ -46,7 +49,7 @@ export default function AdminProductsPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors du chargement des produits');
+      showAlert('Erreur lors du chargement des produits', 'Erreur', '/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -56,7 +59,7 @@ export default function AdminProductsPage() {
     try {
       // Cette route n'existe pas encore, on pourrait la créer si besoin
       console.log('Mettre à jour le stock:', productId, newStock);
-      alert('Fonctionnalité à implémenter : mise à jour du stock');
+      showAlert('Fonctionnalité à implémenter : mise à jour du stock', 'Information', '/help.png');
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -64,45 +67,48 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (productId, productName) => {
     // Demander confirmation avant suppression
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer "${productName}" ?`)) {
-      return;
-    }
+    showConfirm(
+      `Êtes-vous sûr de vouloir supprimer "${productName}" ?`,
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Erreur', '/annuler.png');
+            router.push('/login');
+            return;
+          }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Vous devez être connecté');
-        router.push('/login');
-        return;
-      }
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          if (response.status === 403) {
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/annuler.png');
+            router.push('/');
+            return;
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            showAlert('Produit supprimé avec succès !', 'Succès', '/validation.png');
+            // Recharger la liste des produits
+            fetchProducts();
+          } else {
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur lors de la suppression du produit', 'Erreur', '/annuler.png');
         }
-      });
-
-      if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
-        router.push('/');
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert('Produit supprimé avec succès !');
-        // Recharger la liste des produits
-        fetchProducts();
-      } else {
-        alert(data.message || 'Erreur lors de la suppression');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la suppression du produit');
-    }
+      },
+      'Confirmation de suppression',
+      '/trash.png'
+    );
   };
 
   if (loading) {
@@ -222,6 +228,19 @@ export default function AdminProductsPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </>
   );
 }

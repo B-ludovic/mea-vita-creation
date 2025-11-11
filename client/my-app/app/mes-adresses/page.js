@@ -4,6 +4,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../components/Modal';
+import { useModal } from '../../hooks/useModal';
 import '../../styles/Addresses.css';
 
 // COMPOSANT PRINCIPAL - Page de gestion des adresses
@@ -14,6 +16,7 @@ export default function MesAdresses() {
   const [loading, setLoading] = useState(true); // Chargement en cours
   const [showForm, setShowForm] = useState(false); // Afficher/masquer le formulaire
   const [editingAddress, setEditingAddress] = useState(null); // Adresse en cours de modification
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
 
   // Hook pour la navigation
   const router = useRouter();
@@ -110,41 +113,45 @@ export default function MesAdresses() {
         // Réinitialiser le formulaire
         resetForm();
       } else {
-        alert(data.message || 'Erreur lors de l\'enregistrement');
+        showAlert(data.message || 'Erreur lors de l\'enregistrement', 'Erreur', '/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de l\'enregistrement de l\'adresse');
+      showAlert('Erreur lors de l\'enregistrement de l\'adresse', 'Erreur', '/annuler.png');
     }
   };
 
   // FONCTION POUR SUPPRIMER UNE ADRESSE
   const handleDelete = async (addressId) => {
     // Demander confirmation
-    if (!confirm('Voulez-vous vraiment supprimer cette adresse ?')) {
-      return;
-    }
+    showConfirm(
+      'Voulez-vous vraiment supprimer cette adresse ?',
+      async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/${addressId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
 
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/${addressId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          const data = await response.json();
+
+          if (data.success) {
+            // Recharger les adresses
+            loadAddresses(user.id);
+            showAlert('Adresse supprimée avec succès', 'Succès', '/validation.png');
+          } else {
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur lors de la suppression de l\'adresse', 'Erreur', '/annuler.png');
         }
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        // Recharger les adresses
-        loadAddresses(user.id);
-      } else {
-        alert(data.message || 'Erreur lors de la suppression');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la suppression de l\'adresse');
-    }
+      },
+      'Confirmation de suppression',
+      '/trash.png'
+    );
   };
 
   // FONCTION POUR DÉFINIR UNE ADRESSE PAR DÉFAUT
@@ -163,11 +170,11 @@ export default function MesAdresses() {
         // Recharger les adresses
         loadAddresses(user.id);
       } else {
-        alert(data.message || 'Erreur');
+        showAlert(data.message || 'Erreur', 'Erreur', '/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la définition de l\'adresse par défaut');
+      showAlert('Erreur lors de la définition de l\'adresse par défaut', 'Erreur', '/annuler.png');
     }
   };
 
@@ -430,6 +437,19 @@ export default function MesAdresses() {
           ))
         )}
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </div>
   );
 }

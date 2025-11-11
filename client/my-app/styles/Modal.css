@@ -1,0 +1,145 @@
+/* Modal - Composant de dialogue réutilisable */
+
+/* Couche de fond du modal (backdrop semi-transparent) */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Fond noir semi-transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* Au-dessus de tout le reste */
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Conteneur principal du modal */
+.modal-container {
+  background-color: var(--white);
+  border-radius: 15px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Icône du modal (optionnelle) */
+.modal-icon {
+  margin: 0 auto 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-icon img {
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+}
+
+/* Titre du modal */
+.modal-title {
+  margin: 0 0 1rem 0;
+  font-size: 1.4rem;
+  color: var(--text-dark);
+  font-weight: 700;
+}
+
+/* Message du modal */
+.modal-message {
+  margin: 0 0 2rem 0;
+  font-size: 1rem;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Conteneur des boutons */
+.modal-button-container {
+  display: flex;
+  justify-content: center; /* Centrer les boutons */
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--light-beige);
+}
+
+/* Styles généraux pour les boutons */
+.modal-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+/* Bouton annuler */
+.modal-cancel {
+  background-color: #f0f0f0;
+  color: var(--text-dark);
+}
+
+.modal-cancel:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+/* Bouton confirmer */
+.modal-confirm {
+  background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+  color: var(--text-dark);
+  box-shadow: 0 4px 15px rgba(255, 218, 68, 0.3);
+}
+
+.modal-confirm:hover {
+  background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  .modal-container {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modal-title {
+    font-size: 1.2rem;
+  }
+
+  .modal-message {
+    font-size: 0.95rem;
+  }
+
+  .modal-button-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modal-button {
+    width: 100%;
+  }
+}

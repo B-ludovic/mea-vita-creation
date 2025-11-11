@@ -4,9 +4,13 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Modal from '../../components/Modal';
+import { useModal } from '../../hooks/useModal';
 import '../../styles/Contact.css';
 
 export default function ContactPage() {
+  const { modalState, showAlert, closeModal } = useModal();
+
   // STATE pour gérer le formulaire
   const [formData, setFormData] = useState({
     name: '',
@@ -29,7 +33,11 @@ export default function ContactPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // TODO: Envoyer le formulaire au backend
-    alert('Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.');
+    showAlert(
+      'Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.',
+      'Message envoyé',
+      '/sent-mail.png'
+    );
     
     // Réinitialiser le formulaire
     setFormData({
@@ -303,6 +311,19 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </>
   );
 }

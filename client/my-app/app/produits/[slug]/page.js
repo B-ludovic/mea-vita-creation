@@ -12,6 +12,9 @@ import { useCart } from '../../../contexts/CartContext';
 import ProductCarousel from '../../../components/ProductCarousel';
 // Import de la configuration des images
 import { getProductImages, getCategoryImages } from '../../../config/productImages';
+// Import du Modal
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
 
 // Import du CSS
 import '../../../styles/Product.css';
@@ -21,7 +24,16 @@ export default function ProductPage() {
     const router = useRouter();
     const slug = params.slug;
     // Utiliser le contexte du panier
-    const { addToCart } = useCart();
+    const { addToCart, setAlertCallback, cart } = useCart();
+    // Utiliser le hook modal
+    const { modalState, showAlert, closeModal } = useModal();
+
+    // Enregistrer la fonction showAlert dans le CartContext pour les alertes de stock
+    useEffect(() => {
+        setAlertCallback(() => showAlert);
+        // Nettoyer au démontage du composant
+        return () => setAlertCallback(null);
+    }, [setAlertCallback, showAlert]);
 
     // États
     const [product, setProduct] = useState(null);
@@ -68,22 +80,36 @@ export default function ProductPage() {
         // addToCart retourne true si réussi, false sinon
         const success = addToCart(product, quantity);
         
-        // Afficher l'alerte de succès UNIQUEMENT si l'ajout a réussi
+        // Afficher le modal de succès UNIQUEMENT si l'ajout a réussi
         if (success) {
-            alert(`✅ ${quantity} x ${product.name} ajouté(s) au panier !`);
-            
-            // IMPORTANT : Mettre à jour le stock local du produit
-            // Cela permet d'afficher le bon message de stock sans recharger la page
-            setProduct(prevProduct => ({
-                ...prevProduct,
-                stock: prevProduct.stock - quantity
-            }));
+            showAlert(
+                `${quantity} x ${product.name} ajouté(s) au panier !`,
+                'Produit ajouté',
+                '/validation.png'
+            );
             
             // Remettre la quantité à 1
             setQuantity(1);
         }
         // Sinon, l'alerte d'erreur a déjà été affichée par addToCart()
     };
+
+    // CALCUL DU STOCK DISPONIBLE RÉEL
+    // Prendre en compte la quantité déjà dans le panier
+    const getAvailableStock = () => {
+        if (!product) return 0;
+        
+        // Trouver le produit dans le panier
+        const cartItem = cart.find(item => item.id === product.id);
+        
+        // Stock disponible = stock total - quantité déjà dans le panier
+        const availableStock = product.stock - (cartItem ? cartItem.quantity : 0);
+        
+        return Math.max(0, availableStock); // Ne jamais retourner un nombre négatif
+    };
+
+    // Stock disponible pour l'affichage et les actions
+    const availableStock = getAvailableStock();
 
     // Si en cours de chargement
     if (loading) {
@@ -156,15 +182,15 @@ export default function ProductPage() {
                             {product.description}
                         </p>
 
-                        {/* Stock */}
-                        <div className={`product-stock ${product.stock < 5 ? 'low' : ''} ${product.stock === 0 ? 'out' : ''}`}>
-                            {product.stock === 0 ? 'Rupture de stock' :
-                                product.stock < 5 ? `Plus que ${product.stock} en stock !` :
-                                    `En stock (${product.stock} disponibles)`}
+                        {/* Stock - affichage basé sur le stock disponible réel */}
+                        <div className={`product-stock ${availableStock < 5 ? 'low' : ''} ${availableStock === 0 ? 'out' : ''}`}>
+                            {availableStock === 0 ? 'Rupture de stock' :
+                                availableStock < 5 ? `Plus que ${availableStock} en stock !` :
+                                    `En stock (${availableStock} disponibles)`}
                         </div>
 
-                        {/* Actions */}
-                        {product.stock > 0 && (
+                        {/* Actions - affichage basé sur le stock disponible réel */}
+                        {availableStock > 0 && (
                             <div className="product-actions">
                                 <div className="quantity-selector">
                                     <label htmlFor="quantity">Quantité :</label>
@@ -172,9 +198,9 @@ export default function ProductPage() {
                                         type="number"
                                         id="quantity"
                                         min="1"
-                                        max={product.stock}
+                                        max={availableStock}
                                         value={quantity}
-                                        onChange={(e) => setQuantity(Math.max(1, Math.min(product.stock, parseInt(e.target.value) || 1)))}
+                                        onChange={(e) => setQuantity(Math.max(1, Math.min(availableStock, parseInt(e.target.value) || 1)))}
                                     />
                                 </div>
 
@@ -189,6 +215,19 @@ export default function ProductPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Modal pour les notifications */}
+            <Modal
+                isOpen={modalState.isOpen}
+                title={modalState.title}
+                message={modalState.message}
+                icon={modalState.icon}
+                onConfirm={modalState.onConfirm}
+                onCancel={modalState.onCancel}
+                confirmText={modalState.confirmText}
+                cancelText={modalState.cancelText}
+                showCancelButton={modalState.showCancelButton}
+            />
         </div>
     );
 }

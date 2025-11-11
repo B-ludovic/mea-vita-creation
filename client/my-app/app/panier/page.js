@@ -6,13 +6,23 @@ import { useCart } from '../../contexts/CartContext';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import Modal from '../../components/Modal';
+import { useModal } from '../../hooks/useModal';
 
 // Import du CSS
 import '../../styles/Cart.css';
 
 export default function CartPage() {
   // Utiliser le contexte du panier
-  const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal, getCartCount } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, getCartTotal, getCartCount, setAlertCallback } = useCart();
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
+
+  // Enregistrer la fonction showAlert dans le CartContext pour les alertes de stock
+  useEffect(() => {
+    setAlertCallback(() => showAlert);
+    // Nettoyer au démontage du composant
+    return () => setAlertCallback(null);
+  }, [setAlertCallback, showAlert]);
 
   // État pour gérer le chargement du paiement
   const [loading, setLoading] = useState(false);
@@ -73,7 +83,7 @@ export default function CartPage() {
     }
   }, [cart]);
 
-  // 🆕 FONCTION POUR CHARGER LES ADRESSES DE L'UTILISATEUR
+  // FONCTION POUR CHARGER LES ADRESSES DE L'UTILISATEUR
   const loadUserAddresses = async (userId) => {
     try {
       // Appel API pour récupérer les adresses
@@ -157,11 +167,11 @@ export default function CartPage() {
           isDefault: false
         });
       } else {
-        alert(data.message || 'Erreur lors de la création de l\'adresse');
+        showAlert(data.message || 'Erreur lors de la création de l\'adresse', 'Erreur', '/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la création de l\'adresse');
+      showAlert('Erreur lors de la création de l\'adresse', 'Erreur', '/annuler.png');
     }
   };
 
@@ -169,7 +179,7 @@ export default function CartPage() {
   const handleCheckout = async () => {
     // VÉRIFIER QU'UNE ADRESSE EST SÉLECTIONNÉE (si l'utilisateur est connecté)
     if (user && !selectedAddressId) {
-      alert('Veuillez sélectionner une adresse de livraison');
+      showAlert('Veuillez sélectionner une adresse de livraison', 'Adresse requise', '/location.png');
       return; // Arrêter la fonction ici
     }
 
@@ -189,7 +199,7 @@ export default function CartPage() {
         body: JSON.stringify({
           items: cart,
           userId: userObj?.id || null,
-          addressId: selectedAddressId // 🆕 Envoyer l'adresse sélectionnée
+          addressId: selectedAddressId // Envoyer l'adresse sélectionnée
         })
       });
       
@@ -199,13 +209,13 @@ export default function CartPage() {
         // Rediriger vers la page de paiement Stripe
         window.location.href = data.url;
       } else {
-        alert('Erreur lors de la création de la session de paiement');
+        showAlert('Erreur lors de la création de la session de paiement', 'Erreur', '/paiement-refuse.png');
         setLoading(false);
       }
       
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur de connexion au serveur');
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
       setLoading(false);
     }
   };
@@ -466,9 +476,15 @@ export default function CartPage() {
             <button
               className="clear-cart-btn"
               onClick={() => {
-                if (confirm('Êtes-vous sûr de vouloir vider le panier ?')) {
-                  clearCart();
-                }
+                showConfirm(
+                  'Êtes-vous sûr de vouloir vider le panier ? Cette action est irréversible.',
+                  () => {
+                    clearCart();
+                    showAlert('Le panier a été vidé', 'Panier vidé', '/validation.png');
+                  },
+                  'Vider le panier',
+                  '/trash.png'
+                );
               }}
             >
               Vider le panier
@@ -476,6 +492,19 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </div>
   );
 }

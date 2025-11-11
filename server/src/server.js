@@ -163,8 +163,10 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 
 // 6. Limiteur de requêtes global (protection anti spam et brute-force)
-// Maximum 100 requêtes par 15 minutes par IP
-app.use('/api', apiLimiter);
+// Désactivé en développement, activé en production uniquement
+if (process.env.NODE_ENV === 'production') {
+  app.use('/api', apiLimiter);
+}
 
 // ROUTES D'AUTHENTIFICATION
 // Toutes les routes dans authRoutes commenceront par /api/auth

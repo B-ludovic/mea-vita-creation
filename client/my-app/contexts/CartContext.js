@@ -1,7 +1,7 @@
 // Context pour gérer le panier (cart) dans toute l'application
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 
 // Créer le contexte
 const CartContext = createContext();
@@ -18,15 +18,18 @@ export const useCart = () => {
 // Provider du panier (entoure toute l'application)
 export function CartProvider({ children }) {
   // État du panier (tableau d'articles)
-  const [cart, setCart] = useState([]);
-
-  // Charger le panier depuis localStorage au démarrage
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
+  // Initialiser directement avec localStorage pour éviter les cascading renders
+  const [cart, setCart] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedCart = localStorage.getItem('cart');
+      return savedCart ? JSON.parse(savedCart) : [];
     }
-  }, []);
+    return [];
+  });
+  
+  // Callback pour afficher les alertes (sera fourni par les composants qui utilisent le hook useModal)
+  // Utilisation de useRef pour éviter les re-renders en boucle
+  const alertCallbackRef = useRef(null);
 
   // Sauvegarder le panier dans localStorage à chaque modification
   useEffect(() => {
@@ -45,7 +48,12 @@ export function CartProvider({ children }) {
       
       // SÉCURITÉ : Vérifier qu'on ne dépasse pas le stock disponible
       if (newQuantity > product.stock) {
-        alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        // Utiliser le callback si disponible, sinon fallback sur alert natif
+        if (alertCallbackRef.current) {
+          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/help.png');
+        } else {
+          alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        }
         return false; // Échec
       }
       
@@ -61,7 +69,12 @@ export function CartProvider({ children }) {
     } else {
       // SÉCURITÉ : Vérifier le stock avant d'ajouter un nouveau produit
       if (quantity > product.stock) {
-        alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        // Utiliser le callback si disponible, sinon fallback sur alert natif
+        if (alertCallbackRef.current) {
+          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/help.png');
+        } else {
+          alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
+        }
         return false; // Échec
       }
       
@@ -88,7 +101,12 @@ export function CartProvider({ children }) {
         if (item.id === productId) {
           // SÉCURITÉ : Vérifier qu'on ne dépasse pas le stock disponible
           if (quantity > item.stock) {
-            alert(`⚠️ Stock insuffisant ! Seulement ${item.stock} disponible(s).`);
+            // Utiliser le callback si disponible, sinon fallback sur alert natif
+            if (alertCallbackRef.current) {
+              alertCallbackRef.current(`Stock insuffisant ! Seulement ${item.stock} disponible(s).`, 'Stock limité', '/help.png');
+            } else {
+              alert(`⚠️ Stock insuffisant ! Seulement ${item.stock} disponible(s).`);
+            }
             return item; // Garder la quantité actuelle
           }
           return { ...item, quantity };
@@ -113,6 +131,11 @@ export function CartProvider({ children }) {
     return cart.reduce((count, item) => count + item.quantity, 0);
   }, [cart]);
 
+  // Fonction pour enregistrer le callback d'alerte
+  const setAlertCallback = useCallback((callback) => {
+    alertCallbackRef.current = callback;
+  }, []);
+
   // Valeurs et fonctions disponibles dans toute l'application
   const value = {
     cart,
@@ -122,6 +145,7 @@ export function CartProvider({ children }) {
     clearCart,
     getCartTotal,
     getCartCount,
+    setAlertCallback, // Permet aux composants d'enregistrer leur fonction showAlert
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

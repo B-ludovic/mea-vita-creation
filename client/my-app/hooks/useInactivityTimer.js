@@ -1,90 +1,103 @@
 // Hook personnalisé pour gérer la déconnexion automatique après inactivité
 // Durée d'inactivité : 20 minutes
 
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useMemo } from 'react';
 
-export function useInactivityTimer() {
-  const router = useRouter();
-  
-  // Utiliser useRef pour garder une référence au timer
-  // useRef persiste entre les rendus sans déclencher de re-render
+// Fonction utilitaire (optionnelle) pour "debouncer"
+// Vous pouvez aussi utiliser une lib comme lodash.debounce
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+
+/**
+ * Hook pour déclencher une action après une période d'inactivité.
+ * @param {object} options
+ * @param {boolean} options.isActive - Le timer doit-il être actif ? (ex: utilisateur connecté)
+ * @param {function} options.onTimeout - La fonction à appeler lorsque le timer expire.
+ * @param {number} [options.timeout=1200000] - Le temps d'inactivité en ms (défaut: 20 min).
+ * @param {number} [options.debounceMs=500] - Délai de debounce pour les événements.
+ */
+export function useInactivityTimer({
+  isActive,
+  onTimeout,
+  timeout = 20 * 60 * 1000,
+  debounceMs = 500
+}) {
+
   const timerRef = useRef(null);
+  
+  // On utilise une ref pour la callback pour éviter de la mettre en dépendance du useEffect
+  // Cela évite de ré-attacher tous les listeners si la fonction onTimeout change
+  const onTimeoutRef = useRef(onTimeout);
+  useEffect(() => {
+    onTimeoutRef.current = onTimeout;
+  }, [onTimeout]);
 
-  // Durée d'inactivité en millisecondes (20 minutes = 20 * 60 * 1000)
-  const INACTIVITY_TIME = 20 * 60 * 1000; // 20 minutes
-
-  // Fonction pour déconnecter l'utilisateur
-  const handleLogout = () => {
-    // Supprimer le token et les infos utilisateur
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+  // Créer une version "debounced" de la fonction de reset
+  // On utilise useMemo pour ne la créer qu'une seule fois
+  const resetTimer = useMemo(() => {
+    const internalReset = () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => {
+        // Appeler la dernière version de la callback
+        if (onTimeoutRef.current) {
+          onTimeoutRef.current();
+        }
+      }, timeout);
+    };
     
-    // Déclencher un événement pour notifier les autres composants
-    window.dispatchEvent(new Event('userLoggedOut'));
-    
-    // Afficher un message à l'utilisateur
-    alert('Vous avez été déconnecté pour cause d\'inactivité (20 minutes)');
-    
-    // Rediriger vers la page de connexion
-    router.push('/login');
-  };
+    // "Debouncer" la fonction de réinitialisation
+    return debounce(internalReset, debounceMs);
+  }, [timeout, debounceMs]);
 
-  // Fonction pour réinitialiser le timer
-  const resetTimer = () => {
-    // Si un timer existe déjà, on l'annule
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    // Créer un nouveau timer de 20 minutes
-    timerRef.current = setTimeout(() => {
-      handleLogout();
-    }, INACTIVITY_TIME);
-  };
 
   useEffect(() => {
-    // Vérifier si l'utilisateur est connecté
-    const token = localStorage.getItem('token');
-    
-    // Si pas de token, pas besoin du timer
-    if (!token) {
-      return;
+    // Si le hook n'est pas censé être actif (user déconnecté),
+    // on nettoie tout et on n'attache pas les listeners.
+    if (!isActive) {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      return; // Stop
     }
 
     // Liste des événements qui réinitialisent le timer
-    // (= actions de l'utilisateur qui montrent qu'il est actif)
     const events = [
-      'mousedown',    // Clic de souris
-      'mousemove',    // Mouvement de souris
-      'keypress',     // Touche clavier pressée
-      'scroll',       // Scroll de la page
-      'touchstart',   // Touch sur mobile
-      'click'         // Clic
+      'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'
     ];
 
     // Démarrer le timer initial
     resetTimer();
 
     // Ajouter les écouteurs d'événements
-    // À chaque action, on réinitialise le timer
     events.forEach(event => {
       window.addEventListener(event, resetTimer);
     });
 
-    // Fonction de nettoyage (s'exécute quand le composant se démonte)
+    // Fonction de nettoyage
     return () => {
-      // Supprimer tous les écouteurs d'événements
       events.forEach(event => {
         window.removeEventListener(event, resetTimer);
       });
-      
-      // Annuler le timer s'il existe
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
-  }, []); // Le tableau vide [] signifie : s'exécute une seule fois au montage
-
-  // Ce hook ne retourne rien, il travaille en arrière-plan
+    
+    // Ce useEffect dépend de 'isActive', 'timeout', et 'resetTimer' (qui est mémorisé)
+    // Si 'isActive' passe à false, le cleanup s'exécute et les timers/listeners sont coupés.
+    // Si 'isActive' passe à true, tout est (ré)initialisé.
+  }, [isActive, timeout, resetTimer]);
 }

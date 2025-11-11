@@ -9,6 +9,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
 
 // Import des styles
 import '../../../styles/Admin.css';
@@ -20,6 +22,7 @@ export default function AdminCategoriesPage() {
   
   
   const router = useRouter();
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
   
   // Liste de toutes les catégories
   const [categories, setCategories] = useState([]);
@@ -158,10 +161,8 @@ export default function AdminCategoriesPage() {
 
       // Si succès
       if (data.success) {
-        setMessage({ 
-          type: 'success', 
-          text: editingId ? 'Catégorie modifiée avec succès' : 'Catégorie ajoutée avec succès' 
-        });
+        const successMessage = editingId ? 'Catégorie modifiée avec succès' : 'Catégorie ajoutée avec succès';
+        showAlert(successMessage, 'Succès', '/validation.png');
         
         // Réinitialiser le formulaire
         setFormData({ name: '', slug: '', description: '', order: 0 });
@@ -170,9 +171,6 @@ export default function AdminCategoriesPage() {
         
         // Recharger la liste des catégories
         fetchCategories();
-        
-        // Effacer le message après 3 secondes
-        setTimeout(() => setMessage({ type: '', text: '' }), 3000);
       } else {
         setMessage({ type: 'error', text: data.message });
       }
@@ -205,37 +203,39 @@ export default function AdminCategoriesPage() {
   // FONCTION 5 : SUPPRIMER UNE CATÉGORIE
  
   const handleDelete = async (id, categoryName) => {
-    // CONFIRMATION : Demander à l'admin s'il est sûr
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer la catégorie "${categoryName}" ?`)) {
-      return; // Si annulé, ne rien faire
-    }
+    // CONFIRMATION : Demander à l'admin s'il est sûr avec Modal
+    showConfirm(
+      `Êtes-vous sûr de vouloir supprimer la catégorie "${categoryName}" ?`,
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
 
-    try {
-      const token = localStorage.getItem('token');
+          // APPEL API : Demander au backend de supprimer la catégorie
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
 
-      // APPEL API : Demander au backend de supprimer la catégorie
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
+          const data = await response.json();
+
+          // Si succès
+          if (data.success) {
+            showAlert('Catégorie supprimée avec succès', 'Succès', '/validation.png');
+            fetchCategories(); // Recharger la liste
+          } else {
+            setMessage({ type: 'error', text: data.message });
+          }
+
+        } catch (error) {
+          console.error('Erreur:', error);
+          setMessage({ type: 'error', text: 'Erreur lors de la suppression' });
         }
-      });
-
-      const data = await response.json();
-
-      // Si succès
-      if (data.success) {
-        setMessage({ type: 'success', text: 'Catégorie supprimée avec succès' });
-        fetchCategories(); // Recharger la liste
-        setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-      } else {
-        setMessage({ type: 'error', text: data.message });
-      }
-
-    } catch (error) {
-      console.error('Erreur:', error);
-      setMessage({ type: 'error', text: 'Erreur lors de la suppression' });
-    }
+      },
+      'Supprimer la catégorie',
+      '/trash.png'
+    );
   };
 
   // FONCTION 6 : ANNULER L'ÉDITION
@@ -459,6 +459,19 @@ export default function AdminCategoriesPage() {
           <li><strong>Ordre</strong> : Les catégories sont triées par ce numéro (0 en premier)</li>
         </ul>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={closeModal}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </div>
   );
 }

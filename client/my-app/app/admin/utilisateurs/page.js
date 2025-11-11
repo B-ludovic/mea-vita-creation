@@ -4,11 +4,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
 
 export default function AdminUsersPage() {
   const router = useRouter();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
 
   useEffect(() => {
     fetchUsers();
@@ -19,7 +22,7 @@ export default function AdminUsersPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Vous devez être connecté');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
         router.push('/login');
         return;
       }
@@ -32,7 +35,7 @@ export default function AdminUsersPage() {
       });
 
       if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
         router.push('/');
         return;
       }
@@ -44,7 +47,7 @@ export default function AdminUsersPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors du chargement des utilisateurs');
+      showAlert('Erreur lors du chargement des utilisateurs', 'Erreur', '/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -53,130 +56,139 @@ export default function AdminUsersPage() {
   const handleToggleActive = async (userId, currentStatus, userEmail) => {
     const action = currentStatus ? 'désactiver' : 'activer';
     
-    if (!confirm(`Voulez-vous vraiment ${action} le compte de "${userEmail}" ?`)) {
-      return;
-    }
+    showConfirm(
+      `Voulez-vous vraiment ${action} le compte de "${userEmail}" ?`,
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            router.push('/login');
+            return;
+          }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Vous devez être connecté');
-        router.push('/login');
-        return;
-      }
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/toggle-active`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/toggle-active`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          if (response.status === 403) {
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            router.push('/');
+            return;
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            showAlert(data.message || 'Statut modifié avec succès', 'Succès', '/validation.png');
+            fetchUsers();
+          } else {
+            showAlert(data.message || 'Erreur lors de la modification du statut', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur lors de la modification du statut', 'Erreur', '/annuler.png');
         }
-      });
-
-      if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
-        router.push('/');
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert(data.message || 'Statut modifié avec succès');
-        fetchUsers();
-      } else {
-        alert(data.message || 'Erreur lors de la modification du statut');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la modification du statut');
-    }
+      },
+      `${action.charAt(0).toUpperCase() + action.slice(1)} le compte`,
+      '/help.png'
+    );
   };
 
   const handleToggleRole = async (userId, currentRole, userEmail) => {
     const newRole = currentRole === 'ADMIN' ? 'CLIENT' : 'ADMIN';
     const action = newRole === 'ADMIN' ? 'promouvoir en administrateur' : 'rétrograder en client';
     
-    if (!confirm(`Voulez-vous vraiment ${action} l'utilisateur "${userEmail}" ?`)) {
-      return;
-    }
+    showConfirm(
+      `Voulez-vous vraiment ${action} l'utilisateur "${userEmail}" ?`,
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            router.push('/login');
+            return;
+          }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Vous devez être connecté');
-        router.push('/login');
-        return;
-      }
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/role`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ role: newRole })
+          });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/role`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ role: newRole })
-      });
+          if (response.status === 403) {
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            router.push('/');
+            return;
+          }
 
-      if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
-        router.push('/');
-        return;
-      }
+          const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-        alert(data.message || 'Rôle modifié avec succès');
-        fetchUsers(); // Recharger la liste
-      } else {
-        alert(data.message || 'Erreur lors de la modification du rôle');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la modification du rôle');
-    }
+          if (data.success) {
+            showAlert(data.message || 'Rôle modifié avec succès', 'Succès', '/validation.png');
+            fetchUsers(); // Recharger la liste
+          } else {
+            showAlert(data.message || 'Erreur lors de la modification du rôle', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur lors de la modification du rôle', 'Erreur', '/annuler.png');
+        }
+      },
+      'Modifier le rôle',
+      '/help.png'
+    );
   };
 
   const handleDelete = async (userId, userEmail, userRole) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer l'utilisateur "${userEmail}" ?\n\nCette action est irréversible.`)) {
-      return;
-    }
+    showConfirm(
+      `Êtes-vous sûr de vouloir supprimer l'utilisateur "${userEmail}" ?\n\nCette action est irréversible.`,
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            router.push('/login');
+            return;
+          }
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        alert('Vous devez être connecté');
-        router.push('/login');
-        return;
-      }
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          if (response.status === 403) {
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            router.push('/');
+            return;
+          }
+
+          const data = await response.json();
+
+          if (data.success) {
+            showAlert('Utilisateur supprimé avec succès !', 'Succès', '/validation.png');
+            fetchUsers(); // Recharger la liste
+          } else {
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur lors de la suppression de l\'utilisateur', 'Erreur', '/annuler.png');
         }
-      });
-
-      if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
-        router.push('/');
-        return;
-      }
-
-      const data = await response.json();
-
-      if (data.success) {
-        alert('Utilisateur supprimé avec succès !');
-        fetchUsers(); // Recharger la liste
-      } else {
-        alert(data.message || 'Erreur lors de la suppression');
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      alert('Erreur lors de la suppression de l\'utilisateur');
-    }
+      },
+      'Supprimer l\'utilisateur',
+      '/trash.png'
+    );
   };
 
   if (loading) {
@@ -277,6 +289,19 @@ export default function AdminUsersPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={closeModal}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </>
   );
 }

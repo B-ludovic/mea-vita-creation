@@ -5,6 +5,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Modal from '../../components/Modal';
+import { useModal } from '../../hooks/useModal';
 
 // Import du CSS
 import '../../styles/Auth.css';
@@ -12,6 +14,7 @@ import '../../styles/Auth.css';
 export default function RegisterPage() {
   // Router pour rediriger l'utilisateur après inscription
   const router = useRouter();
+  const { modalState, showAlert, closeModal } = useModal();
   
   // États (variables qui peuvent changer)
   const [formData, setFormData] = useState({
@@ -96,8 +99,14 @@ export default function RegisterPage() {
 
       if (response.ok) {
         setError('');
-        alert(data.message + '\nVous allez recevoir un email de vérification.');
-        router.push('/login');
+        showAlert(
+          data.message + '\nVous allez recevoir un email de vérification.',
+          'Inscription réussie',
+          '/congratulation.png'
+        );
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000); // Redirection après 2 secondes pour laisser le temps de lire le message
       } else {
         setError(data.message || 'Une erreur est survenue');
       }
@@ -199,6 +208,19 @@ export default function RegisterPage() {
           <Link href="/login">Se connecter</Link>
         </div>
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={closeModal}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </div>
   );
 }

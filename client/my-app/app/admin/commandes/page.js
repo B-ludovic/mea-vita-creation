@@ -3,11 +3,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
 
 export default function AdminOrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { modalState, showAlert, closeModal } = useModal();
 
   useEffect(() => {
     fetchOrders();
@@ -19,7 +22,7 @@ export default function AdminOrdersPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Vous devez être connecté');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
         router.push('/login');
         return;
       }
@@ -33,7 +36,7 @@ export default function AdminOrdersPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
         router.push('/');
         return;
       }
@@ -45,7 +48,7 @@ export default function AdminOrdersPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors du chargement des commandes');
+      showAlert('Erreur lors du chargement des commandes', 'Erreur', '/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -56,7 +59,7 @@ export default function AdminOrdersPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        alert('Vous devez être connecté');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
         router.push('/login');
         return;
       }
@@ -72,7 +75,7 @@ export default function AdminOrdersPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        alert('Accès refusé. Réservé aux administrateurs.');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
         router.push('/');
         return;
       }
@@ -80,13 +83,13 @@ export default function AdminOrdersPage() {
       if (response.ok) {
         // Recharger les commandes
         fetchOrders();
-        alert('Statut mis à jour !');
+        showAlert('Statut mis à jour avec succès !', 'Succès', '/validation.png');
       } else {
-        alert('Erreur lors de la mise à jour');
+        showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la mise à jour');
+      showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/annuler.png');
     }
   };
 
@@ -218,6 +221,19 @@ export default function AdminOrdersPage() {
           </div>
         )}
       </div>
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={closeModal}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </>
   );
 }

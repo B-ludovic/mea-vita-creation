@@ -1,0 +1,100 @@
+/* Page Politique de confidentialité */
+
+.politique-container {
+  padding: 3rem 0;
+}
+
+.politique-content {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.politique-title {
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.politique-date {
+  color: var(--text-light);
+  margin-bottom: 3rem;
+  font-style: italic;
+}
+
+.politique-section {
+  margin-bottom: 3rem;
+}
+
+.politique-section h2 {
+  color: var(--primary-orange);
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.politique-section h3 {
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.politique-section p {
+  line-height: 1.8;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+
+.politique-section ul {
+  line-height: 1.8;
+  color: var(--text-dark);
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.politique-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.politique-section strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.politique-section a {
+  color: var(--primary-orange);
+  text-decoration: underline;
+}
+
+.politique-section a:hover {
+  color: var(--primary-orange-dark);
+}
+
+.politique-contact-box {
+  background: var(--cream);
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
+
+.politique-contact-box p {
+  margin: 0;
+  line-height: 1.8;
+  color: var(--text-dark);
+}
+
+.politique-back-btn {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.politique-back-btn .btn-primary {
+  display: inline-block;
+  text-decoration: none;
+}
+
+.cookie-icon-inline {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  margin-right: 4px;
+}

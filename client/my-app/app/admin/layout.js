@@ -32,7 +32,7 @@ export default function AdminLayout({ children }) {
         }
 
         const parsedUser = JSON.parse(userData);
-        
+
         // Vérifier le rôle dans localStorage (première vérification)
         if (parsedUser.role !== 'ADMIN') {
           console.log('Utilisateur non-admin détecté');
@@ -53,11 +53,11 @@ export default function AdminLayout({ children }) {
         // Si le token est invalide ou expiré, le backend renverra 401 ou 403
         if (!response.ok) {
           console.error('Token invalide ou expiré:', response.status);
-          
+
           // Nettoyer le localStorage
           localStorage.removeItem('token');
           localStorage.removeItem('user');
-          
+
           // Rediriger vers login avec un message
           setError('Session expirée. Veuillez vous reconnecter.');
           setTimeout(() => router.push('/login'), 2000);
@@ -71,11 +71,11 @@ export default function AdminLayout({ children }) {
 
       } catch (error) {
         console.error('Erreur lors de la vérification:', error);
-        
+
         // En cas d'erreur, nettoyer et rediriger
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        
+
         setError('Erreur de connexion. Redirection...');
         setTimeout(() => router.push('/login'), 2000);
       }
@@ -102,8 +102,8 @@ export default function AdminLayout({ children }) {
         <nav>
           <ul className="admin-nav">
             <li>
-              <Link 
-                href="/admin/dashboard" 
+              <Link
+                href="/admin/dashboard"
                 className={pathname === '/admin/dashboard' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
@@ -113,7 +113,7 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li>
-              <Link 
+              <Link
                 href="/admin/commandes"
                 className={pathname === '/admin/commandes' ? 'active' : ''}
               >
@@ -124,7 +124,7 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li>
-              <Link 
+              <Link
                 href="/admin/produits"
                 className={pathname === '/admin/produits' ? 'active' : ''}
               >
@@ -135,7 +135,7 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li>
-              <Link 
+              <Link
                 href="/admin/categories"
                 className={pathname === '/admin/categories' ? 'active' : ''}
               >
@@ -146,7 +146,7 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li>
-              <Link 
+              <Link
                 href="/admin/avis"
                 className={pathname === '/admin/avis' ? 'active' : ''}
               >
@@ -157,7 +157,18 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li>
-              <Link 
+              <Link
+                href="/admin/factures"
+                className={pathname.startsWith('/admin/factures') ? 'active' : ''}
+              >
+                <span className="admin-nav-icon">
+                  <Image src="/icones/invoice.png" alt="Factures" width={20} height={20} />
+                </span>
+                <span>Factures</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/admin/utilisateurs"
                 className={pathname === '/admin/utilisateurs' ? 'active' : ''}
               >

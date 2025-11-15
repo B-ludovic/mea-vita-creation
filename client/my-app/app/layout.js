@@ -1,3 +1,6 @@
+// Import Analytics Wrapper
+import AnalyticsWrapper from '../components/AnalyticsWrapper';
+
 // Import du CSS global
 import '../styles/globals.css';
 
@@ -25,6 +28,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <body>
+        {/* Analytics avec gestion du consentement cookies */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <AnalyticsWrapper GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        )}
+        
         {/* CartProvider entoure toute l'application */}
         <CartProvider>
           {/* InactivityWrapper gère la déconnexion automatique après 20 minutes */}

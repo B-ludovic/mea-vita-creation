@@ -6,6 +6,9 @@ const prisma = require('../config/prisma');
 // Importer les middlewares d'authentification
 const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
 
+// Importer les utilitaires pour les transporteurs
+const { getCarriersList } = require('../utils/carriers');
+
 // Importer les fonctions du contrôleur
 const { 
   createOrder, 
@@ -106,6 +109,24 @@ router.get('/user/me', authenticateToken, async (req, res) => {
 // ROUTE POUR RÉCUPÉRER LES COMMANDES D'UN UTILISATEUR
 // GET /api/orders/user/:userId
 router.get('/user/:userId', getUserOrders);
+
+// ROUTE POUR OBTENIR LA LISTE DES TRANSPORTEURS
+// GET /api/orders/carriers/list
+router.get('/carriers/list', (req, res) => {
+  try {
+    const carriersList = getCarriersList();
+    res.json({
+      success: true,
+      carriers: carriersList
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des transporteurs:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
 
 // ROUTE POUR RÉCUPÉRER UNE COMMANDE PAR SON ID
 // GET /api/orders/:orderId

@@ -303,6 +303,8 @@ francois-maroquinerie/
 │   │   ├── services/       # Services
 │   │   │   ├── emailService.js # Service emails (Resend)
 │   │   │   └── invoiceService.js # Génération factures PDF
+│   │   ├── utils/          # Utilitaires
+│   │   │   └── carriers.js # Validation et URLs tracking transporteurs
 │   │   ├── templates/      # Templates
 │   │   │   ├── emailStyles.js # Styles CSS pour emails
 │   │   │   ├── verificationEmailTemplate.js
@@ -457,6 +459,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Système de reviews avec modération (1 avis/user/produit)
 - ✅ Templates emails externalisés pour meilleure maintenance
 - ✅ API tracking avec update conditionnel et auto-dates (shippedAt, deliveredAt)
+- ✅ Validation des numéros de tracking par transporteur (regex)
+- ✅ Génération automatique d'URLs de suivi (8 transporteurs supportés)
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)

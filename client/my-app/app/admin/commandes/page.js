@@ -14,6 +14,7 @@ export default function AdminOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [carriers, setCarriers] = useState([]);
   const [trackingData, setTrackingData] = useState({
     trackingNumber: '',
     carrier: '',
@@ -24,8 +25,23 @@ export default function AdminOrdersPage() {
 
   useEffect(() => {
     fetchOrders();
+    fetchCarriers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const fetchCarriers = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/carriers/list`);
+      const data = await response.json();
+      if (data.success) {
+        setCarriers(data.carriers);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la récupération des transporteurs:', error);
+      // Liste par défaut si l'API ne répond pas
+      setCarriers(['Colissimo', 'Chronopost', 'DHL', 'UPS', 'FedEx', 'Mondial Relay', 'GLS', 'TNT']);
+    }
+  };
 
   const fetchOrders = async () => {
     try {
@@ -280,7 +296,7 @@ export default function AdminOrdersPage() {
                       <option value="CANCELLED">Annulé</option>
                       <option value="REFUNDED">Remboursé</option>
                     </select>
-                    
+
                     <button
                       className="admin-btn admin-btn-secondary"
                       style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}
@@ -324,7 +340,7 @@ export default function AdminOrdersPage() {
               <Image src="/icones/delivery-box.png" alt="Tracking" width={40} height={40} />
               <h2>Informations de suivi</h2>
             </div>
-            
+
             <div className="modal-body">
               <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
                 Commande : <strong>{selectedOrder?.orderNumber}</strong>
@@ -366,14 +382,14 @@ export default function AdminOrdersPage() {
                     }}
                   >
                     <option value="">Sélectionner un transporteur</option>
-                    <option value="Colissimo">Colissimo</option>
-                    <option value="Chronopost">Chronopost</option>
-                    <option value="DHL">DHL</option>
-                    <option value="UPS">UPS</option>
-                    <option value="FedEx">FedEx</option>
-                    <option value="Mondial Relay">Mondial Relay</option>
+                    {carriers.map(carrier => (
+                      <option key={carrier} value={carrier}>{carrier}</option>
+                    ))}
                     <option value="Autre">Autre</option>
                   </select>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                    💡 L&apos;URL sera générée automatiquement si vous laissez le champ URL vide
+                  </p>
                 </div>
 
                 <div>
@@ -384,7 +400,7 @@ export default function AdminOrdersPage() {
                     type="url"
                     value={trackingData.trackingUrl}
                     onChange={(e) => setTrackingData({ ...trackingData, trackingUrl: e.target.value })}
-                    placeholder="https://www.laposte.fr/outils/suivre-vos-envois?code=..."
+                    placeholder="Laissez vide pour génération automatique"
                     style={{
                       width: '100%',
                       padding: '12px',

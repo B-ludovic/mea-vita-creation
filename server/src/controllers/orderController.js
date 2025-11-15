@@ -1,6 +1,14 @@
 // Importer Prisma
 const prisma = require('../config/prisma');
 
+// Importer les utilitaires pour les transporteurs
+const {
+  generateTrackingUrl,
+  validateTrackingNumber,
+  getCarriersList,
+  carriers
+} = require('../utils/carriers');
+
 // FONCTION POUR CRÉER UNE COMMANDE
 // Cette fonction est appelée après un paiement Stripe réussi
 const createOrder = async (req, res) => {
@@ -185,28 +193,51 @@ const updateTracking = async (req, res) => {
       });
     }
 
+    // Valider le numéro de tracking si fourni
+    if (trackingNumber && carrier && !validateTrackingNumber(carrier, trackingNumber)) {
+      return res.status(400).json({
+        success: false,
+        message: `Format du numéro de tracking invalide pour ${carrier}`
+      });
+    }
+
+    // Générer automatiquement l'URL si non fournie
+    let finalTrackingUrl = trackingUrl;
+    if (!finalTrackingUrl && trackingNumber && carrier) {
+      finalTrackingUrl = generateTrackingUrl(carrier, trackingNumber);
+      if (finalTrackingUrl) {
+        console.log(`✅ URL de tracking générée automatiquement: ${finalTrackingUrl}`);
+      }
+    }
+
     const updateData = {};
 
-    // Ajouter les champs de tracking s'ils sont fournis
+    // Ajouter les champs uniquement s'ils sont fournis
     if (trackingNumber) updateData.trackingNumber = trackingNumber;
-    if (trackingUrl) updateData.trackingUrl = trackingUrl;
+    if (finalTrackingUrl) updateData.trackingUrl = finalTrackingUrl;
     if (carrier) updateData.carrier = carrier;
 
-    // Si le statut passe à SHIPPED, ajouter la date d'expédition
-    if (status === 'SHIPPED') {
-      updateData.status = 'SHIPPED';
-      updateData.shippedAt = new Date();
-    }
+    // Gestion du statut avec validation
+    const validStatuses = ['PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED'];
+    
+    if (status) {
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: `Statut invalide. Statuts autorisés: ${validStatuses.join(', ')}`
+        });
+      }
 
-    // Si le statut passe à DELIVERED, ajouter la date de livraison
-    if (status === 'DELIVERED') {
-      updateData.status = 'DELIVERED';
-      updateData.deliveredAt = new Date();
-    }
-
-    // Si status est fourni mais n'est ni SHIPPED ni DELIVERED, mettre à jour quand même
-    if (status && status !== 'SHIPPED' && status !== 'DELIVERED') {
       updateData.status = status;
+
+      // Ajouter les dates automatiquement selon le statut
+      if (status === 'SHIPPED') {
+        updateData.shippedAt = new Date();
+      }
+      
+      if (status === 'DELIVERED') {
+        updateData.deliveredAt = new Date();
+      }
     }
 
     const order = await prisma.order.update({
@@ -231,7 +262,8 @@ const updateTracking = async (req, res) => {
     res.json({
       success: true,
       order,
-      message: 'Informations de suivi mises à jour avec succès'
+      message: 'Informations de suivi mises à jour avec succès',
+      trackingUrlGenerated: !trackingUrl && !!finalTrackingUrl
     });
 
   } catch (error) {

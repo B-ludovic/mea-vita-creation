@@ -147,6 +147,17 @@ export default function AdminLayout({ children }) {
             </li>
             <li>
               <Link 
+                href="/admin/avis"
+                className={pathname === '/admin/avis' ? 'active' : ''}
+              >
+                <span className="admin-nav-icon">
+                  <Image src="/review.png" alt="Avis clients" width={20} height={20} />
+                </span>
+                <span>Avis clients</span>
+              </Link>
+            </li>
+            <li>
+              <Link 
                 href="/admin/utilisateurs"
                 className={pathname === '/admin/utilisateurs' ? 'active' : ''}
               >

@@ -64,6 +64,44 @@ router.get('/user/all', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+// ROUTE POUR RÉCUPÉRER LES COMMANDES DE L'UTILISATEUR CONNECTÉ
+// GET /api/orders/user/me
+router.get('/user/me', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const orders = await prisma.order.findMany({
+      where: { userId },
+      include: {
+        OrderItem: {
+          include: {
+            Product: {
+              include: {
+                ProductImage: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    res.json({
+      success: true,
+      orders
+    });
+
+  } catch (error) {
+    console.error('Erreur lors de la récupération des commandes:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur'
+    });
+  }
+});
+
 // ROUTE POUR RÉCUPÉRER LES COMMANDES D'UN UTILISATEUR
 // GET /api/orders/user/:userId
 router.get('/user/:userId', getUserOrders);

@@ -2,31 +2,88 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useModal } from '../../hooks/useModal';
+import Modal from '../../components/Modal';
 import '../../styles/Orders.css';
 
 export default function OrdersPage() {
+  const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { modalState, showAlert, closeModal } = useModal();
+
+  // Fonction pour télécharger la facture
+  const downloadInvoice = async (orderId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        showAlert('Vous devez être connecté pour télécharger une facture', 'Connexion requise', '/error.png');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/invoices/${orderId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        // Créer un blob à partir de la réponse
+        const blob = await response.blob();
+        // Créer un lien de téléchargement
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `facture-${orderId}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+        
+        showAlert('Votre facture a été téléchargée avec succès !', 'Téléchargement réussi', '/validation.png');
+      } else {
+        showAlert('Impossible de télécharger la facture. Veuillez réessayer.', 'Erreur', '/error.png');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/error.png');
+    }
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        // Récupérer l'utilisateur connecté
-        const userData = localStorage.getItem('user');
+        // Récupérer le token JWT
+        const token = localStorage.getItem('token');
 
-        if (!userData) {
+        if (!token) {
           setError('Vous devez être connecté pour voir vos commandes');
           setLoading(false);
           return;
         }
 
-        const user = JSON.parse(userData);
+        // Headers avec authentification
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
 
-        // Appeler l'API pour récupérer les commandes
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/${user.id}`);
+        // Appeler l'API pour récupérer les commandes de l'utilisateur connecté
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/me`, { headers });
+        
+        if (response.status === 401 || response.status === 403) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setError('Session expirée, veuillez vous reconnecter');
+          setLoading(false);
+          return;
+        }
+
         const data = await response.json();
 
         if (data.success) {
@@ -106,7 +163,7 @@ export default function OrdersPage() {
         <div className="container">
           <div className="orders-empty">
             <h2>Aucune commande</h2>
-            <p>Vous n'avez pas encore passé de commande.</p>
+            <p>Vous n&apos;avez pas encore passé de commande.</p>
             <Link href="/categories" className="btn-primary">
               Découvrir nos produits
             </Link>
@@ -182,11 +239,32 @@ export default function OrdersPage() {
                 <div className="order-total">
                   Total : <span>{order.totalAmount.toFixed(2)}€</span>
                 </div>
+                <button
+                  onClick={() => downloadInvoice(order.id)}
+                  className="btn-invoice"
+                >
+                  <Image src="/payment.png" alt="Facture" width={20} height={20} />
+                  Télécharger la facture
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Modal pour les messages */}
+      <Modal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
     </div>
   );
 }

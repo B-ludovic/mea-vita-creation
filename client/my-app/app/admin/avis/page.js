@@ -1,0 +1,290 @@
+// Page Admin - Gestion des avis
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
+import StarRating from '../../../components/StarRating';
+import Modal from '../../../components/Modal';
+import { useModal } from '../../../hooks/useModal';
+
+export default function AdminReviewsPage() {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { modalState, showAlert, showConfirm, closeModal } = useModal();
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      // Récupérer le token depuis localStorage
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        console.error('Pas de token d\'authentification');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des avis');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setReviews(data.reviews);
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApprove = async (reviewId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${reviewId}/approve`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        showAlert('L\'avis a été approuvé avec succès !', 'Avis approuvé', '/validation.png');
+        fetchReviews();
+      } else {
+        showAlert('Une erreur est survenue lors de l\'approbation', 'Erreur', '/annuler.png');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
+    }
+  };
+
+  const handleDelete = async (reviewId) => {
+    // Utiliser showConfirm pour la confirmation
+    showConfirm(
+      'Êtes-vous sûr de vouloir supprimer cet avis ? Cette action est irréversible.',
+      async () => {
+        try {
+          const token = localStorage.getItem('token');
+          
+          if (!token) {
+            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            return;
+          }
+
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/${reviewId}`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            showAlert('L\'avis a été supprimé avec succès', 'Avis supprimé', '/validation.png');
+            fetchReviews();
+          } else {
+            showAlert('Une erreur est survenue lors de la suppression', 'Erreur', '/annuler.png');
+          }
+        } catch (error) {
+          console.error('Erreur:', error);
+          showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
+        }
+      },
+      'Confirmer la suppression',
+      '/trash.png'
+    );
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="admin-header">
+        <h1>Chargement...</h1>
+      </div>
+    );
+  }
+
+  // Séparer les avis en attente et approuvés
+  const pendingReviews = reviews.filter(r => !r.isApproved);
+  const approvedReviews = reviews.filter(r => r.isApproved);
+
+  return (
+    <>
+      <div className="admin-header">
+        <h1>Gestion des avis</h1>
+        <p>{reviews.length} avis au total</p>
+      </div>
+
+      {/* Avis en attente */}
+      {pendingReviews.length > 0 && (
+        <div className="admin-table-container" style={{ marginBottom: '2rem' }}>
+          <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Image src="/sand-timer.png" alt="En attente" width={24} height={24} />
+            Avis en attente de modération ({pendingReviews.length})
+          </h2>
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Produit</th>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pendingReviews.map((review) => (
+                <tr key={review.id} style={{ background: '#fff3e0' }}>
+                  <td>
+                    <div>
+                      <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                        {review.User.email}
+                      </div>
+                    </div>
+                  </td>
+                  <td>{review.Product.name}</td>
+                  <td>
+                    <StarRating rating={review.rating} readonly size="small" />
+                  </td>
+                  <td style={{ maxWidth: '300px' }}>
+                    {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
+                  </td>
+                  <td>{formatDate(review.createdAt)}</td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button
+                        className="admin-btn admin-btn-primary"
+                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                        onClick={() => handleApprove(review.id)}
+                      >
+                        <Image src="/ok.png" alt="Approuver" width={16} height={16} />
+                        Approuver
+                      </button>
+                      <button
+                        className="admin-btn admin-btn-danger"
+                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                        onClick={() => handleDelete(review.id)}
+                      >
+                        <Image src="/trash.png" alt="Supprimer" width={16} height={16} />
+                        Supprimer
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Avis approuvés */}
+      <div className="admin-table-container">
+        <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <Image src="/validation.png" alt="Approuvés" width={24} height={24} />
+          Avis approuvés ({approvedReviews.length})
+        </h2>
+        {approvedReviews.length > 0 ? (
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Produit</th>
+                <th>Note</th>
+                <th>Commentaire</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {approvedReviews.map((review) => (
+                <tr key={review.id}>
+                  <td>
+                    <div>
+                      <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                        {review.User.email}
+                      </div>
+                    </div>
+                  </td>
+                  <td>{review.Product.name}</td>
+                  <td>
+                    <StarRating rating={review.rating} readonly size="small" />
+                  </td>
+                  <td style={{ maxWidth: '300px' }}>
+                    {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
+                  </td>
+                  <td>{formatDate(review.createdAt)}</td>
+                  <td>
+                    <button
+                      className="admin-btn admin-btn-danger"
+                      style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                      onClick={() => handleDelete(review.id)}
+                    >
+                      <Image src="/trash.png" alt="Supprimer" width={16} height={16} />
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+            <p>Aucun avis approuvé</p>
+          </div>
+        )}
+      </div>
+
+      {reviews.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+          <p>Aucun avis pour le moment</p>
+        </div>
+      )}
+
+      {/* Modal pour les notifications */}
+      <Modal
+        isOpen={modalState.isOpen}
+        title={modalState.title}
+        message={modalState.message}
+        icon={modalState.icon}
+        onConfirm={modalState.onConfirm}
+        onCancel={modalState.onCancel}
+        confirmText={modalState.confirmText}
+        cancelText={modalState.cancelText}
+        showCancelButton={modalState.showCancelButton}
+      />
+    </>
+  );
+}

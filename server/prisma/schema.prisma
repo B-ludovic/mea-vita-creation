@@ -110,6 +110,7 @@ model Product {
   Category        Category       @relation(fields: [categoryId], references: [id])
   ProductImage    ProductImage[]
   WishlistItem    WishlistItem[]
+  Review          Review[]
 }
 
 model ProductImage {
@@ -157,6 +158,7 @@ model User {
   CartItem                  CartItem[]
   Order                     Order[]
   WishlistItem              WishlistItem[]
+  Review                    Review[]
 }
 
 model WishlistItem {
@@ -166,6 +168,22 @@ model WishlistItem {
   createdAt DateTime @default(now())
   Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  userId     String
+  rating     Int      // Note de 1 à 5
+  comment    String?
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  User       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, productId])
 }

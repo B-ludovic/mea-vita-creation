@@ -25,15 +25,16 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🛒 **Panier intelligent** : Gestion des articles avec validation de stock en temps réel
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
-- 📍 **Adresses multiples** : Gestion des adresses de livraison
-- 👤 **Espace admin protégé** : Dashboard avec vérification JWT, gestion produits/commandes/utilisateurs/catégories
+- � **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
+- 📧 **Emails automatiques** : Système d'emailing avec templates (vérification, bienvenue, confirmation, reset password)
+- �📍 **Adresses multiples** : Gestion des adresses de livraison
+- 👤 **Espace admin protégé** : Dashboard avec statistiques, graphiques, gestion complète
 - 🖼️ **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
-- 📧 **Emails automatiques** : Vérification compte, bienvenue, reset password, confirmation commande
 - 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
 - 📊 **Stock en temps réel** : Mise à jour instantanée du stock après ajout au panier
 - 🚫 **Protection stock** : Impossible d'acheter plus que le stock disponible, affichage "Rupture de stock"
 - 📱 **Design responsive** : Interface optimisée mobile/tablette/desktop avec breakpoints adaptatifs
-- 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages produits et catégories
+- 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages et dans les emails/factures
 - ✨ **UX moderne** : Système de modals élégants avec animations pour toutes les notifications
 
 ---
@@ -213,9 +214,10 @@ francois-maroquinerie/
 │   │   ├── contact/        # Page contact
 │   │   ├── success/        # Page succès paiement
 │   │   └── admin/          # Panel admin
-│   │       ├── dashboard/  # Tableau de bord
+│   │       ├── dashboard/  # Tableau de bord avec statistiques et graphiques
 │   │       ├── produits/   # Gestion produits
 │   │       ├── commandes/  # Gestion commandes
+│   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
 │   │   ├── Header.jsx      # En-tête navigation
@@ -232,7 +234,7 @@ francois-maroquinerie/
 │   │   └── productImages.js # Images produits
 │   ├── styles/             # Fichiers CSS
 │   │   ├── globals.css
-│   │   ├── variables.css
+│   │   ├── variables.css   # Variables couleurs du projet
 │   │   ├── Modal.css       # Styles modal avec animations
 │   │   ├── Header.css
 │   │   ├── Home.css
@@ -243,6 +245,8 @@ francois-maroquinerie/
 │   │   ├── Orders.css
 │   │   ├── Addresses.css
 │   │   ├── Admin.css
+│   │   ├── Dashboard.css   # Styles dashboard admin
+│   │   ├── AdminForms.css
 │   │   └── ...
 │   └── public/             # Fichiers statiques
 │       └── images/         # Images produits
@@ -267,6 +271,7 @@ francois-maroquinerie/
 │   │   │   ├── orders.js
 │   │   │   ├── payment.js
 │   │   │   ├── addresses.js
+│   │   │   ├── invoices.js # Routes factures PDF
 │   │   │   └── users.js
 │   │   ├── middleware/     # Middlewares
 │   │   │   ├── authMiddleware.js
@@ -274,7 +279,10 @@ francois-maroquinerie/
 │   │   │   ├── sanitizer.js
 │   │   │   └── upload.js   # Multer config (upload images)
 │   │   ├── services/       # Services
-│   │   │   └── emailService.js
+│   │   │   ├── emailService.js # Service emails (Resend)
+│   │   │   └── invoiceService.js # Génération factures PDF
+│   │   ├── templates/      # Templates
+│   │   │   └── emailStyles.js # Styles CSS pour emails
 │   │   ├── config/         # Configuration
 │   │   │   ├── database.js
 │   │   │   └── prisma.js
@@ -282,6 +290,7 @@ francois-maroquinerie/
 │   ├── prisma/
 │   │   ├── schema.prisma   # Schéma base de données
 │   │   └── migrations/     # Migrations
+│   ├── invoices/           # Dossier des factures PDF générées
 │   └── scripts/
 │       └── recover-orders.js
 │
@@ -397,6 +406,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Animations CSS (transitions, staggered menu burger, fadeIn/slideIn modals)
 - ✅ Système de modals réutilisables avec icônes PNG
 - ✅ Gestion du stock disponible en temps réel (panier + BDD)
+- ✅ Téléchargement de factures PDF avec gestion de blobs
+- ✅ Dashboard admin avec graphiques interactifs (recharts)
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -404,11 +415,13 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Authentification JWT (tokens, refresh, expiration)
 - ✅ Middlewares (auth, rate limiting, sanitization)
 - ✅ Webhooks Stripe pour les paiements asynchrones
-- ✅ Envoi d'emails transactionnels avec Resend
+- ✅ Envoi d'emails transactionnels avec Resend (templates HTML avec styles externalisés)
+- ✅ Génération de factures PDF avec PDFKit (logo, images produits, TVA)
 - ✅ Gestion des erreurs et validation des données
 - ✅ Gestion automatique du stock (décrémentation après paiement)
 - ✅ Validation du stock avant création de commande
 - ✅ Upload de fichiers avec Multer (images produits, 5MB max, validation MIME)
+- ✅ Système de factures avec authentification et vérification de propriété
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -444,8 +457,11 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Internationalisation
 - [ ] PWA (Progressive Web App)
 - [ ] Gestion des stocks avec alertes admin
-- [ ] Export PDF des commandes
-- [ ] Statistiques avancées (dashboard admin)
+- [x] ~~Export PDF des commandes~~ ✅ Fait (factures PDF)
+- [x] ~~Statistiques avancées (dashboard admin)~~ ✅ Fait (graphiques recharts)
+- [ ] Envoi automatique des factures par email
+- [ ] Historique des factures dans l'admin
+- [ ] Système de relances clients (emails automatiques)
 
 ---
 

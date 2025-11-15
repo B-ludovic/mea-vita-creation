@@ -52,8 +52,14 @@ const paymentRoutes = require('./routes/payment');
 const orderRoutes = require('./routes/orders');
 // Importer les routes des adresses
 const addressRoutes = require('./routes/addresses');
+// Importer les routes des avis
+const reviewRoutes = require('./routes/reviews');
+// Importer les routes des statistiques
+const statsRoutes = require('./routes/stats');
 // Importer les routes des utilisateurs
 const userRoutes = require('./routes/users');
+// Importer les routes des factures
+const invoiceRoutes = require('./routes/invoices');
 
 // Importer le limiteur de requêtes (protection anti brute-force)
 const { apiLimiter } = require('./middleware/rateLimiter');
@@ -163,10 +169,8 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 
 // 6. Limiteur de requêtes global (protection anti spam et brute-force)
-// Désactivé en développement, activé en production uniquement
-if (process.env.NODE_ENV === 'production') {
-  app.use('/api', apiLimiter);
-}
+// Maximum 100 requêtes par 15 minutes par IP
+app.use('/api', apiLimiter);
 
 // ROUTES D'AUTHENTIFICATION
 // Toutes les routes dans authRoutes commenceront par /api/auth
@@ -181,8 +185,14 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/orders', orderRoutes);
 // ROUTES DES ADRESSES
 app.use('/api/addresses', addressRoutes);
+// ROUTES DES AVIS
+app.use('/api/reviews', reviewRoutes);
+// ROUTES DES STATISTIQUES
+app.use('/api/stats', statsRoutes);
 // ROUTES DES UTILISATEURS
 app.use('/api/users', userRoutes);
+// ROUTES DES FACTURES
+app.use('/api/invoices', invoiceRoutes);
 
 
 // ROUTE D'ACCUEIL (page principale)

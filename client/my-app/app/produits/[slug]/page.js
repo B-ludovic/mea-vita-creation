@@ -15,6 +15,10 @@ import { getProductImages, getCategoryImages } from '../../../config/productImag
 // Import du Modal
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+// Import du composant StarRating et du CSS des avis
+import StarRating from '../../../components/StarRating';
+import '../../../styles/Reviews.css';
+import '../../../styles/StarRating.css';
 
 // Import du CSS
 import '../../../styles/Product.css';
@@ -42,25 +46,48 @@ export default function ProductPage() {
     const [error, setError] = useState('');
     const [productImages, setProductImages] = useState([]);
 
-    // Charger le produit
-    useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`);
-                const data = await response.json();
+    // États pour les avis
+    const [reviews, setReviews] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
+    const [totalReviews, setTotalReviews] = useState(0);
+    const [showReviewForm, setShowReviewForm] = useState(false);
+    const [reviewForm, setReviewForm] = useState({
+        rating: 5,
+        comment: ''
+    });
+    const [reviewSubmitting, setReviewSubmitting] = useState(false);
+    const [reviewError, setReviewError] = useState('');
 
-                if (data.success) {
-                    setProduct(data.product);
+    // Charger le produit et les avis
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Récupérer le produit
+                const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`);
+                const productData = await productResponse.json();
+
+                if (productData.success) {
+                    setProduct(productData.product);
                     
                     // Obtenir les images spécifiques du produit
-                    const images = getProductImages(data.product.slug);
+                    const images = getProductImages(productData.product.slug);
                     
                     // Si pas d'images spécifiques, utiliser les images de la catégorie
                     if (images.length === 0) {
-                        const categoryImages = getCategoryImages(data.product.Category.slug);
+                        const categoryImages = getCategoryImages(productData.product.Category.slug);
                         setProductImages(categoryImages);
                     } else {
                         setProductImages(images);
+                    }
+                    
+                    // Récupérer les avis du produit
+                    const reviewsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews/product/${productData.product.id}`);
+                    const reviewsData = await reviewsResponse.json();
+                    
+                    if (reviewsData.success) {
+                        setReviews(reviewsData.reviews);
+                        setAverageRating(reviewsData.averageRating);
+                        setTotalReviews(reviewsData.totalReviews);
                     }
                 } else {
                     setError('Produit non trouvé');
@@ -72,7 +99,7 @@ export default function ProductPage() {
             }
         };
 
-        fetchProduct();
+        fetchData();
     }, [slug]);
 
     // Fonction pour ajouter au panier
@@ -92,6 +119,70 @@ export default function ProductPage() {
             setQuantity(1);
         }
         // Sinon, l'alerte d'erreur a déjà été affichée par addToCart()
+    };
+
+    // Fonction pour soumettre un avis
+    const handleReviewSubmit = async (e) => {
+        e.preventDefault();
+        
+        // Vérifier si l'utilisateur est connecté
+        const userData = localStorage.getItem('user');
+        if (!userData) {
+            showAlert(
+                'Vous devez être connecté pour laisser un avis',
+                'Connexion requise',
+                '/error.png'
+            );
+            return;
+        }
+        
+        const user = JSON.parse(userData);
+        setReviewSubmitting(true);
+        setReviewError('');
+        
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({
+                    productId: product.id,
+                    userId: user.id,
+                    rating: reviewForm.rating,
+                    comment: reviewForm.comment
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showAlert(
+                    'Votre avis a été soumis ! Il sera visible après modération.',
+                    'Avis envoyé',
+                    '/validation.png'
+                );
+                setShowReviewForm(false);
+                setReviewForm({ rating: 5, comment: '' });
+            } else {
+                setReviewError(data.message || 'Erreur lors de l\'envoi de l\'avis');
+            }
+        } catch (error) {
+            setReviewError('Erreur de connexion au serveur');
+        } finally {
+            setReviewSubmitting(false);
+        }
+    };
+
+    // Fonction pour formater la date
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('fr-FR', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
     };
 
     // CALCUL DU STOCK DISPONIBLE RÉEL
@@ -213,6 +304,138 @@ export default function ProductPage() {
                             </div>
                         )}
                     </div>
+                </div>
+            </div>
+            
+            {/* SECTION AVIS */}
+            <div className="reviews-section" style={{ maxWidth: '1200px', margin: '6rem auto 0 auto', padding: '0 2rem' }}>
+                <div className="reviews-header">
+                    <h2>Avis clients</h2>
+                    
+                    <button 
+                        className="admin-btn admin-btn-primary"
+                        onClick={() => setShowReviewForm(!showReviewForm)}
+                    >
+                        <Image 
+                            src="/user-rating.png" 
+                            alt="Laisser un avis" 
+                            width={20} 
+                            height={20} 
+                            style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                        />
+                        Laisser un avis
+                    </button>
+
+                    {totalReviews > 0 && (
+                        <div className="reviews-summary">
+                            <div className="average-rating">{averageRating}</div>
+                            <div className="rating-details">
+                                <StarRating rating={Math.round(averageRating)} readonly size="medium" />
+                                <div className="total-reviews">
+                                    Basé sur {totalReviews} avis
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Formulaire d'avis */}
+                {showReviewForm && (
+                    <div className="review-form">
+                        <h3>Votre avis</h3>
+                        <form onSubmit={handleReviewSubmit}>
+                            <div className="form-group-review">
+                                <label>Votre note</label>
+                                <StarRating 
+                                    rating={reviewForm.rating}
+                                    onRatingChange={(rating) => setReviewForm({ ...reviewForm, rating })}
+                                    size="large"
+                                />
+                            </div>
+
+                            <div className="form-group-review">
+                                <label htmlFor="comment">Votre commentaire</label>
+                                <textarea
+                                    id="comment"
+                                    value={reviewForm.comment}
+                                    onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                                    placeholder="Partagez votre expérience avec ce produit..."
+                                    required
+                                />
+                            </div>
+
+                            {reviewError && (
+                                <p className="error-message">{reviewError}</p>
+                            )}
+
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <button 
+                                    type="submit" 
+                                    className="admin-btn admin-btn-primary"
+                                    disabled={reviewSubmitting}
+                                >
+                                    {reviewSubmitting ? (
+                                        'Envoi...'
+                                    ) : (
+                                        <>
+                                            <Image 
+                                                src="/validation.png" 
+                                                alt="Publier" 
+                                                width={18} 
+                                                height={18} 
+                                                style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                                            />
+                                            Publier mon avis
+                                        </>
+                                    )}
+                                </button>
+                                <button 
+                                    type="button"
+                                    className="admin-btn admin-btn-secondary"
+                                    onClick={() => setShowReviewForm(false)}
+                                >
+                                    Annuler
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
+
+                {/* Liste des avis */}
+                <div className="reviews-list">
+                    {reviews.length > 0 ? (
+                        reviews.map((review) => (
+                            <div key={review.id} className="review-card">
+                                <div className="review-card-header">
+                                    <div className="review-author">
+                                        <div className="review-author-name">
+                                            {review.User.firstName} {review.User.lastName}
+                                            <span className="verified-badge" style={{ marginLeft: '0.5rem' }}>
+                                                <Image 
+                                                    src="/ok.png" 
+                                                    alt="Vérifié" 
+                                                    width={16} 
+                                                    height={16} 
+                                                    style={{ marginRight: '0.25rem', verticalAlign: 'middle' }}
+                                                />
+                                                Achat vérifié
+                                            </span>
+                                        </div>
+                                        <div className="review-date">{formatDate(review.createdAt)}</div>
+                                    </div>
+                                    <StarRating rating={review.rating} readonly size="small" />
+                                </div>
+                                {review.comment && (
+                                    <p className="review-comment">{review.comment}</p>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <div className="no-reviews">
+                            <h3>Aucun avis pour le moment</h3>
+                            <p>Soyez le premier à donner votre avis sur ce produit !</p>
+                        </div>
+                    )}
                 </div>
             </div>
 

@@ -1,0 +1,42 @@
+/* Composant StarRating - Étoiles d'évaluation */
+
+.star-rating {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.star-wrapper {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.star-wrapper.interactive {
+  cursor: pointer;
+}
+
+.star-wrapper.interactive:hover {
+  transform: scale(1.2);
+}
+
+.star-icon {
+  display: block;
+  transition: filter 0.2s ease;
+}
+
+/* Étoile remplie - Utilise la couleur or du projet */
+.star-icon.filled {
+  filter: brightness(0) saturate(100%) 
+          invert(77%) sepia(83%) saturate(1391%) 
+          hue-rotate(359deg) brightness(103%) contrast(104%);
+  /* Cette valeur correspond à --primary-gold: #FFD700 */
+}
+
+/* Étoile vide - Gris clair */
+.star-icon.empty {
+  filter: brightness(0) saturate(100%) 
+          invert(87%) sepia(0%) saturate(0%) 
+          hue-rotate(209deg) brightness(98%) contrast(93%);
+  /* Cette valeur correspond à #ddd */
+  opacity: 0.4;
+}

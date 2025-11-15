@@ -1,0 +1,98 @@
+/* Dashboard Analytics */
+
+/* Grid pour les graphiques */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+/* En-tête des graphiques avec icône */
+.chart-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-header h2 {
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.chart-header img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Section informations */
+.info-section {
+  margin-top: 2rem;
+}
+
+.info-section h2 {
+  margin-bottom: 1rem;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-section p {
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.info-section ul {
+  margin-top: 1rem;
+  color: var(--text-light);
+  line-height: 2;
+  list-style: none;
+  padding-left: 0;
+}
+
+.info-section li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-section li img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Icônes dans les stat-cards déjà stylées dans Admin.css */
+.stat-card-icon img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+/* Cellules du tableau avec couleur orange pour CA */
+.revenue-cell {
+  color: var(--primary-orange);
+  font-weight: bold;
+}
+
+/* Responsive pour les graphiques */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    margin-top: 1rem;
+    gap: 1rem;
+  }
+
+  .chart-header h2 {
+    font-size: 1.1rem;
+  }
+}

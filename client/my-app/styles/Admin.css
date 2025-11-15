@@ -120,10 +120,15 @@
 
 .stat-card {
     background: var(--white);
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 150px;
+    height: 100%;
+    overflow: hidden; /* Empêcher tout débordement */
 }
 
 .stat-card:hover {
@@ -134,31 +139,61 @@
 .stat-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 0.5rem;
     margin-bottom: 1rem;
+    flex-shrink: 0;
+    width: 100%;
 }
 
 .stat-card-title {
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .stat-card-icon {
     font-size: 2rem;
+    flex-shrink: 0;
+    width: clamp(32px, 8vw, 40px);
+    height: clamp(32px, 8vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .stat-card-value {
-    font-size: 2.5rem;
+    font-size: clamp(1.3rem, 3.5vw, 2.2rem);
     font-weight: 700;
     color: var(--text-dark);
     margin-bottom: 0.5rem;
+    line-height: 1.1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .stat-card-change {
-    font-size: 0.9rem;
+    font-size: clamp(0.7rem, 1.4vw, 0.85rem);
     color: #2e7d32;
+    line-height: 1.4;
+    margin-top: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .stat-card-change.negative {
@@ -267,6 +302,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 0.9rem;
+    min-width: 120px; /* Largeur minimale pour uniformiser les boutons */
+    text-align: center;
 }
 
 .admin-btn-primary {

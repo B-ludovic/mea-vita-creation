@@ -172,6 +172,38 @@
     color: var(--primary-orange);
 }
 
+/* Bouton de facture */
+.btn-invoice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: var(--font-secondary);
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+    color: var(--text-dark);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
+}
+
+.btn-invoice:hover {
+    background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
+}
+
+.btn-invoice img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .orders-container {
@@ -217,10 +249,15 @@
     .order-footer {
         flex-direction: column;
         gap: 1rem;
-        align-items: flex-start;
+        align-items: stretch;
     }
 
     .order-total {
         font-size: 1.1rem;
+    }
+
+    .btn-invoice {
+        width: 100%;
+        justify-content: center;
     }
 }

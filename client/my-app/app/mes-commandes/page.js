@@ -22,7 +22,7 @@ export default function OrdersPage() {
       const token = localStorage.getItem('token');
       
       if (!token) {
-        showAlert('Vous devez être connecté pour télécharger une facture', 'Connexion requise', '/error.png');
+        showAlert('Vous devez être connecté pour télécharger une facture', 'Connexion requise', '/icones/error.png');
         return;
       }
 
@@ -45,13 +45,13 @@ export default function OrdersPage() {
         window.URL.revokeObjectURL(url);
         document.body.removeChild(a);
         
-        showAlert('Votre facture a été téléchargée avec succès !', 'Téléchargement réussi', '/validation.png');
+        showAlert('Votre facture a été téléchargée avec succès !', 'Téléchargement réussi', '/icones/validation.png');
       } else {
-        showAlert('Impossible de télécharger la facture. Veuillez réessayer.', 'Erreur', '/error.png');
+        showAlert('Impossible de télécharger la facture. Veuillez réessayer.', 'Erreur', '/icones/error.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur de connexion au serveur', 'Erreur', '/error.png');
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/icones/error.png');
     }
   };
 
@@ -215,7 +215,7 @@ export default function OrdersPage() {
                         />
                       ) : (
                         <Image
-                          src="/shopping.png"
+                          src="/icones/shopping.png"
                           alt="Produit"
                           width={80}
                           height={80}
@@ -243,7 +243,7 @@ export default function OrdersPage() {
                   onClick={() => downloadInvoice(order.id)}
                   className="btn-invoice"
                 >
-                  <Image src="/payment.png" alt="Facture" width={20} height={20} />
+                  <Image src="/icones/payment.png" alt="Facture" width={20} height={20} />
                   Télécharger la facture
                 </button>
               </div>

@@ -93,7 +93,7 @@ export default function AdminLayout({ children }) {
       <aside className="admin-sidebar">
         <div className="admin-sidebar-header">
           <h2>
-            <Image src="/satistic.png" alt="Admin" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+            <Image src="/icones/satistic.png" alt="Admin" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
             Admin
           </h2>
           <p>François Maroquinerie</p>
@@ -107,7 +107,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/dashboard' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/satistic.png" alt="Dashboard" width={20} height={20} />
+                  <Image src="/icones/satistic.png" alt="Dashboard" width={20} height={20} />
                 </span>
                 <span>Dashboard</span>
               </Link>
@@ -118,7 +118,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/commandes' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/delivery-box.png" alt="Commandes" width={20} height={20} />
+                  <Image src="/icones/delivery-box.png" alt="Commandes" width={20} height={20} />
                 </span>
                 <span>Commandes</span>
               </Link>
@@ -129,7 +129,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/produits' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/shopping.png" alt="Produits" width={20} height={20} />
+                  <Image src="/icones/shopping.png" alt="Produits" width={20} height={20} />
                 </span>
                 <span>Produits</span>
               </Link>
@@ -140,7 +140,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/categories' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/category.png" alt="Catégories" width={20} height={20} />
+                  <Image src="/icones/category.png" alt="Catégories" width={20} height={20} />
                 </span>
                 <span>Catégories</span>
               </Link>
@@ -151,7 +151,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/avis' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/review.png" alt="Avis clients" width={20} height={20} />
+                  <Image src="/icones/review.png" alt="Avis clients" width={20} height={20} />
                 </span>
                 <span>Avis clients</span>
               </Link>
@@ -162,7 +162,7 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/utilisateurs' ? 'active' : ''}
               >
                 <span className="admin-nav-icon">
-                  <Image src="/users.png" alt="Utilisateurs" width={20} height={20} />
+                  <Image src="/icones/users.png" alt="Utilisateurs" width={20} height={20} />
                 </span>
                 <span>Utilisateurs</span>
               </Link>
@@ -170,7 +170,7 @@ export default function AdminLayout({ children }) {
             <li style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
               <Link href="/">
                 <span className="admin-nav-icon">
-                  <Image src="/home.png" alt="Retour au site" width={20} height={20} />
+                  <Image src="/icones/home.png" alt="Retour au site" width={20} height={20} />
                 </span>
                 <span>Retour au site</span>
               </Link>

@@ -22,7 +22,7 @@ export default function AdminUsersPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
         return;
       }
@@ -35,7 +35,7 @@ export default function AdminUsersPage() {
       });
 
       if (response.status === 403) {
-        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
         router.push('/');
         return;
       }
@@ -47,7 +47,7 @@ export default function AdminUsersPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors du chargement des utilisateurs', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors du chargement des utilisateurs', 'Erreur', '/icones/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export default function AdminUsersPage() {
         try {
           const token = localStorage.getItem('token');
           if (!token) {
-            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
             return;
           }
@@ -76,7 +76,7 @@ export default function AdminUsersPage() {
           });
 
           if (response.status === 403) {
-            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
             router.push('/');
             return;
           }
@@ -84,18 +84,18 @@ export default function AdminUsersPage() {
           const data = await response.json();
 
           if (data.success) {
-            showAlert(data.message || 'Statut modifié avec succès', 'Succès', '/validation.png');
+            showAlert(data.message || 'Statut modifié avec succès', 'Succès', '/icones/validation.png');
             fetchUsers();
           } else {
-            showAlert(data.message || 'Erreur lors de la modification du statut', 'Erreur', '/annuler.png');
+            showAlert(data.message || 'Erreur lors de la modification du statut', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur lors de la modification du statut', 'Erreur', '/annuler.png');
+          showAlert('Erreur lors de la modification du statut', 'Erreur', '/icones/annuler.png');
         }
       },
       `${action.charAt(0).toUpperCase() + action.slice(1)} le compte`,
-      '/help.png'
+      '/icones/help.png'
     );
   };
 
@@ -109,7 +109,7 @@ export default function AdminUsersPage() {
         try {
           const token = localStorage.getItem('token');
           if (!token) {
-            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
             return;
           }
@@ -124,7 +124,7 @@ export default function AdminUsersPage() {
           });
 
           if (response.status === 403) {
-            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
             router.push('/');
             return;
           }
@@ -132,18 +132,18 @@ export default function AdminUsersPage() {
           const data = await response.json();
 
           if (data.success) {
-            showAlert(data.message || 'Rôle modifié avec succès', 'Succès', '/validation.png');
+            showAlert(data.message || 'Rôle modifié avec succès', 'Succès', '/icones/validation.png');
             fetchUsers(); // Recharger la liste
           } else {
-            showAlert(data.message || 'Erreur lors de la modification du rôle', 'Erreur', '/annuler.png');
+            showAlert(data.message || 'Erreur lors de la modification du rôle', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur lors de la modification du rôle', 'Erreur', '/annuler.png');
+          showAlert('Erreur lors de la modification du rôle', 'Erreur', '/icones/annuler.png');
         }
       },
       'Modifier le rôle',
-      '/help.png'
+      '/icones/help.png'
     );
   };
 
@@ -154,7 +154,7 @@ export default function AdminUsersPage() {
         try {
           const token = localStorage.getItem('token');
           if (!token) {
-            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
             return;
           }
@@ -168,7 +168,7 @@ export default function AdminUsersPage() {
           });
 
           if (response.status === 403) {
-            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
             router.push('/');
             return;
           }
@@ -176,18 +176,18 @@ export default function AdminUsersPage() {
           const data = await response.json();
 
           if (data.success) {
-            showAlert('Utilisateur supprimé avec succès !', 'Succès', '/validation.png');
+            showAlert('Utilisateur supprimé avec succès !', 'Succès', '/icones/validation.png');
             fetchUsers(); // Recharger la liste
           } else {
-            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur lors de la suppression de l\'utilisateur', 'Erreur', '/annuler.png');
+          showAlert('Erreur lors de la suppression de l\'utilisateur', 'Erreur', '/icones/annuler.png');
         }
       },
       'Supprimer l\'utilisateur',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -252,7 +252,7 @@ export default function AdminUsersPage() {
                       onClick={() => handleToggleActive(user.id, user.isActive, user.email)}
                     >
                       <Image 
-                        src={user.isActive ? "/desactiver.png" : "/validation.png"} 
+                        src={user.isActive ? "/icones/desactiver.png" : "/icones/validation.png"} 
                         alt="" 
                         width={12} 
                         height={12} 
@@ -266,7 +266,7 @@ export default function AdminUsersPage() {
                       onClick={() => handleToggleRole(user.id, user.role, user.email)}
                     >
                       <Image 
-                        src={user.role === 'ADMIN' ? "/retrograder.png" : "/promouvoir.png"} 
+                        src={user.role === 'ADMIN' ? "/icones/retrograder.png" : "/icones/promouvoir.png"} 
                         alt="" 
                         width={12} 
                         height={12} 
@@ -279,7 +279,7 @@ export default function AdminUsersPage() {
                       style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
                       onClick={() => handleDelete(user.id, user.email, user.role)}
                     >
-                      <Image src="/trash.png" alt="" width={12} height={12} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/trash.png" alt="" width={12} height={12} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Supprimer
                     </button>
                   </div>

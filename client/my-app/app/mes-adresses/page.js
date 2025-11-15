@@ -113,11 +113,11 @@ export default function MesAdresses() {
         // Réinitialiser le formulaire
         resetForm();
       } else {
-        showAlert(data.message || 'Erreur lors de l\'enregistrement', 'Erreur', '/annuler.png');
+        showAlert(data.message || 'Erreur lors de l\'enregistrement', 'Erreur', '/icones/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors de l\'enregistrement de l\'adresse', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors de l\'enregistrement de l\'adresse', 'Erreur', '/icones/annuler.png');
     }
   };
 
@@ -140,17 +140,17 @@ export default function MesAdresses() {
           if (data.success) {
             // Recharger les adresses
             loadAddresses(user.id);
-            showAlert('Adresse supprimée avec succès', 'Succès', '/validation.png');
+            showAlert('Adresse supprimée avec succès', 'Succès', '/icones/validation.png');
           } else {
-            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur lors de la suppression de l\'adresse', 'Erreur', '/annuler.png');
+          showAlert('Erreur lors de la suppression de l\'adresse', 'Erreur', '/icones/annuler.png');
         }
       },
       'Confirmation de suppression',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -170,11 +170,11 @@ export default function MesAdresses() {
         // Recharger les adresses
         loadAddresses(user.id);
       } else {
-        showAlert(data.message || 'Erreur', 'Erreur', '/annuler.png');
+        showAlert(data.message || 'Erreur', 'Erreur', '/icones/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors de la définition de l\'adresse par défaut', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors de la définition de l\'adresse par défaut', 'Erreur', '/icones/annuler.png');
     }
   };
 
@@ -373,7 +373,7 @@ export default function MesAdresses() {
               <div className="address-info">
                 <p className="address-name">
                   <Image 
-                    src="/location.png" 
+                    src="/icones/location.png" 
                     alt="Adresse" 
                     width={20} 
                     height={20}
@@ -395,7 +395,7 @@ export default function MesAdresses() {
                     onClick={() => handleSetDefault(address.id)}
                   >
                     <Image 
-                      src="/default.png" 
+                      src="/icones/default.png" 
                       alt="Définir par défaut" 
                       width={18} 
                       height={18}
@@ -410,7 +410,7 @@ export default function MesAdresses() {
                   onClick={() => handleEdit(address)}
                 >
                   <Image 
-                    src="/modify.png" 
+                    src="/icones/modify.png" 
                     alt="Modifier" 
                     width={18} 
                     height={18}
@@ -424,7 +424,7 @@ export default function MesAdresses() {
                   onClick={() => handleDelete(address.id)}
                 >
                   <Image 
-                    src="/trash.png" 
+                    src="/icones/trash.png" 
                     alt="Supprimer" 
                     width={18} 
                     height={18}

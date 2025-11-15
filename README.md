@@ -25,9 +25,11 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🛒 **Panier intelligent** : Gestion des articles avec validation de stock en temps réel
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
-- � **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
-- 📧 **Emails automatiques** : Système d'emailing avec templates (vérification, bienvenue, confirmation, reset password)
-- �📍 **Adresses multiples** : Gestion des adresses de livraison
+- 📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
+- 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password)
+- 📍 **Adresses multiples** : Gestion des adresses de livraison
+- ❤️ **Liste de souhaits** : Système de wishlist complet avec authentification JWT
+- ⭐ **Avis produits** : Système de reviews avec notation étoiles et modération admin
 - 👤 **Espace admin protégé** : Dashboard avec statistiques, graphiques, gestion complète
 - 🖼️ **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
 - 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
@@ -36,6 +38,8 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 📱 **Design responsive** : Interface optimisée mobile/tablette/desktop avec breakpoints adaptatifs
 - 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages et dans les emails/factures
 - ✨ **UX moderne** : Système de modals élégants avec animations pour toutes les notifications
+- 🔍 **SEO optimisé** : Métadonnées dynamiques, JSON-LD, robots.txt, sitemap.xml automatique
+- 🗂️ **Organisation icônes** : 48 icônes centralisées dans /public/icones/ pour une meilleure structure
 
 ---
 
@@ -210,6 +214,7 @@ francois-maroquinerie/
 │   │   ├── panier/         # Page panier
 │   │   ├── mes-commandes/  # Page mes commandes
 │   │   ├── mes-adresses/   # Page gestion adresses
+│   │   ├── ma-wishlist/    # Page liste de souhaits
 │   │   ├── apropos/        # Page à propos
 │   │   ├── contact/        # Page contact
 │   │   ├── success/        # Page succès paiement
@@ -222,6 +227,7 @@ francois-maroquinerie/
 │   ├── components/         # Composants React
 │   │   ├── Header.jsx      # En-tête navigation
 │   │   ├── Modal.jsx       # Composant modal réutilisable
+│   │   ├── StarRating.jsx  # Composant notation étoiles
 │   │   ├── ConditionalLayout.jsx
 │   │   ├── InactivityWrapper.jsx
 │   │   └── ProductCarousel.jsx
@@ -230,6 +236,8 @@ francois-maroquinerie/
 │   ├── hooks/              # Custom hooks
 │   │   ├── useModal.js     # Hook pour gérer les modals
 │   │   └── useInactivityTimer.js
+│   ├── utils/              # Utilitaires
+│   │   └── metadata.js     # Métadonnées SEO (JSON-LD, OG tags)
 │   ├── config/             # Configuration
 │   │   └── productImages.js # Images produits
 │   ├── styles/             # Fichiers CSS
@@ -246,9 +254,16 @@ francois-maroquinerie/
 │   │   ├── Addresses.css
 │   │   ├── Admin.css
 │   │   ├── Dashboard.css   # Styles dashboard admin
-│   │   ├── AdminForms.css
-│   │   └── ...
+│   │   ├── Contact.css
+│   │   ├── Success.css
+│   │   ├── ProductCarousel.css
+│   │   └── ma-wishlist.css # Styles liste de souhaits
+│   ├── app/
+│   │   └── sitemap.js      # Génération automatique du sitemap
 │   └── public/             # Fichiers statiques
+│       ├── icones/         # 48 icônes UI du projet
+│       ├── robots.txt      # Configuration SEO robots
+│       ├── Logo_Francois_sansfond.PNG # Logo marque
 │       └── images/         # Images produits
 │           ├── pochettes-unisexe/
 │           ├── porte-carte/
@@ -263,7 +278,9 @@ francois-maroquinerie/
 │   │   │   ├── categoryController.js
 │   │   │   ├── orderController.js
 │   │   │   ├── paymentController.js
-│   │   │   └── addressController.js
+│   │   │   ├── addressController.js
+│   │   │   ├── wishlistController.js # Gestion wishlist
+│   │   │   └── reviewController.js # Gestion avis produits
 │   │   ├── routes/         # Routes API
 │   │   │   ├── auth.js
 │   │   │   ├── products.js
@@ -272,6 +289,8 @@ francois-maroquinerie/
 │   │   │   ├── payment.js
 │   │   │   ├── addresses.js
 │   │   │   ├── invoices.js # Routes factures PDF
+│   │   │   ├── wishlist.js # Routes wishlist
+│   │   │   ├── reviews.js  # Routes reviews
 │   │   │   └── users.js
 │   │   ├── middleware/     # Middlewares
 │   │   │   ├── authMiddleware.js
@@ -282,7 +301,11 @@ francois-maroquinerie/
 │   │   │   ├── emailService.js # Service emails (Resend)
 │   │   │   └── invoiceService.js # Génération factures PDF
 │   │   ├── templates/      # Templates
-│   │   │   └── emailStyles.js # Styles CSS pour emails
+│   │   │   ├── emailStyles.js # Styles CSS pour emails
+│   │   │   ├── verificationEmailTemplate.js
+│   │   │   ├── welcomeEmailTemplate.js
+│   │   │   ├── orderConfirmationTemplate.js
+│   │   │   └── passwordResetTemplate.js
 │   │   ├── config/         # Configuration
 │   │   │   ├── database.js
 │   │   │   └── prisma.js
@@ -408,6 +431,9 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Gestion du stock disponible en temps réel (panier + BDD)
 - ✅ Téléchargement de factures PDF avec gestion de blobs
 - ✅ Dashboard admin avec graphiques interactifs (recharts)
+- ✅ SEO avec métadonnées dynamiques, JSON-LD, sitemap automatique
+- ✅ Prévention des erreurs d'hydration React (isMounted pattern)
+- ✅ Système de wishlist avec optimistic UI
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -422,6 +448,9 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Validation du stock avant création de commande
 - ✅ Upload de fichiers avec Multer (images produits, 5MB max, validation MIME)
 - ✅ Système de factures avec authentification et vérification de propriété
+- ✅ API wishlist avec relations many-to-many (User ↔ Product)
+- ✅ Système de reviews avec modération et contraintes (1 avis/user/produit)
+- ✅ Templates emails externalisés pour meilleure maintenance
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -442,6 +471,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Protection des routes admin (vérification JWT côté client)
 - ✅ Validation de stock côté client et serveur (double sécurité)
 - ✅ Système de callback sécurisé pour alertes (useRef, pas de boucle infinie)
+- ✅ Vérification de propriété pour factures et wishlist (req.user.userId)
+- ✅ Contrainte unique BDD pour éviter doublons (wishlist, reviews)
 
 ---
 
@@ -459,9 +490,17 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Gestion des stocks avec alertes admin
 - [x] ~~Export PDF des commandes~~ ✅ Fait (factures PDF)
 - [x] ~~Statistiques avancées (dashboard admin)~~ ✅ Fait (graphiques recharts)
+- [x] ~~Wishlist / Favoris~~ ✅ Fait (ma-wishlist avec JWT)
+- [x] ~~Avis clients~~ ✅ Fait (système reviews avec modération)
+- [x] ~~SEO optimization~~ ✅ Fait (metadata.js, robots.txt, sitemap.xml)
+- [x] ~~Organisation icônes~~ ✅ Fait (48 icônes dans /icones/)
+- [x] ~~Templates emails externalisés~~ ✅ Fait (dossier templates/)
 - [ ] Envoi automatique des factures par email
 - [ ] Historique des factures dans l'admin
 - [ ] Système de relances clients (emails automatiques)
+- [ ] Bon de réduction / codes promo
+- [ ] Suivi de livraison (tracking)
+- [ ] Export Excel des commandes
 
 ---
 

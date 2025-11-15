@@ -54,7 +54,7 @@ export default function EditProductPage() {
         });
 
         if (categoriesResponse.status === 403) {
-          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
           router.push('/');
           return;
         }
@@ -72,13 +72,13 @@ export default function EditProductPage() {
         });
 
         if (productResponse.status === 403) {
-          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+          showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
           router.push('/');
           return;
         }
 
         if (productResponse.status === 404) {
-          showAlert('Produit non trouvé', 'Erreur', '/annuler.png');
+          showAlert('Produit non trouvé', 'Erreur', '/icones/annuler.png');
           router.push('/admin/produits');
           return;
         }
@@ -208,7 +208,7 @@ export default function EditProductPage() {
       const data = await response.json();
       
       if (data.success) {
-        showAlert('Image ajoutée avec succès !', 'Succès', '/validation.png');
+        showAlert('Image ajoutée avec succès !', 'Succès', '/icones/validation.png');
         // Ajouter la nouvelle image à la liste
         setProductImages([...productImages, data.image]);
         // Réinitialiser la sélection
@@ -235,7 +235,7 @@ export default function EditProductPage() {
         try {
           const token = localStorage.getItem('token');
           if (!token) {
-            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
             return;
           }
@@ -250,7 +250,7 @@ export default function EditProductPage() {
           const data = await response.json();
           
           if (data.success) {
-            showAlert('Image supprimée avec succès !', 'Succès', '/validation.png');
+            showAlert('Image supprimée avec succès !', 'Succès', '/icones/validation.png');
             // Retirer l'image de la liste
             setProductImages(productImages.filter(img => img.id !== imageId));
             setSuccess('');
@@ -263,7 +263,7 @@ export default function EditProductPage() {
         }
       },
       'Supprimer l\'image',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -276,7 +276,7 @@ export default function EditProductPage() {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
         return;
       }
@@ -291,7 +291,7 @@ export default function EditProductPage() {
       });
 
       if (response.status === 403) {
-        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
         router.push('/');
         return;
       }
@@ -299,7 +299,7 @@ export default function EditProductPage() {
       const data = await response.json();
 
       if (data.success) {
-        showAlert('Produit modifié avec succès !', 'Succès', '/validation.png');
+        showAlert('Produit modifié avec succès !', 'Succès', '/icones/validation.png');
         setTimeout(() => {
           router.push('/admin/produits');
         }, 2000);
@@ -449,7 +449,7 @@ export default function EditProductPage() {
           {/* SECTION GESTION DES IMAGES */}
           <div className="form-group" style={{ marginTop: '2rem', padding: '1.5rem', background: '#f9f9f9', borderRadius: '10px' }}>
             <h3 style={{ marginBottom: '1rem', color: 'var(--text-dark)', textAlign: 'center' }}>
-              <Image src="/camera.png" alt="" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/camera.png" alt="" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Gestion des images du produit
             </h3>
 
@@ -581,7 +581,7 @@ export default function EditProductPage() {
                 style={{ width: '100%' }}
               >
                 <Image 
-                  src="/validation.png" 
+                  src="/icones/validation.png" 
                   alt="" 
                   width={20} 
                   height={20} 
@@ -598,7 +598,7 @@ export default function EditProductPage() {
               className="admin-btn admin-btn-primary"
               disabled={submitting}
             >
-              <Image src="/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               {submitting ? 'Modification en cours...' : 'Enregistrer les modifications'}
             </button>
             <button
@@ -606,7 +606,7 @@ export default function EditProductPage() {
               className="admin-btn admin-btn-secondary"
               onClick={() => router.push('/admin/produits')}
             >
-              <Image src="/trash.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/trash.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Annuler
             </button>
           </div>

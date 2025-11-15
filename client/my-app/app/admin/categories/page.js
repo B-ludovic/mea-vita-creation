@@ -162,7 +162,7 @@ export default function AdminCategoriesPage() {
       // Si succès
       if (data.success) {
         const successMessage = editingId ? 'Catégorie modifiée avec succès' : 'Catégorie ajoutée avec succès';
-        showAlert(successMessage, 'Succès', '/validation.png');
+        showAlert(successMessage, 'Succès', '/icones/validation.png');
         
         // Réinitialiser le formulaire
         setFormData({ name: '', slug: '', description: '', order: 0 });
@@ -222,7 +222,7 @@ export default function AdminCategoriesPage() {
 
           // Si succès
           if (data.success) {
-            showAlert('Catégorie supprimée avec succès', 'Succès', '/validation.png');
+            showAlert('Catégorie supprimée avec succès', 'Succès', '/icones/validation.png');
             fetchCategories(); // Recharger la liste
           } else {
             setMessage({ type: 'error', text: data.message });
@@ -234,7 +234,7 @@ export default function AdminCategoriesPage() {
         }
       },
       'Supprimer la catégorie',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -426,14 +426,14 @@ export default function AdminCategoriesPage() {
                         className="admin-btn admin-btn-secondary"
                         onClick={() => handleEdit(category)}
                       >
-                        <Image src="/modify.png" alt="Modifier" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                        <Image src="/icones/modify.png" alt="Modifier" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
                         Modifier
                       </button>
                       <button 
                         className="admin-btn admin-btn-danger"
                         onClick={() => handleDelete(category.id, category.name)}
                       >
-                        <Image src="/trash.png" alt="Supprimer" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                        <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
                         Supprimer
                       </button>
                     </div>
@@ -448,7 +448,7 @@ export default function AdminCategoriesPage() {
       {/* AIDE */}
       <div className="admin-help" style={{ marginTop: '3rem', padding: '1.5rem', background: 'var(--cream)', borderRadius: '10px' }}>
         <h3>
-          <Image src="/help.png" alt="Aide" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+          <Image src="/icones/help.png" alt="Aide" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
           Aide
         </h3>
         <ul>

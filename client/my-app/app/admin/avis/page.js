@@ -54,7 +54,7 @@ export default function AdminReviewsPage() {
       const token = localStorage.getItem('token');
       
       if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         return;
       }
 
@@ -67,14 +67,14 @@ export default function AdminReviewsPage() {
       });
 
       if (response.ok) {
-        showAlert('L\'avis a été approuvé avec succès !', 'Avis approuvé', '/validation.png');
+        showAlert('L\'avis a été approuvé avec succès !', 'Avis approuvé', '/icones/validation.png');
         fetchReviews();
       } else {
-        showAlert('Une erreur est survenue lors de l\'approbation', 'Erreur', '/annuler.png');
+        showAlert('Une erreur est survenue lors de l\'approbation', 'Erreur', '/icones/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/icones/annuler.png');
     }
   };
 
@@ -87,7 +87,7 @@ export default function AdminReviewsPage() {
           const token = localStorage.getItem('token');
           
           if (!token) {
-            showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             return;
           }
 
@@ -100,18 +100,18 @@ export default function AdminReviewsPage() {
           });
 
           if (response.ok) {
-            showAlert('L\'avis a été supprimé avec succès', 'Avis supprimé', '/validation.png');
+            showAlert('L\'avis a été supprimé avec succès', 'Avis supprimé', '/icones/validation.png');
             fetchReviews();
           } else {
-            showAlert('Une erreur est survenue lors de la suppression', 'Erreur', '/annuler.png');
+            showAlert('Une erreur est survenue lors de la suppression', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
+          showAlert('Erreur de connexion au serveur', 'Erreur', '/icones/annuler.png');
         }
       },
       'Confirmer la suppression',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -149,7 +149,7 @@ export default function AdminReviewsPage() {
       {pendingReviews.length > 0 && (
         <div className="admin-table-container" style={{ marginBottom: '2rem' }}>
           <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Image src="/sand-timer.png" alt="En attente" width={24} height={24} />
+            <Image src="/icones/sand-timer.png" alt="En attente" width={24} height={24} />
             Avis en attente de modération ({pendingReviews.length})
           </h2>
           <table className="admin-table">
@@ -189,7 +189,7 @@ export default function AdminReviewsPage() {
                         style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                         onClick={() => handleApprove(review.id)}
                       >
-                        <Image src="/ok.png" alt="Approuver" width={16} height={16} />
+                        <Image src="/icones/ok.png" alt="Approuver" width={16} height={16} />
                         Approuver
                       </button>
                       <button
@@ -197,7 +197,7 @@ export default function AdminReviewsPage() {
                         style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                         onClick={() => handleDelete(review.id)}
                       >
-                        <Image src="/trash.png" alt="Supprimer" width={16} height={16} />
+                        <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} />
                         Supprimer
                       </button>
                     </div>
@@ -212,7 +212,7 @@ export default function AdminReviewsPage() {
       {/* Avis approuvés */}
       <div className="admin-table-container">
         <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Image src="/validation.png" alt="Approuvés" width={24} height={24} />
+          <Image src="/icones/validation.png" alt="Approuvés" width={24} height={24} />
           Avis approuvés ({approvedReviews.length})
         </h2>
         {approvedReviews.length > 0 ? (
@@ -252,7 +252,7 @@ export default function AdminReviewsPage() {
                       style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                       onClick={() => handleDelete(review.id)}
                     >
-                      <Image src="/trash.png" alt="Supprimer" width={16} height={16} />
+                      <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} />
                       Supprimer
                     </button>
                   </td>

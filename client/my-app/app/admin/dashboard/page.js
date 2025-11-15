@@ -150,7 +150,7 @@ export default function AdminDashboard() {
           <div className="stat-card-header">
             <span className="stat-card-title">Commandes</span>
             <span className="stat-card-icon">
-              <Image src="/delivery-box.png" alt="Commandes" width={40} height={40} />
+              <Image src="/icones/delivery-box.png" alt="Commandes" width={40} height={40} />
             </span>
           </div>
           <div className="stat-card-value">{stats?.totalOrders || 0}</div>
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
           <div className="stat-card-header">
             <span className="stat-card-title">Chiffre d&apos;affaires</span>
             <span className="stat-card-icon">
-              <Image src="/chiffre-affaire.png" alt="Revenus" width={40} height={40} />
+              <Image src="/icones/chiffre-affaire.png" alt="Revenus" width={40} height={40} />
             </span>
           </div>
           <div className="stat-card-value">{stats?.totalRevenue?.toFixed(2) || '0.00'}€</div>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
           <div className="stat-card-header">
             <span className="stat-card-title">Panier moyen</span>
             <span className="stat-card-icon">
-              <Image src="/shopping.png" alt="Panier" width={40} height={40} />
+              <Image src="/icones/shopping.png" alt="Panier" width={40} height={40} />
             </span>
           </div>
           <div className="stat-card-value">{stats?.averageOrderValue?.toFixed(2) || '0.00'}€</div>
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
           <div className="stat-card-header">
             <span className="stat-card-title">Produits</span>
             <span className="stat-card-icon">
-              <Image src="/shopping.png" alt="Produits" width={40} height={40} />
+              <Image src="/icones/shopping.png" alt="Produits" width={40} height={40} />
             </span>
           </div>
           <div className="stat-card-value">{stats?.totalProducts || 0}</div>
@@ -198,7 +198,7 @@ export default function AdminDashboard() {
         {salesByMonth.length > 0 && (
           <div className="admin-table-container">
             <div className="chart-header">
-              <Image src="/evolution.png" alt="Graphique" width={24} height={24} />
+              <Image src="/icones/evolution.png" alt="Graphique" width={24} height={24} />
               <h2>Évolution des ventes</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
         {topProducts.length > 0 && (
           <div className="admin-table-container">
             <div className="chart-header">
-              <Image src="/trophy.png" alt="Trophée" width={24} height={24} />
+              <Image src="/icones/trophy.png" alt="Trophée" width={24} height={24} />
               <h2>Top 5 produits</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
         {statusData.length > 0 && (
           <div className="admin-table-container">
             <div className="chart-header">
-              <Image src="/satistic.png" alt="Statistiques" width={24} height={24} />
+              <Image src="/icones/satistic.png" alt="Statistiques" width={24} height={24} />
               <h2>Commandes par statut</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
@@ -283,7 +283,7 @@ export default function AdminDashboard() {
         {topProducts.length > 0 && (
           <div className="admin-table-container">
             <div className="chart-header">
-              <Image src="/excellence.png" alt="Excellence" width={24} height={24} />
+              <Image src="/icones/excellence.png" alt="Excellence" width={24} height={24} />
               <h2>Détails des meilleures ventes</h2>
             </div>
             <table className="admin-table">
@@ -314,7 +314,7 @@ export default function AdminDashboard() {
       <div className="admin-table-container info-section">
         <h2>
           <Image 
-            src="/congratulation.png" 
+            src="/icones/congratulation.png" 
             alt="Bienvenue" 
             width={32} 
             height={32}
@@ -326,15 +326,15 @@ export default function AdminDashboard() {
         </p>
         <ul>
           <li>
-            <Image src="/delivery-box.png" alt="" width={20} height={20} />
+            <Image src="/icones/delivery-box.png" alt="" width={20} height={20} />
             <strong>Commandes</strong> : Gérer et suivre toutes les commandes
           </li>
           <li>
-            <Image src="/shopping.png" alt="" width={20} height={20} />
+            <Image src="/icones/shopping.png" alt="" width={20} height={20} />
             <strong>Produits</strong> : Ajouter, modifier ou supprimer des produits
           </li>
           <li>
-            <Image src="/users.png" alt="" width={20} height={20} />
+            <Image src="/icones/users.png" alt="" width={20} height={20} />
             <strong>Utilisateurs</strong> : Voir la liste des clients
           </li>
         </ul>

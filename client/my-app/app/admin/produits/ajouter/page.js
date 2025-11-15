@@ -267,7 +267,7 @@ export default function AddProductPage() {
               className="admin-btn admin-btn-primary"
               disabled={loading}
             >
-              <Image src="/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               {loading ? 'Création en cours...' : 'Créer le produit'}
             </button>
             <button
@@ -275,7 +275,7 @@ export default function AddProductPage() {
               className="admin-btn admin-btn-secondary"
               onClick={() => router.push('/admin/produits')}
             >
-              <Image src="/annuler.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/annuler.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Annuler
             </button>
           </div>

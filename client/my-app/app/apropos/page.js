@@ -37,7 +37,7 @@ export default function AProposPage() {
               <div className="bio-card">
                 <h3>
                   <Image 
-                    src="/philosophie.png" 
+                    src="/icones/philosophie.png" 
                     alt="Notre Philosophie" 
                     width={40} 
                     height={40}
@@ -65,7 +65,7 @@ export default function AProposPage() {
             <div className="value-item">
               <div className="value-icon">
                 <Image 
-                  src="/authenticite.png" 
+                  src="/icones/authenticite.png" 
                   alt="Authenticité" 
                   width={80} 
                   height={80}
@@ -80,7 +80,7 @@ export default function AProposPage() {
             <div className="value-item">
               <div className="value-icon">
                 <Image 
-                  src="/artisanat.png" 
+                  src="/icones/artisanat.png" 
                   alt="Artisanat" 
                   width={80} 
                   height={80}
@@ -95,7 +95,7 @@ export default function AProposPage() {
             <div className="value-item">
               <div className="value-icon">
                 <Image 
-                  src="/heritage.png" 
+                  src="/icones/heritage.png" 
                   alt="Héritage" 
                   width={80} 
                   height={80}
@@ -110,7 +110,7 @@ export default function AProposPage() {
             <div className="value-item">
               <div className="value-icon">
                 <Image 
-                  src="/excellence.png" 
+                  src="/icones/excellence.png" 
                   alt="Excellence" 
                   width={80} 
                   height={80}
@@ -136,7 +136,7 @@ export default function AProposPage() {
                 <div className="material-card">
                   <h4>
                     <Image 
-                      src="/recycle.png" 
+                      src="/icones/recycle.png" 
                       alt="Cuir Recyclé" 
                       width={30} 
                       height={30}
@@ -152,7 +152,7 @@ export default function AProposPage() {
                 <div className="material-card">
                   <h4>
                     <Image 
-                      src="/tree.png" 
+                      src="/icones/tree.png" 
                       alt="Bois de Hêtre" 
                       width={30} 
                       height={30}
@@ -167,7 +167,7 @@ export default function AProposPage() {
                 <div className="material-card">
                   <h4>
                     <Image 
-                      src="/tissus_wax.png" 
+                      src="/icones/tissus_wax.png" 
                       alt="Tissus Wax" 
                       width={30} 
                       height={30}

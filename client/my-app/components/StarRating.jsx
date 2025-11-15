@@ -21,7 +21,7 @@ export default function StarRating({ rating, onRatingChange, readonly = false, s
           onClick={() => !readonly && onRatingChange && onRatingChange(star)}
         >
           <Image
-            src="/review.png"
+            src="/icones/review.png"
             alt="étoile"
             width={sizeMap[size]}
             height={sizeMap[size]}

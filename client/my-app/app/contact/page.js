@@ -36,7 +36,7 @@ export default function ContactPage() {
     showAlert(
       'Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.',
       'Message envoyé',
-      '/sent-mail.png'
+      '/icones/sent-mail.png'
     );
     
     // Réinitialiser le formulaire
@@ -164,7 +164,7 @@ export default function ContactPage() {
                 {/* Email */}
                 <div className="contact-method">
                   <div className="contact-icon">
-                    <Image src="/mail.png" alt="Email" width={40} height={40} />
+                    <Image src="/icones/mail.png" alt="Email" width={40} height={40} />
                   </div>
                   <div className="contact-details">
                     <h3>Email</h3>
@@ -176,7 +176,7 @@ export default function ContactPage() {
                 {/* WhatsApp */}
                 <div className="contact-method">
                   <div className="contact-icon">
-                    <Image src="/iphone.png" alt="WhatsApp" width={40} height={40} />
+                    <Image src="/icones/iphone.png" alt="WhatsApp" width={40} height={40} />
                   </div>
                   <div className="contact-details">
                     <h3>WhatsApp</h3>
@@ -188,7 +188,7 @@ export default function ContactPage() {
                 {/* Atelier */}
                 <div className="contact-method">
                   <div className="contact-icon">
-                    <Image src="/location.png" alt="Localisation" width={40} height={40} />
+                    <Image src="/icones/location.png" alt="Localisation" width={40} height={40} />
                   </div>
                   <div className="contact-details">
                     <h3>Atelier</h3>
@@ -213,7 +213,7 @@ export default function ContactPage() {
                 {/* Instagram */}
                 <a href="https://www.instagram.com/mv.meavita/?igsh=MTc4YjdscjA5NnQ4MA%3D%3D" target="_blank" rel="noopener noreferrer" className="social-link-item">
                   <div className="social-icon">
-                    <Image src="/instagram.png" alt="Instagram" width={30} height={30} />
+                    <Image src="/icones/instagram.png" alt="Instagram" width={30} height={30} />
                   </div>
                   <div className="social-info">
                     <h4>Instagram</h4>
@@ -224,7 +224,7 @@ export default function ContactPage() {
                 {/* WhatsApp Business */}
                 <a href="#" className="social-link-item">
                   <div className="social-icon">
-                    <Image src="/chat.png" alt="WhatsApp" width={30} height={30} />
+                    <Image src="/icones/chat.png" alt="WhatsApp" width={30} height={30} />
                   </div>
                   <div className="social-info">
                     <h4>WhatsApp Business</h4>

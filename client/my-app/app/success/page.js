@@ -39,7 +39,7 @@ export default function SuccessPage() {
         <div className="success-card">
           <div className="success-icon">
             <Image 
-              src="/payment.png" 
+              src="/icones/payment.png" 
               alt="Paiement réussi" 
               width={120} 
               height={120}

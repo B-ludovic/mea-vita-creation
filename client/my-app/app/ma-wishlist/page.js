@@ -66,7 +66,7 @@ export default function WishlistPage() {
       const token = localStorage.getItem('token');
 
       if (!token) {
-        showAlert('Vous devez être connecté', 'Erreur', '/error.png');
+        showAlert('Vous devez être connecté', 'Erreur', '/icones/error.png');
         return;
       }
 
@@ -81,19 +81,19 @@ export default function WishlistPage() {
       if (response.ok) {
         // Retirer de l'état local
         setWishlist(wishlist.filter(item => item.id !== wishlistItemId));
-        showAlert('Produit retiré de vos favoris', 'Succès', '/validation.png');
+        showAlert('Produit retiré de vos favoris', 'Succès', '/icones/validation.png');
       } else {
-        showAlert('Erreur lors de la suppression', 'Erreur', '/error.png');
+        showAlert('Erreur lors de la suppression', 'Erreur', '/icones/error.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur de connexion au serveur', 'Erreur', '/error.png');
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/icones/error.png');
     }
   };
 
   const handleAddToCart = (product) => {
     addToCart(product);
-    showAlert(`${product.name} ajouté au panier !`, 'Succès', '/shopping.png');
+    showAlert(`${product.name} ajouté au panier !`, 'Succès', '/icones/shopping.png');
   };
 
   if (loading) {
@@ -128,7 +128,7 @@ export default function WishlistPage() {
       <div className="wishlist-container">
         <div className="container">
           <div className="wishlist-empty">
-            <Image src="/favori-empty.png" alt="Favoris" width={80} height={80} />
+            <Image src="/icones/favori-empty.png" alt="Favoris" width={80} height={80} />
             <h2>Votre liste de favoris est vide</h2>
             <p>Ajoutez des produits à votre wishlist pour les retrouver facilement !</p>
             <Link href="/categories" className="btn-primary">
@@ -156,7 +156,7 @@ export default function WishlistPage() {
                 onClick={() => handleRemove(item.id)}
                 title="Retirer des favoris"
               >
-                <Image src="/remove.png" alt="Retirer" width={20} height={20} />
+                <Image src="/icones/remove.png" alt="Retirer" width={20} height={20} />
               </button>
 
               <Link href={`/produits/${item.Product.slug}`}>
@@ -175,7 +175,7 @@ export default function WishlistPage() {
                     alignItems: 'center', 
                     justifyContent: 'center'
                   }}>
-                    <Image src="/shopping.png" alt="Produit" width={80} height={80} />
+                    <Image src="/icones/shopping.png" alt="Produit" width={80} height={80} />
                   </div>
                 )}
               </Link>
@@ -201,14 +201,14 @@ export default function WishlistPage() {
                     className="wishlist-btn-cart"
                     onClick={() => handleAddToCart(item.Product)}
                   >
-                    <Image src="/shopping.png" alt="Panier" width={14} height={14} />
+                    <Image src="/icones/shopping.png" alt="Panier" width={14} height={14} />
                     Panier
                   </button>
                   <Link 
                     href={`/produits/${item.Product.slug}`}
                     className="wishlist-btn-view"
                   >
-                    <Image src="/camera.png" alt="Voir" width={14} height={14} />
+                    <Image src="/icones/camera.png" alt="Voir" width={14} height={14} />
                     Détails
                   </Link>
                 </div>

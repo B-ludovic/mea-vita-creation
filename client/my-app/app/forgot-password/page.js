@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
         <div className="auth-card">
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Image 
-              src="/sent-mail.png" 
+              src="/icones/sent-mail.png" 
               alt="Email envoyé" 
               width={80} 
               height={80}

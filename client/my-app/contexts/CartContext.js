@@ -50,7 +50,7 @@ export function CartProvider({ children }) {
       if (newQuantity > product.stock) {
         // Utiliser le callback si disponible, sinon fallback sur alert natif
         if (alertCallbackRef.current) {
-          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/help.png');
+          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/icones/help.png');
         } else {
           alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
         }
@@ -71,7 +71,7 @@ export function CartProvider({ children }) {
       if (quantity > product.stock) {
         // Utiliser le callback si disponible, sinon fallback sur alert natif
         if (alertCallbackRef.current) {
-          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/help.png');
+          alertCallbackRef.current(`Stock insuffisant ! Seulement ${product.stock} disponible(s).`, 'Stock limité', '/icones/help.png');
         } else {
           alert(`⚠️ Stock insuffisant ! Seulement ${product.stock} disponible(s).`);
         }
@@ -103,7 +103,7 @@ export function CartProvider({ children }) {
           if (quantity > item.stock) {
             // Utiliser le callback si disponible, sinon fallback sur alert natif
             if (alertCallbackRef.current) {
-              alertCallbackRef.current(`Stock insuffisant ! Seulement ${item.stock} disponible(s).`, 'Stock limité', '/help.png');
+              alertCallbackRef.current(`Stock insuffisant ! Seulement ${item.stock} disponible(s).`, 'Stock limité', '/icones/help.png');
             } else {
               alert(`⚠️ Stock insuffisant ! Seulement ${item.stock} disponible(s).`);
             }

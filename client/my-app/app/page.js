@@ -2,7 +2,7 @@
 import '../styles/Home.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultMetadata } from '/utils/metadata';
+import { defaultMetadata } from '../utils/metadata';
 
 // Métadonnées pour la page d'accueil Next.js
 export const metadata = defaultMetadata;
@@ -186,19 +186,19 @@ export default function HomePage() {
           </p>
           <ul className="craft-features">
             <li>
-              <Image src="/qualite.png" alt="Qualité" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/qualite.png" alt="Qualité" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Cuirs sélectionnés pour leur qualité exceptionnelle
             </li>
             <li>
-              <Image src="/tissus_wax.png" alt="Tissus Wax" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/tissus_wax.png" alt="Tissus Wax" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Tissus wax authentiques aux motifs uniques
             </li>
             <li>
-              <Image src="/confection.png" alt="Confection" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/confection.png" alt="Confection" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Confection entièrement manuelle
             </li>
             <li>
-              <Image src="/finition_luxe.png" alt="Finitions" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/finition_luxe.png" alt="Finitions" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
               Finitions de luxe et attention aux détails
             </li>
           </ul>

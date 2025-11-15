@@ -154,7 +154,7 @@ export default function ProductPage() {
             showAlert(
                 'Vous devez être connecté pour ajouter des favoris',
                 'Connexion requise',
-                '/error.png'
+                '/icones/error.png'
             );
             return;
         }
@@ -179,7 +179,7 @@ export default function ProductPage() {
                     showAlert(
                         'Produit retiré de vos favoris',
                         'Favoris mis à jour',
-                        '/validation.png'
+                        '/icones/validation.png'
                     );
                 }
             } else {
@@ -204,7 +204,7 @@ export default function ProductPage() {
                     showAlert(
                         'Produit ajouté à vos favoris',
                         'Favoris mis à jour',
-                        '/favori.png'
+                        '/icones/favori.png'
                     );
                 }
             }
@@ -213,7 +213,7 @@ export default function ProductPage() {
             showAlert(
                 'Erreur lors de la mise à jour des favoris',
                 'Erreur',
-                '/error.png'
+                '/icones/error.png'
             );
         }
     };
@@ -228,7 +228,7 @@ export default function ProductPage() {
             showAlert(
                 `${quantity} x ${product.name} ajouté(s) au panier !`,
                 'Produit ajouté',
-                '/validation.png'
+                '/icones/validation.png'
             );
 
             // Remettre la quantité à 1
@@ -247,7 +247,7 @@ const handleReviewSubmit = async (e) => {
         showAlert(
             'Vous devez être connecté pour laisser un avis',
             'Connexion requise',
-            '/error.png'
+            '/icones/error.png'
         );
         return;
     }
@@ -277,7 +277,7 @@ const handleReviewSubmit = async (e) => {
             showAlert(
                 'Votre avis a été soumis ! Il sera visible après modération.',
                 'Avis envoyé',
-                '/validation.png'
+                '/icones/validation.png'
             );
             setShowReviewForm(false);
             setReviewForm({ rating: 5, comment: '' });
@@ -402,7 +402,7 @@ return (
                             }}
                         >
                             <Image
-                                src={inWishlist ? '/favori.png' : '/favori-empty.png'}
+                                src={inWishlist ? '/icones/favori.png' : '/icones/favori-empty.png'}
                                 alt={inWishlist ? 'Retirer des favoris' : 'Ajouter aux favoris'}
                                 width={30}
                                 height={30}
@@ -462,7 +462,7 @@ return (
                     onClick={() => setShowReviewForm(!showReviewForm)}
                 >
                     <Image
-                        src="/user-rating.png"
+                        src="/icones/user-rating.png"
                         alt="Laisser un avis"
                         width={20}
                         height={20}
@@ -524,7 +524,7 @@ return (
                                 ) : (
                                     <>
                                         <Image
-                                            src="/validation.png"
+                                            src="/icones/validation.png"
                                             alt="Publier"
                                             width={18}
                                             height={18}
@@ -557,7 +557,7 @@ return (
                                         {review.User.firstName} {review.User.lastName}
                                         <span className="verified-badge" style={{ marginLeft: '0.5rem' }}>
                                             <Image
-                                                src="/ok.png"
+                                                src="/icones/ok.png"
                                                 alt="Vérifié"
                                                 width={16}
                                                 height={16}

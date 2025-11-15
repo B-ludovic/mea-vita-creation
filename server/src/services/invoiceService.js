@@ -124,7 +124,7 @@ const generateInvoice = async (order, user) => {
         // Chemin de l'image du produit
         const productImagePath = item.Product.ProductImage && item.Product.ProductImage.length > 0
           ? path.join(__dirname, '../../../client/my-app/public', item.Product.ProductImage[0].url)
-          : path.join(__dirname, '../../../client/my-app/public/default.png');
+          : path.join(__dirname, '../../../client/my-app/public/icones/default.png');
 
         // Ajouter l'image du produit si elle existe
         if (fs.existsSync(productImagePath)) {

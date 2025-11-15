@@ -80,7 +80,7 @@ function ResetPasswordForm() {
         <div className="auth-card">
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <Image 
-              src="/congratulation.png" 
+              src="/icones/congratulation.png" 
               alt="Succès" 
               width={80} 
               height={80}

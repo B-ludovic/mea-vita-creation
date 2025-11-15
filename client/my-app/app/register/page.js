@@ -102,7 +102,7 @@ export default function RegisterPage() {
         showAlert(
           data.message + '\nVous allez recevoir un email de vérification.',
           'Inscription réussie',
-          '/congratulation.png'
+          '/icones/congratulation.png'
         );
         setTimeout(() => {
           router.push('/login');

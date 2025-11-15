@@ -22,7 +22,7 @@ export default function AdminOrdersPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
         return;
       }
@@ -36,7 +36,7 @@ export default function AdminOrdersPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
         router.push('/');
         return;
       }
@@ -48,7 +48,7 @@ export default function AdminOrdersPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors du chargement des commandes', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors du chargement des commandes', 'Erreur', '/icones/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function AdminOrdersPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
         return;
       }
@@ -75,7 +75,7 @@ export default function AdminOrdersPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/annuler.png');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
         router.push('/');
         return;
       }
@@ -83,13 +83,13 @@ export default function AdminOrdersPage() {
       if (response.ok) {
         // Recharger les commandes
         fetchOrders();
-        showAlert('Statut mis à jour avec succès !', 'Succès', '/validation.png');
+        showAlert('Statut mis à jour avec succès !', 'Succès', '/icones/validation.png');
       } else {
-        showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/annuler.png');
+        showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/icones/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/icones/annuler.png');
     }
   };
 

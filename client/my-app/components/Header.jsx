@@ -20,12 +20,16 @@ export default function Header() {
     const [user, setUser] = useState(null);
     // État pour le menu burger mobile (ouvert/fermé)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // État pour savoir si le composant est monté (évite l'erreur d'hydratation)
+    const [isMounted, setIsMounted] = useState(false);
     // Utiliser le contexte du panier
     const { getCartCount } = useCart();
 
     // useEffect s'exécute quand le composant s'affiche
     // On vérifie si un utilisateur est connecté
     useEffect(() => {
+        setIsMounted(true);
+        
         // Fonction pour charger les données utilisateur
         const loadUser = () => {
             const userData = localStorage.getItem('user');
@@ -124,7 +128,7 @@ export default function Header() {
                     </li>
                     <li>
                         <Link href="/panier" className="cart-link" onClick={closeMenu}>
-                            Panier ({getCartCount()})
+                            Panier ({isMounted ? getCartCount() : 0})
                         </Link>
                     </li>
                     {user && (

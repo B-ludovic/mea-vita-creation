@@ -167,11 +167,11 @@ export default function CartPage() {
           isDefault: false
         });
       } else {
-        showAlert(data.message || 'Erreur lors de la création de l\'adresse', 'Erreur', '/annuler.png');
+        showAlert(data.message || 'Erreur lors de la création de l\'adresse', 'Erreur', '/icones/annuler.png');
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors de la création de l\'adresse', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors de la création de l\'adresse', 'Erreur', '/icones/annuler.png');
     }
   };
 
@@ -179,7 +179,7 @@ export default function CartPage() {
   const handleCheckout = async () => {
     // VÉRIFIER QU'UNE ADRESSE EST SÉLECTIONNÉE (si l'utilisateur est connecté)
     if (user && !selectedAddressId) {
-      showAlert('Veuillez sélectionner une adresse de livraison', 'Adresse requise', '/location.png');
+      showAlert('Veuillez sélectionner une adresse de livraison', 'Adresse requise', '/icones/location.png');
       return; // Arrêter la fonction ici
     }
 
@@ -209,13 +209,13 @@ export default function CartPage() {
         // Rediriger vers la page de paiement Stripe
         window.location.href = data.url;
       } else {
-        showAlert('Erreur lors de la création de la session de paiement', 'Erreur', '/paiment-refuse.png');
+        showAlert('Erreur lors de la création de la session de paiement', 'Erreur', '/icones/paiment-refuse.png');
         setLoading(false);
       }
       
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur de connexion au serveur', 'Erreur', '/annuler.png');
+      showAlert('Erreur de connexion au serveur', 'Erreur', '/icones/annuler.png');
       setLoading(false);
     }
   };
@@ -265,7 +265,7 @@ export default function CartPage() {
                   ) : (
                     <div className="cart-item-image-placeholder">
                       <Image 
-                        src="/shopping.png" 
+                        src="/icones/shopping.png" 
                         alt="Produit" 
                         width={50} 
                         height={50}
@@ -314,7 +314,7 @@ export default function CartPage() {
               <div className="delivery-address-section">
                 <h2>
                   <Image 
-                    src="/location.png" 
+                    src="/icones/location.png" 
                     alt="Adresse" 
                     width={24} 
                     height={24}
@@ -480,10 +480,10 @@ export default function CartPage() {
                   'Êtes-vous sûr de vouloir vider le panier ? Cette action est irréversible.',
                   () => {
                     clearCart();
-                    showAlert('Le panier a été vidé', 'Panier vidé', '/validation.png');
+                    showAlert('Le panier a été vidé', 'Panier vidé', '/icones/validation.png');
                   },
                   'Vider le panier',
-                  '/trash.png'
+                  '/icones/trash.png'
                 );
               }}
             >

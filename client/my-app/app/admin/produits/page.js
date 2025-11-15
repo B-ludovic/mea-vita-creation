@@ -23,7 +23,7 @@ export default function AdminProductsPage() {
       // Récupérer le token depuis localStorage
       const token = localStorage.getItem('token');
       if (!token) {
-        showAlert('Vous devez être connecté', 'Erreur', '/annuler.png');
+        showAlert('Vous devez être connecté', 'Erreur', '/icones/annuler.png');
         router.push('/login');
         return;
       }
@@ -37,7 +37,7 @@ export default function AdminProductsPage() {
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
-        showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/annuler.png');
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/icones/annuler.png');
         router.push('/');
         return;
       }
@@ -49,7 +49,7 @@ export default function AdminProductsPage() {
       }
     } catch (error) {
       console.error('Erreur:', error);
-      showAlert('Erreur lors du chargement des produits', 'Erreur', '/annuler.png');
+      showAlert('Erreur lors du chargement des produits', 'Erreur', '/icones/annuler.png');
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export default function AdminProductsPage() {
     try {
       // Cette route n'existe pas encore, on pourrait la créer si besoin
       console.log('Mettre à jour le stock:', productId, newStock);
-      showAlert('Fonctionnalité à implémenter : mise à jour du stock', 'Information', '/help.png');
+      showAlert('Fonctionnalité à implémenter : mise à jour du stock', 'Information', '/icones/help.png');
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -73,7 +73,7 @@ export default function AdminProductsPage() {
         try {
           const token = localStorage.getItem('token');
           if (!token) {
-            showAlert('Vous devez être connecté', 'Erreur', '/annuler.png');
+            showAlert('Vous devez être connecté', 'Erreur', '/icones/annuler.png');
             router.push('/login');
             return;
           }
@@ -87,7 +87,7 @@ export default function AdminProductsPage() {
           });
 
           if (response.status === 403) {
-            showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/annuler.png');
+            showAlert('Accès refusé. Réservé aux administrateurs.', 'Erreur', '/icones/annuler.png');
             router.push('/');
             return;
           }
@@ -95,19 +95,19 @@ export default function AdminProductsPage() {
           const data = await response.json();
 
           if (data.success) {
-            showAlert('Produit supprimé avec succès !', 'Succès', '/validation.png');
+            showAlert('Produit supprimé avec succès !', 'Succès', '/icones/validation.png');
             // Recharger la liste des produits
             fetchProducts();
           } else {
-            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/annuler.png');
+            showAlert(data.message || 'Erreur lors de la suppression', 'Erreur', '/icones/annuler.png');
           }
         } catch (error) {
           console.error('Erreur:', error);
-          showAlert('Erreur lors de la suppression du produit', 'Erreur', '/annuler.png');
+          showAlert('Erreur lors de la suppression du produit', 'Erreur', '/icones/annuler.png');
         }
       },
       'Confirmation de suppression',
-      '/trash.png'
+      '/icones/trash.png'
     );
   };
 
@@ -133,7 +133,7 @@ export default function AdminProductsPage() {
             className="admin-btn admin-btn-primary"
             onClick={() => router.push('/admin/produits/ajouter')}
           >
-            <Image src="/validation.png" alt="" width={16} height={16} style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }} />
+            <Image src="/icones/validation.png" alt="" width={16} height={16} style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }} />
             Ajouter un produit
           </button>
         </div>
@@ -175,7 +175,7 @@ export default function AdminProductsPage() {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}>
-                      <Image src="/shopping.png" alt="Produit" width={30} height={30} />
+                      <Image src="/icones/shopping.png" alt="Produit" width={30} height={30} />
                     </div>
                   )}
                 </td>
@@ -210,7 +210,7 @@ export default function AdminProductsPage() {
                       style={{ padding: '6px 12px', fontSize: '0.85rem' }}
                       onClick={() => router.push(`/admin/produits/modifier/${product.id}`)}
                     >
-                      <Image src="/modify.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/modify.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Modifier
                     </button>
                     <button 
@@ -218,7 +218,7 @@ export default function AdminProductsPage() {
                       style={{ padding: '6px 12px', fontSize: '0.85rem' }}
                       onClick={() => handleDelete(product.id, product.name)}
                     >
-                      <Image src="/trash.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/trash.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
                       Supprimer
                     </button>
                   </div>

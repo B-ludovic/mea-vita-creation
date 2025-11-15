@@ -25,12 +25,14 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🛒 **Panier intelligent** : Gestion des articles avec validation de stock en temps réel
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
-- 📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
+- � **Suivi de livraison** : Tracking complet avec numéro de suivi, transporteur, timeline visuelle animée
+- �📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
 - 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password)
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
 - ❤️ **Liste de souhaits** : Système de wishlist complet avec authentification JWT
 - ⭐ **Avis produits** : Système de reviews avec notation étoiles et modération admin
 - 👤 **Espace admin protégé** : Dashboard avec statistiques, graphiques, gestion complète
+- 📦 **Admin tracking** : Interface admin pour ajouter/modifier les informations de suivi (numéro, transporteur, URL)
 - 🖼️ **Upload images produits** : Système complet d'ajout/suppression d'images avec preview en temps réel (Multer)
 - 🔒 **Sécurité renforcée** : Rate limiting, validation, sanitization, JWT frontend + backend
 - 📊 **Stock en temps réel** : Mise à jour instantanée du stock après ajout au panier
@@ -212,7 +214,7 @@ francois-maroquinerie/
 │   │   ├── categories/     # Pages catégories
 │   │   ├── produits/       # Pages produits
 │   │   ├── panier/         # Page panier
-│   │   ├── mes-commandes/  # Page mes commandes
+│   │   ├── mes-commandes/  # Page mes commandes + suivi livraison avec timeline
 │   │   ├── mes-adresses/   # Page gestion adresses
 │   │   ├── ma-wishlist/    # Page liste de souhaits
 │   │   ├── apropos/        # Page à propos
@@ -221,7 +223,7 @@ francois-maroquinerie/
 │   │   └── admin/          # Panel admin
 │   │       ├── dashboard/  # Tableau de bord avec statistiques et graphiques
 │   │       ├── produits/   # Gestion produits
-│   │       ├── commandes/  # Gestion commandes
+│   │       ├── commandes/  # Gestion commandes + modal tracking
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
@@ -252,8 +254,9 @@ francois-maroquinerie/
 │   │   ├── Cart.css
 │   │   ├── Orders.css
 │   │   ├── Addresses.css
-│   │   ├── Admin.css
+│   │   ├── Admin.css       # Styles admin + modal tracking
 │   │   ├── Dashboard.css   # Styles dashboard admin
+│   │   ├── Tracking.css    # Styles suivi commandes + timeline animée
 │   │   ├── Contact.css
 │   │   ├── Success.css
 │   │   ├── ProductCarousel.css
@@ -434,6 +437,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ SEO avec métadonnées dynamiques, JSON-LD, sitemap automatique
 - ✅ Prévention des erreurs d'hydration React (isMounted pattern)
 - ✅ Système de wishlist avec optimistic UI
+- ✅ Timeline CSS avec animations pulse (transform scale + box-shadow)
+- ✅ Alignement précis avec CSS positioning (dots centrés sur ligne verticale)
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -451,6 +456,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ API wishlist avec relations many-to-many (User ↔ Product)
 - ✅ Système de reviews avec modération (1 avis/user/produit)
 - ✅ Templates emails externalisés pour meilleure maintenance
+- ✅ API tracking avec update conditionnel et auto-dates (shippedAt, deliveredAt)
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -499,7 +505,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Historique des factures dans l'admin
 - [ ] Système de relances clients (emails automatiques)
 - [ ] Bon de réduction / codes promo
-- [ ] Suivi de livraison (tracking)
+- [x] ~~Suivi de livraison (tracking)~~ ✅ Fait (tracking avec timeline animée)
+- [ ] Email automatique lors de l'expédition (TODO dans controller)
 - [ ] Export Excel des commandes
 
 ---

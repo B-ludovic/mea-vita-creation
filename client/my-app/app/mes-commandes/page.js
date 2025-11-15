@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useModal } from '../../hooks/useModal';
 import Modal from '../../components/Modal';
 import '../../styles/Orders.css';
+import '../../styles/Tracking.css';
 
 export default function OrdersPage() {
   const router = useRouter();
@@ -243,10 +244,141 @@ export default function OrdersPage() {
                   onClick={() => downloadInvoice(order.id)}
                   className="btn-invoice"
                 >
-                  <Image src="/icones/payment.png" alt="Facture" width={20} height={20} />
+                  <Image src="/icones/invoice.png" alt="Facture" width={20} height={20} />
                   Télécharger la facture
                 </button>
               </div>
+
+              {/* Section tracking si disponible */}
+              {(order.trackingNumber || order.status === 'SHIPPED' || order.status === 'DELIVERED') && (
+                <div className="tracking-section">
+                  <div className="tracking-header">
+                    <Image src="/icones/delivery-box.png" alt="Suivi" width={32} height={32} />
+                    <h3>Suivi de livraison</h3>
+                  </div>
+
+                  {order.trackingNumber && (
+                    <div className="tracking-info">
+                      <div className="tracking-item">
+                        <div className="tracking-item-label">Numéro de suivi</div>
+                        <div className="tracking-item-value">{order.trackingNumber}</div>
+                      </div>
+                      
+                      {order.carrier && (
+                        <div className="tracking-item">
+                          <div className="tracking-item-label">Transporteur</div>
+                          <div className="tracking-item-value">{order.carrier}</div>
+                        </div>
+                      )}
+
+                      {order.shippedAt && (
+                        <div className="tracking-item">
+                          <div className="tracking-item-label">Expédié le</div>
+                          <div className="tracking-item-value">
+                            {new Date(order.shippedAt).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {order.deliveredAt && (
+                        <div className="tracking-item">
+                          <div className="tracking-item-label">Livré le</div>
+                          <div className="tracking-item-value">
+                            {new Date(order.deliveredAt).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {order.trackingUrl && (
+                    <a 
+                      href={order.trackingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tracking-link"
+                    >
+                      <Image src="/icones/location.png" alt="Suivre" width={20} height={20} />
+                      Suivre ma commande
+                    </a>
+                  )}
+
+                  {/* Timeline des statuts */}
+                  <div className="tracking-timeline" style={{ marginTop: '2rem' }}>
+                    <div className={`timeline-item ${['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'].includes(order.status) ? 'active' : ''}`}>
+                      <div className="timeline-dot"></div>
+                      <div className="timeline-content">
+                        <div className="timeline-title">
+                          <Image src="/icones/validation.png" alt="Confirmé" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          Commande confirmée
+                        </div>
+                        <div className="timeline-date">
+                          {formatDate(order.createdAt)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className={`timeline-item ${['PROCESSING', 'SHIPPED', 'DELIVERED'].includes(order.status) ? 'active' : ''}`}>
+                      <div className="timeline-dot"></div>
+                      <div className="timeline-content">
+                        <div className="timeline-title">
+                          <Image src="/icones/confection.png" alt="Préparation" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          En préparation
+                        </div>
+                        {order.status === 'PROCESSING' && (
+                          <div className="timeline-date">En cours</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={`timeline-item ${['SHIPPED', 'DELIVERED'].includes(order.status) ? 'active' : ''}`}>
+                      <div className="timeline-dot"></div>
+                      <div className="timeline-content">
+                        <div className="timeline-title">
+                          <Image src="/icones/delivery.png" alt="Expédié" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          Expédié
+                        </div>
+                        {order.shippedAt && (
+                          <div className="timeline-date">
+                            {new Date(order.shippedAt).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className={`timeline-item ${order.status === 'DELIVERED' ? 'active' : ''}`}>
+                      <div className="timeline-dot"></div>
+                      <div className="timeline-content">
+                        <div className="timeline-title">
+                          <Image src="/icones/congratulation.png" alt="Livré" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          Livré
+                        </div>
+                        {order.deliveredAt && (
+                          <div className="timeline-date">
+                            {new Date(order.deliveredAt).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric'
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

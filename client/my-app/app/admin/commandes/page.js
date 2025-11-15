@@ -3,13 +3,23 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import '../../../styles/Admin.css';
 
 export default function AdminOrdersPage() {
   const router = useRouter();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [trackingData, setTrackingData] = useState({
+    trackingNumber: '',
+    carrier: '',
+    trackingUrl: '',
+    status: 'SHIPPED'
+  });
   const { modalState, showAlert, closeModal } = useModal();
 
   useEffect(() => {
@@ -90,6 +100,66 @@ export default function AdminOrdersPage() {
     } catch (error) {
       console.error('Erreur:', error);
       showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/icones/annuler.png');
+    }
+  };
+
+  const openTrackingModal = (order) => {
+    setSelectedOrder(order);
+    setTrackingData({
+      trackingNumber: order.trackingNumber || '',
+      carrier: order.carrier || '',
+      trackingUrl: order.trackingUrl || '',
+      status: order.status === 'DELIVERED' ? 'DELIVERED' : 'SHIPPED'
+    });
+    setShowTrackingModal(true);
+  };
+
+  const handleUpdateTracking = async () => {
+    if (!trackingData.trackingNumber.trim()) {
+      showAlert('Le numéro de suivi est obligatoire', 'Erreur', '/icones/error.png');
+      return;
+    }
+
+    if (!trackingData.carrier.trim()) {
+      showAlert('Le transporteur est obligatoire', 'Erreur', '/icones/error.png');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
+        router.push('/login');
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${selectedOrder.id}/tracking`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(trackingData)
+      });
+
+      if (response.status === 403) {
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
+        router.push('/');
+        return;
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setShowTrackingModal(false);
+        fetchOrders();
+        showAlert('Informations de suivi mises à jour avec succès !', 'Succès', '/icones/validation.png');
+      } else {
+        showAlert(data.message || 'Erreur lors de la mise à jour', 'Erreur', '/icones/error.png');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      showAlert('Erreur lors de la mise à jour du tracking', 'Erreur', '/icones/error.png');
     }
   };
 
@@ -191,24 +261,35 @@ export default function AdminOrdersPage() {
                   </span>
                 </td>
                 <td data-label="Actions">
-                  <select
-                    value={order.status}
-                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                    style={{
-                      padding: '8px',
-                      borderRadius: '8px',
-                      border: '2px solid var(--light-beige)',
-                      fontSize: '0.9rem'
-                    }}
-                  >
-                    <option value="PENDING">En attente</option>
-                    <option value="PAID">Payé</option>
-                    <option value="PROCESSING">En préparation</option>
-                    <option value="SHIPPED">Expédié</option>
-                    <option value="DELIVERED">Livré</option>
-                    <option value="CANCELLED">Annulé</option>
-                    <option value="REFUNDED">Remboursé</option>
-                  </select>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <select
+                      value={order.status}
+                      onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                      style={{
+                        padding: '8px',
+                        borderRadius: '8px',
+                        border: '2px solid var(--light-beige)',
+                        fontSize: '0.9rem'
+                      }}
+                    >
+                      <option value="PENDING">En attente</option>
+                      <option value="PAID">Payé</option>
+                      <option value="PROCESSING">En préparation</option>
+                      <option value="SHIPPED">Expédié</option>
+                      <option value="DELIVERED">Livré</option>
+                      <option value="CANCELLED">Annulé</option>
+                      <option value="REFUNDED">Remboursé</option>
+                    </select>
+                    
+                    <button
+                      className="admin-btn admin-btn-secondary"
+                      style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}
+                      onClick={() => openTrackingModal(order)}
+                    >
+                      <Image src="/icones/delivery-box.png" alt="Tracking" width={16} height={16} />
+                      Tracking
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -234,6 +315,128 @@ export default function AdminOrdersPage() {
         cancelText={modalState.cancelText}
         showCancelButton={modalState.showCancelButton}
       />
+
+      {/* Modal de tracking */}
+      {showTrackingModal && (
+        <div className="modal-overlay" onClick={() => setShowTrackingModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+            <div className="modal-header">
+              <Image src="/icones/delivery-box.png" alt="Tracking" width={40} height={40} />
+              <h2>Informations de suivi</h2>
+            </div>
+            
+            <div className="modal-body">
+              <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
+                Commande : <strong>{selectedOrder?.orderNumber}</strong>
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                    Numéro de suivi *
+                  </label>
+                  <input
+                    type="text"
+                    value={trackingData.trackingNumber}
+                    onChange={(e) => setTrackingData({ ...trackingData, trackingNumber: e.target.value })}
+                    placeholder="Ex: 6A12345678901"
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      border: '2px solid var(--light-beige)',
+                      fontSize: '1rem'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                    Transporteur *
+                  </label>
+                  <select
+                    value={trackingData.carrier}
+                    onChange={(e) => setTrackingData({ ...trackingData, carrier: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      border: '2px solid var(--light-beige)',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    <option value="">Sélectionner un transporteur</option>
+                    <option value="Colissimo">Colissimo</option>
+                    <option value="Chronopost">Chronopost</option>
+                    <option value="DHL">DHL</option>
+                    <option value="UPS">UPS</option>
+                    <option value="FedEx">FedEx</option>
+                    <option value="Mondial Relay">Mondial Relay</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                    URL de suivi (optionnel)
+                  </label>
+                  <input
+                    type="url"
+                    value={trackingData.trackingUrl}
+                    onChange={(e) => setTrackingData({ ...trackingData, trackingUrl: e.target.value })}
+                    placeholder="https://www.laposte.fr/outils/suivre-vos-envois?code=..."
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      border: '2px solid var(--light-beige)',
+                      fontSize: '1rem'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                    Statut de la commande
+                  </label>
+                  <select
+                    value={trackingData.status}
+                    onChange={(e) => setTrackingData({ ...trackingData, status: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      borderRadius: '10px',
+                      border: '2px solid var(--light-beige)',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    <option value="SHIPPED">Expédié</option>
+                    <option value="DELIVERED">Livré</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer" style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setShowTrackingModal(false)}
+                className="admin-btn"
+                style={{ background: 'var(--light-beige)', color: 'var(--text-dark)' }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleUpdateTracking}
+                className="admin-btn admin-btn-primary"
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
+                <Image src="/icones/validation.png" alt="Valider" width={20} height={20} />
+                Enregistrer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

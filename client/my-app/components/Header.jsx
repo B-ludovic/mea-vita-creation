@@ -140,11 +140,18 @@ export default function Header() {
                                 </Link>
                             </li>
                             {user.role === 'ADMIN' && (
-                                <li>
-                                    <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
-                                        Admin
-                                    </Link>
-                                </li>
+                                <>
+                                    <li>
+                                        <Link href="/admin/avis" className="admin-link" onClick={closeMenu}>
+                                            Avis clients
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
+                                            Admin
+                                        </Link>
+                                    </li>
+                                </>
                             )}
                         </>
                     )}

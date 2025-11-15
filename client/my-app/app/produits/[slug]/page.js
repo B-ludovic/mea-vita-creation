@@ -308,7 +308,7 @@ export default function ProductPage() {
             </div>
             
             {/* SECTION AVIS */}
-            <div className="reviews-section" style={{ maxWidth: '1200px', margin: '6rem auto 0 auto', padding: '0 2rem' }}>
+            <div className="reviews-section" style={{ maxWidth: '1200px', margin: '4rem auto 0 auto', padding: '0 2rem' }}>
                 <div className="reviews-header">
                     <h2>Avis clients</h2>
                     

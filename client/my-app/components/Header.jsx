@@ -135,6 +135,11 @@ export default function Header() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/ma-wishlist" className="wishlist-link" onClick={closeMenu}>
+                                    Ma wishlist
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/mes-adresses" className="addresses-link" onClick={closeMenu}>
                                     Mes adresses
                                 </Link>

@@ -60,6 +60,8 @@ const statsRoutes = require('./routes/stats');
 const userRoutes = require('./routes/users');
 // Importer les routes des factures
 const invoiceRoutes = require('./routes/invoices');
+// Importer les routes de la wishlist
+const wishlistRoutes = require('./routes/wishlist');
 
 // Importer le limiteur de requêtes (protection anti brute-force)
 const { apiLimiter } = require('./middleware/rateLimiter');
@@ -193,6 +195,8 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/users', userRoutes);
 // ROUTES DES FACTURES
 app.use('/api/invoices', invoiceRoutes);
+// ROUTES DE LA WISHLIST
+app.use('/api/wishlist', wishlistRoutes);
 
 
 // ROUTE D'ACCUEIL (page principale)

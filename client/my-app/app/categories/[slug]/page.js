@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+
 // Import de la configuration des images
 import { getProductMainImage, getCategoryImages } from '../../../config/productImages';
 
@@ -70,6 +71,13 @@ export default function CategoryPage() {
 
     fetchData();
   }, [slug]);
+
+  // Mettre à jour le titre de la page dynamiquement
+  useEffect(() => {
+    if (category) {
+      document.title = `${category.name} - Mea Vita Création`;
+    }
+  }, [category]);
 
   // Si en cours de chargement
   if (loading) {

@@ -209,7 +209,7 @@ export default function CartPage() {
         // Rediriger vers la page de paiement Stripe
         window.location.href = data.url;
       } else {
-        showAlert('Erreur lors de la création de la session de paiement', 'Erreur', '/paiement-refuse.png');
+        showAlert('Erreur lors de la création de la session de paiement', 'Erreur', '/paiment-refuse.png');
         setLoading(false);
       }
       

@@ -2,6 +2,10 @@
 import '../styles/Home.css';
 import Link from 'next/link';
 import Image from 'next/image';
+import { defaultMetadata } from '/utils/metadata';
+
+// Métadonnées pour la page d'accueil Next.js
+export const metadata = defaultMetadata;
 
 export default function HomePage() {
   return (

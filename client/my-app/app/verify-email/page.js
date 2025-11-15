@@ -55,7 +55,7 @@ export default function VerifyEmailPage() {
         {status === 'loading' && (
           <>
             <div style={{ marginBottom: '20px' }}>
-              <Image src="/loading.png" alt="Chargement" width={80} height={80} />
+              <Image src="/sand-timer.png" alt="Chargement" width={80} height={80} />
             </div>
             <h2>Vérification en cours...</h2>
             <p style={{ color: 'var(--text-light)' }}>Veuillez patienter</p>
@@ -80,7 +80,7 @@ export default function VerifyEmailPage() {
         {status === 'error' && (
           <>
             <div style={{ marginBottom: '20px' }}>
-              <Image src="/erreur.png" alt="Erreur" width={80} height={80} />
+              <Image src="/error.png" alt="Erreur" width={80} height={80} />
             </div>
             <h2 style={{ color: 'var(--danger)' }}>Erreur de vérification</h2>
             <p style={{ color: 'var(--text-light)', marginTop: '10px' }}>

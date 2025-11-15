@@ -449,7 +449,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Upload de fichiers avec Multer (images produits, 5MB max, validation MIME)
 - ✅ Système de factures avec authentification et vérification de propriété
 - ✅ API wishlist avec relations many-to-many (User ↔ Product)
-- ✅ Système de reviews avec modération et contraintes (1 avis/user/produit)
+- ✅ Système de reviews avec modération (1 avis/user/produit)
 - ✅ Templates emails externalisés pour meilleure maintenance
 
 ### DevOps & Bonnes pratiques

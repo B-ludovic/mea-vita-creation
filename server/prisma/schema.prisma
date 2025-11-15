@@ -64,8 +64,14 @@ model Order {
   stripePaymentIntentId String?     @unique
   promoCode             String?
   notes                 String?
+  trackingNumber        String?     // Numéro de suivi
+  trackingUrl           String?     // URL de suivi chez le transporteur
+  carrier               String?     // Transporteur (Colissimo, Chronopost, etc.)
+  shippedAt             DateTime?   // Date d'expédition
+  deliveredAt           DateTime?   // Date de livraison
   createdAt             DateTime    @default(now())
   updatedAt             DateTime    @updatedAt
+  
   Address               Address?    @relation(fields: [addressId], references: [id])
   User                  User?       @relation(fields: [userId], references: [id])
   OrderItem             OrderItem[]

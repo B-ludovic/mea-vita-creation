@@ -11,7 +11,8 @@ const {
   createOrder, 
   getUserOrders, 
   getOrderById,
-  updateOrderStatus 
+  updateOrderStatus, 
+  updateTracking
 } = require('../controllers/orderController');
 
 // ROUTE POUR CRÉER UNE COMMANDE
@@ -113,6 +114,10 @@ router.get('/:orderId', authenticateToken, getOrderById);
 // ROUTE POUR METTRE À JOUR LE STATUT D'UNE COMMANDE (ADMIN UNIQUEMENT)
 // PUT /api/orders/:orderId/status
 router.put('/:orderId/status', authenticateToken, isAdmin, updateOrderStatus);
+
+// ROUTE POUR METTRE À JOUR LES INFORMATIONS DE SUIVI D'UNE COMMANDE (ADMIN UNIQUEMENT)
+// PUT /api/orders/:orderId/tracking
+router.put('/:orderId/tracking', authenticateToken, isAdmin, updateTracking);
 
 // Exporter le router
 module.exports = router;

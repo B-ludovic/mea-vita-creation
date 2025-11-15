@@ -4,6 +4,7 @@ const verificationEmailTemplate = require('../templates/verificationEmailTemplat
 const welcomeEmailTemplate = require('../templates/welcomeEmailTemplate');
 const orderConfirmationTemplate = require('../templates/orderConfirmationTemplate');
 const passwordResetTemplate = require('../templates/passwordResetTemplate');
+const shippingEmailTemplate = require('../templates/shippingEmailTemplate');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -82,6 +83,30 @@ const sendOrderConfirmationEmail = async (userEmail, userName, order) => {
   }
 };
 
+// FONCTION POUR ENVOYER UN EMAIL D'EXPÉDITION
+const sendShippingEmail = async (userEmail, userName, order) => {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Mea Vita Création <onboarding@resend.dev>',
+      to: [userEmail],
+      subject: `📦 Votre commande ${order.orderNumber} a été expédiée !`,
+      html: shippingEmailTemplate(userName, order)
+    });
+
+    if (error) {
+      console.error('Erreur envoi email d\'expédition:', error);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email d\'expédition envoyé à:', userEmail);
+    return { success: true, data };
+
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email d\'expédition:', error);
+    return { success: false, error };
+  }
+};
+
 // FONCTION POUR ENVOYER UN EMAIL DE RÉINITIALISATION DE MOT DE PASSE
 const sendPasswordResetEmail = async (userEmail, userName, resetToken) => {
   try {
@@ -111,5 +136,6 @@ module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendOrderConfirmationEmail,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  sendShippingEmail
 };

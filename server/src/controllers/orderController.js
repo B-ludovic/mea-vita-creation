@@ -1,6 +1,9 @@
 // Importer Prisma
 const prisma = require('../config/prisma');
 
+// Importer le service d'email
+const { sendShippingEmail } = require('../services/emailService');
+
 // Importer les utilitaires pour les transporteurs
 const {
   generateTrackingUrl,
@@ -253,10 +256,27 @@ const updateTracking = async (req, res) => {
       }
     });
 
-    // TODO: Envoyer un email au client si expédié
+    // Envoyer un email au client si expédié (avec validation)
     if (status === 'SHIPPED' && order.User) {
-      console.log(`📧 Email d'expédition à envoyer à ${order.User.email}`);
-      // On ajoutera l'envoi d'email après
+      // Vérifier que les infos de tracking sont présentes
+      if (order.trackingNumber && order.carrier) {
+        console.log(`Envoi email d'expédition à ${order.User.email}...`);
+        
+        // Envoyer l'email (sans bloquer la réponse)
+        sendShippingEmail(order.User.email, order.User.firstName, order)
+          .then(result => {
+            if (result.success) {
+              console.log('Email d\'expédition envoyé avec succès');
+            } else {
+              console.error('❌ Erreur envoi email:', result.error);
+            }
+          })
+          .catch(err => {
+            console.error('❌ Erreur lors de l\'envoi de l\'email:', err);
+          });
+      } else {
+        console.log('Pas d\'email envoyé : tracking incomplet');
+      }
     }
 
     res.json({

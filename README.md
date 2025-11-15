@@ -27,7 +27,7 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
 - � **Suivi de livraison** : Tracking complet avec numéro de suivi, transporteur, timeline visuelle animée
 - �📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
-- 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password)
+- 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password, expédition)
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
 - ❤️ **Liste de souhaits** : Système de wishlist complet avec authentification JWT
 - ⭐ **Avis produits** : Système de reviews avec notation étoiles et modération admin
@@ -310,7 +310,8 @@ francois-maroquinerie/
 │   │   │   ├── verificationEmailTemplate.js
 │   │   │   ├── welcomeEmailTemplate.js
 │   │   │   ├── orderConfirmationTemplate.js
-│   │   │   └── passwordResetTemplate.js
+│   │   │   ├── passwordResetTemplate.js
+│   │   │   └── shippingEmailTemplate.js # Template email expédition
 │   │   ├── config/         # Configuration
 │   │   │   ├── database.js
 │   │   │   └── prisma.js
@@ -459,8 +460,9 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Système de reviews avec modération (1 avis/user/produit)
 - ✅ Templates emails externalisés pour meilleure maintenance
 - ✅ API tracking avec update conditionnel et auto-dates (shippedAt, deliveredAt)
-- ✅ Validation des numéros de tracking par transporteur (regex)
+- ✅ Validation des numéros de tracking par transporteur (regex patterns)
 - ✅ Génération automatique d'URLs de suivi (8 transporteurs supportés)
+- ✅ Email automatique d'expédition avec sanitization HTML et validation
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -483,6 +485,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Système de callback sécurisé pour alertes (useRef, pas de boucle infinie)
 - ✅ Vérification de propriété pour factures et wishlist (req.user.userId)
 - ✅ Contrainte unique BDD pour éviter doublons (wishlist, reviews)
+- ✅ Sanitization HTML dans templates emails (protection XSS)
+- ✅ Validation données avant envoi emails (tracking complet requis)
 
 ---
 
@@ -504,13 +508,13 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [x] ~~Avis clients~~ ✅ Fait (système reviews avec modération)
 - [x] ~~SEO optimization~~ ✅ Fait (metadata.js, robots.txt, sitemap.xml)
 - [x] ~~Organisation icônes~~ ✅ Fait (48 icônes dans /icones/)
-- [x] ~~Templates emails externalisés~~ ✅ Fait (dossier templates/)
+- [x] ~~Templates emails externalisés~~ ✅ Fait (dossier templates/ avec 5 templates)
 - [ ] Envoi automatique des factures par email
 - [ ] Historique des factures dans l'admin
 - [ ] Système de relances clients (emails automatiques)
 - [ ] Bon de réduction / codes promo
 - [x] ~~Suivi de livraison (tracking)~~ ✅ Fait (tracking avec timeline animée)
-- [ ] Email automatique lors de l'expédition (TODO dans controller)
+- [x] ~~Email automatique lors de l'expédition~~ ✅ Fait (shippingEmailTemplate avec sanitization)
 - [ ] Export Excel des commandes
 
 ---

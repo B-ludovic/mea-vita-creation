@@ -41,7 +41,11 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🎨 **Branding cohérent** : Logo marque affiché sur toutes les pages et dans les emails/factures
 - ✨ **UX moderne** : Système de modals élégants avec animations pour toutes les notifications
 - 🔍 **SEO optimisé** : Métadonnées dynamiques, JSON-LD, robots.txt, sitemap.xml automatique
-- 🗂️ **Organisation icônes** : 48 icônes centralisées dans /public/icones/ pour une meilleure structure
+- 🗂️ **Organisation icônes** : 51 icônes centralisées dans /public/icones/ pour une meilleure structure
+- 📊 **Google Analytics** : Tracking avec consentement RGPD, bannière cookies conforme
+- 🍪 **Gestion cookies** : Bannière de consentement RGPD avec icônes, localStorage
+- 📜 **Politique confidentialité** : Page RGPD complète avec droits utilisateurs
+- 🧾 **Historique factures admin** : Interface admin pour consulter et télécharger les factures
 
 ---
 
@@ -219,20 +223,26 @@ francois-maroquinerie/
 │   │   ├── ma-wishlist/    # Page liste de souhaits
 │   │   ├── apropos/        # Page à propos
 │   │   ├── contact/        # Page contact
+│   │   ├── politique-confidentialite/ # Page politique RGPD
 │   │   ├── success/        # Page succès paiement
 │   │   └── admin/          # Panel admin
 │   │       ├── dashboard/  # Tableau de bord avec statistiques et graphiques
 │   │       ├── produits/   # Gestion produits
 │   │       ├── commandes/  # Gestion commandes + modal tracking
+│   │       ├── factures/   # Historique factures avec téléchargement
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
 │   │   ├── Header.jsx      # En-tête navigation
 │   │   ├── Modal.jsx       # Composant modal réutilisable
 │   │   ├── StarRating.jsx  # Composant notation étoiles
+│   │   ├── CookieConsent.jsx # Bannière consentement RGPD
+│   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
 │   │   ├── ConditionalLayout.jsx
 │   │   ├── InactivityWrapper.jsx
-│   │   └── ProductCarousel.jsx
+│   │   ├── ProductCarousel.jsx
+│   │   └── analytics/
+│   │       └── GoogleAnalytics.jsx # Composant Google Analytics
 │   ├── contexts/           # Context API
 │   │   └── CartContext.js  # Gestion du panier
 │   ├── hooks/              # Custom hooks
@@ -260,11 +270,13 @@ francois-maroquinerie/
 │   │   ├── Contact.css
 │   │   ├── Success.css
 │   │   ├── ProductCarousel.css
+│   │   ├── CookieConsent.css # Styles bannière cookies
+│   │   ├── politique-confidentialite.css # Styles page RGPD
 │   │   └── ma-wishlist.css # Styles liste de souhaits
 │   ├── app/
 │   │   └── sitemap.js      # Génération automatique du sitemap
 │   └── public/             # Fichiers statiques
-│       ├── icones/         # 48 icônes UI du projet
+│       ├── icones/         # 51 icônes UI du projet (bill, cookie, total)
 │       ├── robots.txt      # Configuration SEO robots
 │       ├── Logo_Francois_sansfond.PNG # Logo marque
 │       └── images/         # Images produits
@@ -336,6 +348,7 @@ francois-maroquinerie/
 |----------|-------------|
 | `NEXT_PUBLIC_API_URL` | URL de l'API backend |
 | `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` | Clé publique Stripe |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ID Google Analytics (G-XXXXXXXXXX) |
 
 ### Backend (`.env`)
 | Variable | Description |
@@ -442,6 +455,9 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Système de wishlist avec optimistic UI
 - ✅ Timeline CSS avec animations pulse (transform scale + box-shadow)
 - ✅ Alignement précis avec CSS positioning (dots centrés sur ligne verticale)
+- ✅ Google Analytics avec Script Next.js
+- ✅ Gestion du consentement cookies RGPD (localStorage, bannière interactive)
+- ✅ Page politique de confidentialité complète (9 sections RGPD)
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -463,6 +479,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Validation des numéros de tracking par transporteur (regex patterns)
 - ✅ Génération automatique d'URLs de suivi (8 transporteurs supportés)
 - ✅ Email automatique d'expédition avec sanitization HTML et validation
+- ✅ Route factures avec authentification JWT et vérification propriétaire
+- ✅ Téléchargement factures PDF avec headers Authorization
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)
@@ -497,7 +515,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Compression et optimisation d'images (Sharp)
 - [ ] Recherche avancée et filtres
 - [ ] Notifications en temps réel (WebSocket)
-- [ ] Analytics et monitoring
+- [x] ~~Analytics et monitoring~~ ✅ Fait (Google Analytics avec RGPD)
 - [ ] Mode sombre / thème personnalisable
 - [ ] Internationalisation
 - [ ] PWA (Progressive Web App)
@@ -510,7 +528,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [x] ~~Organisation icônes~~ ✅ Fait (48 icônes dans /icones/)
 - [x] ~~Templates emails externalisés~~ ✅ Fait (dossier templates/ avec 5 templates)
 - [ ] Envoi automatique des factures par email
-- [ ] Historique des factures dans l'admin
+- [x] ~~Historique des factures dans l'admin~~ ✅ Fait (page factures avec recherche/filtres)
 - [ ] Système de relances clients (emails automatiques)
 - [ ] Bon de réduction / codes promo
 - [x] ~~Suivi de livraison (tracking)~~ ✅ Fait (tracking avec timeline animée)

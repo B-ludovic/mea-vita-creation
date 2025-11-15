@@ -225,7 +225,16 @@ export default function OrdersPage() {
                       )}
                     </div>
                     <div className="order-item-details">
-                      <h4>{item.Product.name}</h4>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <Image 
+                          src="/Logo_Francois_sansfond.PNG" 
+                          alt="François Maroquinerie" 
+                          width={24} 
+                          height={24}
+                          style={{ objectFit: 'contain' }}
+                        />
+                        <h4 style={{ margin: 0 }}>{item.Product.name}</h4>
+                      </div>
                       <p>Quantité : {item.quantity} × {item.unitPrice.toFixed(2)}€</p>
                     </div>
                     <div className="order-item-price">

@@ -19,7 +19,7 @@
     align-items: center;
     padding: 0 1.5rem;
     gap: 0.75rem;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* Permet l'enroulement sur petits écrans */
 }
 
 .logo {
@@ -46,7 +46,8 @@
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     font-weight: 700;
     letter-spacing: 1px;
-    white-space: nowrap;
+    max-width: 250px; /* Limite la largeur */
+    line-height: 1.2; /* Meilleur espacement si retour à la ligne */
 }
 
 .nav-menu {
@@ -56,7 +57,7 @@
     align-items: center;
     flex: 1;
     justify-content: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap; /* Permet l'enroulement des liens */
 }
 
 .nav-menu a {
@@ -195,7 +196,14 @@
 
 /* Responsive */
 
-/* Écrans moyens - Réduire les espacements */
+/* Écrans très larges - optimal */
+@media (min-width: 1501px) {
+    .nav-menu {
+        gap: 2.5rem;
+    }
+}
+
+/* Écrans larges - Réduire légèrement */
 @media (max-width: 1500px) {
     .nav {
         padding: 0 1rem;
@@ -203,11 +211,11 @@
     }
 
     .nav-menu {
-        gap: 1.5rem; /* Réduire l'espace entre les liens */
+        gap: 2rem;
     }
 
     .nav-menu a {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
     }
 
     .logo h1 {
@@ -234,13 +242,64 @@
     }
 }
 
-@media (max-width: 1024px) {
+/* Tablettes larges - Réduction progressive */
+@media (max-width: 1200px) {
+    .nav {
+        padding: 0 1rem;
+    }
+
     .nav-menu {
         gap: 1.5rem;
     }
+
+    .nav-menu a {
+        font-size: 0.8rem;
+    }
+
+    .logo h1 {
+        font-size: clamp(0.8rem, 1.2vw, 1rem);
+        max-width: 200px;
+    }
+}
+
+/* Tablettes - Masquer certains liens secondaires */
+@media (max-width: 1024px) {
+    .nav {
+        padding: 0 0.75rem;
+    }
+
+    .nav-menu {
+        gap: 1.2rem;
+    }
     
     .nav-menu a {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+    }
+
+    .logo h1 {
+        font-size: clamp(0.75rem, 1.1vw, 0.95rem);
+        max-width: 180px;
+    }
+
+    .auth-buttons button {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Petites tablettes - Préparation au burger */
+@media (max-width: 900px) {
+    .nav-menu {
+        gap: 1rem;
+    }
+
+    .nav-menu a {
+        font-size: 0.7rem;
+    }
+
+    .logo h1 {
+        font-size: 0.8rem;
+        max-width: 150px;
     }
 }
 
@@ -259,6 +318,7 @@
     padding: 0;
     z-index: 1001;
     transition: transform 0.3s ease;
+    flex-shrink: 0; /* Empêche le bouton de rétrécir */
 }
 
 .burger-button:hover {
@@ -300,6 +360,27 @@
 }
 
 @media (max-width: 768px) {
+    /* Réinitialiser certains styles pour mobile */
+    .header {
+        padding: 1rem 0;
+    }
+
+    .nav {
+        padding: 0 1rem;
+        flex-wrap: nowrap; /* Sur mobile, pas d'enroulement car menu burger */
+    }
+
+    .logo h1 {
+        font-size: 0.75rem;
+        max-width: 120px;
+        white-space: nowrap; /* Sur mobile, garder sur une ligne */
+    }
+
+    .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+
     /* Afficher le bouton burger sur mobile */
     .burger-button {
         display: flex;
@@ -523,9 +604,36 @@
     }
 }
 
-@media (max-width: 768px) {
+/* Media query pour petits mobiles */
+@media (max-width: 480px) {
+    .header {
+        padding: 0.75rem 0;
+    }
+
     .nav {
-        flex-wrap: wrap;
-        gap: 1rem;
+        padding: 0 0.75rem;
+    }
+
+    .logo h1 {
+        font-size: 0.7rem;
+        max-width: 100px;
+    }
+
+    .logo-img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .burger-button {
+        width: 28px;
+        height: 22px;
+    }
+
+    .burger-line {
+        height: 2.5px;
+    }
+
+    .nav-menu {
+        width: 260px; /* Menu plus étroit sur très petits écrans */
     }
 }

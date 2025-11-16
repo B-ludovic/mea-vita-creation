@@ -488,6 +488,7 @@
         transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
         border: none;
+        z-index: 999; /* Au-dessus de l'overlay (998) */
     }
 
     /* Menu ouvert - glisse depuis la droite */
@@ -530,6 +531,15 @@
     }
     .nav-menu.mobile-open li:nth-child(9) { 
         animation: slideInSmooth 0.5s ease-out forwards 0.45s; 
+    }
+    .nav-menu.mobile-open li:nth-child(10) { 
+        animation: slideInSmooth 0.5s ease-out forwards 0.5s; 
+    }
+    .nav-menu.mobile-open li:nth-child(11) { 
+        animation: slideInSmooth 0.5s ease-out forwards 0.55s; 
+    }
+    .nav-menu.mobile-open li:nth-child(12) { 
+        animation: slideInSmooth 0.5s ease-out forwards 0.6s; 
     }
 
     /* Keyframe pour l'animation staggered plus douce */
@@ -587,16 +597,21 @@
     }
 
     /* Overlay sombre quand le menu est ouvert - apparition plus douce */
-    .nav-menu.mobile-open::before {
-        content: '';
+    .menu-overlay {
         position: fixed;
         top: 0;
         left: 0;
-        width: calc(100vw - 280px);
+        width: calc(100vw - 280px); /* Couvre tout sauf le menu (280px à droite) */
         height: 100vh;
         background: rgba(0,0,0,0.5);
-        z-index: -1;
-        animation: fadeInSmooth 0.4s ease; /* Animation plus douce */
+        z-index: 998; /* Juste en dessous du menu (999) */
+        animation: fadeInSmooth 0.4s ease;
+        cursor: pointer;
+    }
+
+    /* Retirer l'ancien overlay ::before qui ne fonctionnait pas pour les clics */
+    .nav-menu.mobile-open::before {
+        display: none;
     }
 
     @keyframes fadeInSmooth {

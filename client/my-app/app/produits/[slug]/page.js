@@ -112,14 +112,6 @@ export default function ProductPage() {
                         const currentIndex = products.findIndex(p => p.slug === slug);
                         setCurrentProductIndex(currentIndex);
 
-                        console.log('Navigation debug:', {
-                            totalProducts: products.length,
-                            currentIndex: currentIndex,
-                            currentSlug: slug,
-                            hasPrevious: currentIndex > 0,
-                            hasNext: currentIndex < products.length - 1
-                        });
-
                         // Déterminer le produit précédent et suivant
                         if (currentIndex > 0) {
                             setPreviousProduct(products[currentIndex - 1]);

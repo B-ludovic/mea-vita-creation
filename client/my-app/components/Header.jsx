@@ -59,6 +59,28 @@ export default function Header() {
         };
     }, []);
 
+    // useEffect pour fermer le menu quand on clique en dehors
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            // Si le menu est ouvert et qu'on clique en dehors du menu et du bouton burger
+            if (isMenuOpen && 
+                !event.target.closest('.nav-menu') && 
+                !event.target.closest('.burger-button')) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        // Ajouter l'écouteur d'événement
+        if (isMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        // Nettoyer l'écouteur
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isMenuOpen]);
+
     // Fonction pour se déconnecter
     const handleLogout = () => {
         // Supprimer le token et les infos utilisateur
@@ -87,6 +109,9 @@ export default function Header() {
 
     return (
         <header className="header">
+            {/* Overlay pour fermer le menu en cliquant en dehors */}
+            {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
+            
             <nav className="nav">
                 {/* Logo et nom du site */}
                 <Link href="/" className="logo" onClick={closeMenu}>

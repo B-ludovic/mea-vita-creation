@@ -165,6 +165,7 @@ model User {
   Order                     Order[]
   WishlistItem              WishlistItem[]
   Review                    Review[]
+  RefreshToken              RefreshToken[] 
 }
 
 model WishlistItem {
@@ -208,7 +209,7 @@ model RefreshToken {
   id        String   @id @default(cuid())
   token     String   @unique
   userId    String
-  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   createdAt DateTime @default(now())
   

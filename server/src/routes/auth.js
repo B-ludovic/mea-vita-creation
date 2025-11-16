@@ -3,7 +3,15 @@ const express = require('express');
 const router = express.Router();
 
 // Importer les fonctions du contrôleur
-const { register, login, verifyEmail, forgotPassword, resetPassword } = require('../controllers/authController');
+const { 
+  register, 
+  login, 
+  verifyEmail, 
+  refreshAccessToken, 
+  logout, 
+  forgotPassword, 
+  resetPassword 
+} = require('../controllers/authController');
 
 // Importer les limiteurs de tentatives (protection anti brute-force)
 const { loginLimiter, registerLimiter, forgotPasswordLimiter, resetPasswordLimiter } = require('../middleware/rateLimiter');
@@ -23,6 +31,18 @@ router.post('/login', loginLimiter, login);
 // ROUTE DE VÉRIFICATION EMAIL
 // GET /api/auth/verify-email/:token
 router.get('/verify-email/:token', verifyEmail);
+
+// ROUTE POUR RAFRAÎCHIR L'ACCESS TOKEN
+// POST /api/auth/refresh
+// Le front-end envoie : { refreshToken }
+// Renvoie : { accessToken }
+router.post('/refresh', refreshAccessToken);
+
+// ROUTE DE DÉCONNEXION
+// POST /api/auth/logout
+// Le front-end envoie : { refreshToken }
+// Supprime le refresh token de la BDD
+router.post('/logout', logout);
 
 // ROUTE POUR DEMANDER LA RÉINITIALISATION DU MOT DE PASSE
 // POST /api/auth/forgot-password

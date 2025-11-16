@@ -1,14 +1,33 @@
-// Contrôleur pour les messages de contact
+// Contrôleur pour les messages de contact avec protection Honeypot
 const { PrismaClient } = require('@prisma/client');
 const { sendContactEmail } = require('../services/emailService');
 const prisma = new PrismaClient();
 
-// FONCTION POUR ENVOYER UN MESSAGE DE CONTACT
+// FONCTION POUR ENVOYER UN MESSAGE DE CONTACT (AVEC HONEYPOT)
 const sendContactMessage = async (req, res) => {
   try {
-    const { name, email, phone, interest, message } = req.body;
+    const { name, email, phone, interest, message, website } = req.body;
 
-    // Validation
+    
+    // HONEYPOT : Protection anti-bot
+    // Si le champ "website" est rempli, c'est un bot !
+    if (website) {
+      console.log('🤖 Bot détecté sur formulaire de contact !');
+      console.log('   Champ honeypot rempli:', website);
+      console.log('   IP:', req.ip);
+      console.log('   User-Agent:', req.headers['user-agent']);
+      
+      // On fait semblant que tout est OK pour ne pas alerter le bot
+      return res.json({
+        success: true,
+        message: 'Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.'
+      });
+      // En réalité, on n'envoie rien et on ne sauvegarde rien
+    }
+
+   
+    // Validation des champs obligatoires
+    
     if (!name || !email || !message) {
       return res.status(400).json({
         success: false,
@@ -25,7 +44,9 @@ const sendContactMessage = async (req, res) => {
       fullMessage = `Téléphone: ${phone}\n\n${message}`;
     }
 
+    
     // Sauvegarder dans la base de données
+    
     const contactMessage = await prisma.contactMessage.create({
       data: {
         name,
@@ -35,16 +56,25 @@ const sendContactMessage = async (req, res) => {
       }
     });
 
+    console.log('✅ Message de contact sauvegardé:', contactMessage.id);
+
+    
     // Envoyer un email à l'admin
+    
     await sendContactEmail(name, email, subject, fullMessage);
 
+    console.log('✅ Email de contact envoyé à l\'admin');
+
+   
+    // Réponse au client
+   
     res.json({
       success: true,
       message: 'Message envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.'
     });
 
   } catch (error) {
-    console.error('Erreur lors de l\'envoi du message:', error.message);
+    console.error('❌ Erreur lors de l\'envoi du message:', error.message);
     res.status(500).json({
       success: false,
       message: 'Erreur lors de l\'envoi du message'

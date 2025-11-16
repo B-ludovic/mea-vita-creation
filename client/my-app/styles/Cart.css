@@ -16,6 +16,10 @@
     font-size: clamp(2rem, 5vw, 2.5rem); /* Rendre le titre fluide */
 }
 
+.cart-header-count {
+    color: var(--text-light);
+}
+
 .cart-empty {
     text-align: center;
     padding: 4rem 2rem;
@@ -61,6 +65,11 @@
 
 .cart-item:hover {
     box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+
+.cart-item-img {
+    object-fit: cover;
+    border-radius: 10px;
 }
 
 .cart-item-image-placeholder {
@@ -210,6 +219,11 @@
     background: #c62828;
     color: var(--white);
     transform: translateY(-2px);
+}
+
+.clear-cart-icon {
+    margin-right: 0.5rem;
+    vertical-align: middle;
 }
 
 /* STYLES POUR LA SECTION ADRESSE DE LIVRAISON */

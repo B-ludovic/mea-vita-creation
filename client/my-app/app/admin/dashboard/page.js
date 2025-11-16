@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { getAccessToken } from '../../../utils/auth';
 import { 
   LineChart, 
   Line, 
@@ -32,7 +33,7 @@ export default function AdminDashboard() {
   const fetchAllStats = async () => {
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         console.error('Pas de token - accès non autorisé');
         router.push('/login');
@@ -114,7 +115,7 @@ export default function AdminDashboard() {
     return (
       <div className="admin-header">
         <h1>Erreur</h1>
-        <p style={{ color: 'var(--primary-orange)' }}>{error}</p>
+        <p className="dashboard-error">{error}</p>
       </div>
     );
   }

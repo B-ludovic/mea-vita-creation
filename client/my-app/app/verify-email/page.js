@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { setTokens } from '../../utils/auth';
 import '../../styles/Auth.css';
 
 export default function VerifyEmailPage() {
@@ -29,11 +30,12 @@ export default function VerifyEmailPage() {
           setStatus('success');
           setMessage(data.message);
           
-          localStorage.setItem('token', data.token);
+          // Stocker les 2 tokens (Access + Refresh)
+          setTokens(data.accessToken, data.refreshToken);
           localStorage.setItem('user', JSON.stringify(data.user));
 
           setTimeout(() => {
-            router.push('/');
+            window.location.href = '/';
           }, 3000);
         } else {
           setStatus('error');
@@ -51,27 +53,27 @@ export default function VerifyEmailPage() {
 
   return (
     <div className="auth-container">
-      <div className="auth-card" style={{ maxWidth: '500px', textAlign: 'center' }}>
+      <div className="auth-card verify-card">
         {status === 'loading' && (
           <>
-            <div style={{ marginBottom: '20px' }}>
+            <div className="verify-icon-wrapper">
               <Image src="/icones/sand-timer.png" alt="Chargement" width={80} height={80} />
             </div>
             <h2>Vérification en cours...</h2>
-            <p style={{ color: 'var(--text-light)' }}>Veuillez patienter</p>
+            <p className="verify-text-light">Veuillez patienter</p>
           </>
         )}
 
         {status === 'success' && (
           <>
-            <div style={{ marginBottom: '20px' }}>
+            <div className="verify-icon-wrapper">
               <Image src="/icones/validation.png" alt="Succès" width={80} height={80} />
             </div>
-            <h2 style={{ color: 'var(--success)' }}>Email vérifié avec succès !</h2>
-            <p style={{ color: 'var(--text-light)', marginTop: '10px' }}>
+            <h2 className="verify-text-success">Email vérifié avec succès !</h2>
+            <p className="verify-message">
               {message}
             </p>
-            <p style={{ color: 'var(--text-light)', marginTop: '10px' }}>
+            <p className="verify-message">
               Redirection automatique vers l&apos;accueil...
             </p>
           </>
@@ -79,14 +81,14 @@ export default function VerifyEmailPage() {
 
         {status === 'error' && (
           <>
-            <div style={{ marginBottom: '20px' }}>
+            <div className="verify-icon-wrapper">
               <Image src="/icones/error.png" alt="Erreur" width={80} height={80} />
             </div>
-            <h2 style={{ color: 'var(--danger)' }}>Erreur de vérification</h2>
-            <p style={{ color: 'var(--text-light)', marginTop: '10px' }}>
+            <h2 className="verify-text-danger">Erreur de vérification</h2>
+            <p className="verify-message">
               {message}
             </p>
-            <div style={{ marginTop: '30px' }}>
+            <div className="verify-actions">
               <button 
                 onClick={() => router.push('/login')}
                 className="auth-button"

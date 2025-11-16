@@ -85,7 +85,7 @@ export default function CategoryPage() {
   // Si en cours de chargement
   if (loading) {
     return (
-      <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
+      <div className="container categories-loading">
         <h2>Chargement...</h2>
       </div>
     );
@@ -94,9 +94,9 @@ export default function CategoryPage() {
   // Si erreur
   if (error) {
     return (
-      <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
-        <h2 style={{ color: 'var(--primary-orange)' }}>{error}</h2>
-        <Link href="/categories" className="btn-secondary" style={{ marginTop: '2rem' }}>
+      <div className="container categories-error">
+        <h2>{error}</h2>
+        <Link href="/categories" className="btn-secondary categories-error-link">
           Retour aux catégories
         </Link>
       </div>
@@ -167,7 +167,7 @@ export default function CategoryPage() {
                         alt="Logo" 
                         width={24} 
                         height={24} 
-                        style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} 
+                        className="product-card-logo"
                       />
                       {product.name}
                     </h3>

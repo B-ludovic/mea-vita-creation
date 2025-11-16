@@ -6,6 +6,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../../../components/Modal';
 import { useModal } from '../../../../../hooks/useModal';
+import { getAccessToken } from '../../../../../utils/auth';
 import '../../../../../styles/AdminForms.css';
 
 export default function EditProductPage() {
@@ -40,7 +41,7 @@ export default function EditProductPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = getAccessToken();
         if (!token) {
           router.push('/login');
           return;
@@ -183,7 +184,7 @@ export default function EditProductPage() {
     setSuccess('');
     
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         alert('Vous devez être connecté');
         router.push('/login');
@@ -233,7 +234,7 @@ export default function EditProductPage() {
       'Voulez-vous vraiment supprimer cette image ?',
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
@@ -274,7 +275,7 @@ export default function EditProductPage() {
     setSuccess('');
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -361,7 +362,7 @@ export default function EditProductPage() {
               required
               placeholder="Ex: atlas-fogo"
             />
-            <small style={{ color: 'var(--text-light)', fontSize: '0.85rem' }}>
+            <small className="product-form-hint">
               Généré automatiquement à partir du nom
             </small>
           </div>
@@ -440,79 +441,44 @@ export default function EditProductPage() {
                 checked={formData.isActive}
                 onChange={handleChange}
               />
-              <label htmlFor="isActive" style={{ fontWeight: 'normal' }}>
+              <label htmlFor="isActive" className="form-checkbox-label-normal">
                 Produit actif (visible sur le site)
               </label>
             </div>
           </div>
 
           {/* SECTION GESTION DES IMAGES */}
-          <div className="form-group" style={{ marginTop: '2rem', padding: '1.5rem', background: '#f9f9f9', borderRadius: '10px' }}>
-            <h3 style={{ marginBottom: '1rem', color: 'var(--text-dark)', textAlign: 'center' }}>
-              <Image src="/icones/camera.png" alt="" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+          <div className="form-group image-management-section">
+            <h3 className="image-section-title">
+              <Image src="/icones/camera.png" alt="" width={24} height={24} className="image-section-icon" />
               Gestion des images du produit
             </h3>
 
             {/* IMAGES EXISTANTES */}
             {productImages.length > 0 && (
-              <div style={{ marginBottom: '1.5rem' }}>
-                <h4 style={{ fontSize: '0.95rem', marginBottom: '0.75rem', color: 'var(--text-light)' }}>
+              <div className="images-current-section">
+                <h4 className="images-current-title">
                   Images actuelles ({productImages.length})
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '1rem' }}>
+                <div className="images-grid">
                   {productImages.map((image) => (
-                    <div key={image.id} style={{ 
-                      position: 'relative', 
-                      border: '2px solid var(--light-beige)', 
-                      borderRadius: '10px',
-                      overflow: 'hidden',
-                      background: 'white'
-                    }}>
+                    <div key={image.id} className="image-card">
                       <Image
                         src={image.url}
                         alt={image.altText || 'Image produit'}
                         width={150}
                         height={150}
-                        style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                        className="image-card-img"
                       />
                       {image.isPrimary && (
-                        <div style={{
-                          position: 'absolute',
-                          top: '8px',
-                          left: '8px',
-                          background: 'var(--primary-orange)',
-                          color: 'white',
-                          padding: '4px 8px',
-                          borderRadius: '5px',
-                          fontSize: '0.75rem',
-                          fontWeight: '600'
-                        }}>
+                        <div className="image-primary-badge">
                           Principale
                         </div>
                       )}
                       <button
                         type="button"
                         onClick={() => handleImageDelete(image.id)}
-                        style={{
-                          position: 'absolute',
-                          top: '8px',
-                          right: '8px',
-                          background: '#c62828',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '30px',
-                          height: '30px',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '1.2rem',
-                          fontWeight: 'bold',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => e.target.style.background = '#b71c1c'}
-                        onMouseLeave={(e) => e.target.style.background = '#c62828'}
+                        className="image-delete-btn"
                       >
                         ×
                       </button>
@@ -523,51 +489,34 @@ export default function EditProductPage() {
             )}
 
             {/* AJOUTER UNE NOUVELLE IMAGE */}
-            <div style={{ 
-              border: '2px dashed var(--light-beige)', 
-              borderRadius: '10px', 
-              padding: '1.5rem',
-              background: 'white'
-            }}>
-              <h4 style={{ fontSize: '0.95rem', marginBottom: '1rem', color: 'var(--text-dark)' }}>
+            <div className="image-upload-section">
+              <h4 className="image-upload-title">
                 Ajouter une nouvelle image
               </h4>
 
               {/* INPUT FILE */}
-              <div style={{ marginBottom: '1rem' }}>
+              <div className="image-upload-input-wrapper">
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleImageSelect}
-                  style={{
-                    padding: '10px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '8px',
-                    width: '100%',
-                    cursor: 'pointer'
-                  }}
+                  className="image-upload-input"
                 />
-                <small style={{ display: 'block', marginTop: '0.5rem', color: 'var(--text-light)', fontSize: '0.85rem' }}>
+                <small className="image-upload-hint">
                   Formats acceptés: JPG, PNG, WEBP, GIF • Taille max: 5 MB
                 </small>
               </div>
 
               {/* PREVIEW DE L'IMAGE SÉLECTIONNÉE */}
               {previewUrl && (
-                <div style={{ marginBottom: '1rem' }}>
-                  <p style={{ fontSize: '0.9rem', marginBottom: '0.5rem', fontWeight: '600' }}>Aperçu :</p>
+                <div className="image-preview-section">
+                  <p className="image-preview-label">Aperçu :</p>
                   <Image
                     src={previewUrl}
                     alt="Aperçu"
                     width={200}
                     height={200}
-                    style={{ 
-                      borderRadius: '8px', 
-                      border: '2px solid var(--light-beige)',
-                      objectFit: 'cover',
-                      width: '200px',
-                      height: '200px'
-                    }}
+                    className="image-preview-img"
                   />
                 </div>
               )}
@@ -577,15 +526,14 @@ export default function EditProductPage() {
                 type="button"
                 onClick={handleImageUpload}
                 disabled={!selectedFile || uploading}
-                className="admin-btn admin-btn-primary"
-                style={{ width: '100%' }}
+                className="admin-btn admin-btn-primary image-upload-btn-full"
               >
                 <Image 
                   src="/icones/validation.png" 
                   alt="" 
                   width={20} 
                   height={20} 
-                  style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} 
+                  className="btn-icon-inline"
                 />
                 {uploading ? 'Upload en cours...' : 'Ajouter cette image'}
               </button>
@@ -598,7 +546,7 @@ export default function EditProductPage() {
               className="admin-btn admin-btn-primary"
               disabled={submitting}
             >
-              <Image src="/icones/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/validation.png" alt="" width={20} height={20} className="btn-icon-inline" />
               {submitting ? 'Modification en cours...' : 'Enregistrer les modifications'}
             </button>
             <button
@@ -606,7 +554,7 @@ export default function EditProductPage() {
               className="admin-btn admin-btn-secondary"
               onClick={() => router.push('/admin/produits')}
             >
-              <Image src="/icones/trash.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/trash.png" alt="" width={20} height={20} className="btn-icon-inline" />
               Annuler
             </button>
           </div>

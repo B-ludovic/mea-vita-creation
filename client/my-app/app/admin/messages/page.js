@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 import '../../../styles/Admin.css';
 import '../../../styles/AdminMessages.css';
 
@@ -23,7 +24,7 @@ export default function AdminMessagesPage() {
 
   const fetchMessages = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -58,7 +59,7 @@ export default function AdminMessagesPage() {
 
   const handleMarkAsRead = async (messageId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -88,7 +89,7 @@ export default function AdminMessagesPage() {
       'Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.',
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');

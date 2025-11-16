@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useModal } from '../../hooks/useModal';
 import Modal from '../../components/Modal';
+import { getAccessToken } from '../../utils/auth';
 import '../../styles/Orders.css';
 import '../../styles/Tracking.css';
 
@@ -20,7 +21,7 @@ export default function OrdersPage() {
   // Fonction pour télécharger la facture
   const downloadInvoice = async (orderId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       if (!token) {
         showAlert('Vous devez être connecté pour télécharger une facture', 'Connexion requise', '/icones/error.png');
@@ -60,7 +61,7 @@ export default function OrdersPage() {
     const fetchOrders = async () => {
       try {
         // Récupérer le token JWT
-        const token = localStorage.getItem('token');
+        const token = getAccessToken();
 
         if (!token) {
           setError('Vous devez être connecté pour voir vos commandes');
@@ -212,7 +213,7 @@ export default function OrdersPage() {
                           alt={item.Product.name}
                           width={80}
                           height={80}
-                          style={{ objectFit: 'cover', borderRadius: '10px' }}
+                          className="order-item-img"
                         />
                       ) : (
                         <Image
@@ -220,20 +221,20 @@ export default function OrdersPage() {
                           alt="Produit"
                           width={80}
                           height={80}
-                          style={{ objectFit: 'contain' }}
+                          className="order-item-img-fallback"
                         />
                       )}
                     </div>
                     <div className="order-item-details">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <div className="order-item-header">
                         <Image 
                           src="/Logo_Francois_sansfond.PNG" 
                           alt="François Maroquinerie" 
                           width={24} 
                           height={24}
-                          style={{ objectFit: 'contain' }}
+                          className="order-item-logo"
                         />
-                        <h4 style={{ margin: 0 }}>{item.Product.name}</h4>
+                        <h4 className="order-item-title">{item.Product.name}</h4>
                       </div>
                       <p>Quantité : {item.quantity} × {item.unitPrice.toFixed(2)}€</p>
                     </div>
@@ -321,12 +322,12 @@ export default function OrdersPage() {
                   )}
 
                   {/* Timeline des statuts */}
-                  <div className="tracking-timeline" style={{ marginTop: '2rem' }}>
+                  <div className="tracking-timeline tracking-timeline-container">
                     <div className={`timeline-item ${['PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED'].includes(order.status) ? 'active' : ''}`}>
                       <div className="timeline-dot"></div>
                       <div className="timeline-content">
                         <div className="timeline-title">
-                          <Image src="/icones/validation.png" alt="Confirmé" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          <Image src="/icones/validation.png" alt="Confirmé" width={16} height={16} className="timeline-icon" />
                           Commande confirmée
                         </div>
                         <div className="timeline-date">
@@ -339,7 +340,7 @@ export default function OrdersPage() {
                       <div className="timeline-dot"></div>
                       <div className="timeline-content">
                         <div className="timeline-title">
-                          <Image src="/icones/confection.png" alt="Préparation" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
+                          <Image src="/icones/confection.png" alt="Préparation" width={16} height={16} className="timeline-icon" />
                           En préparation
                         </div>
                         {order.status === 'PROCESSING' && (
@@ -352,8 +353,8 @@ export default function OrdersPage() {
                       <div className="timeline-dot"></div>
                       <div className="timeline-content">
                         <div className="timeline-title">
-                          <Image src="/icones/delivery.png" alt="Expédié" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
-                          Expédié
+                          <Image src="/icones/delivery.png" alt="Expédié" width={16} height={16} className="timeline-icon" />
+                          Expédiée
                         </div>
                         {order.shippedAt && (
                           <div className="timeline-date">
@@ -371,8 +372,8 @@ export default function OrdersPage() {
                       <div className="timeline-dot"></div>
                       <div className="timeline-content">
                         <div className="timeline-title">
-                          <Image src="/icones/congratulation.png" alt="Livré" width={16} height={16} style={{ display: 'inline', marginRight: '8px', verticalAlign: 'middle' }} />
-                          Livré
+                          <Image src="/icones/congratulation.png" alt="Livré" width={16} height={16} className="timeline-icon" />
+                          Livrée
                         </div>
                         {order.deliveredAt && (
                           <div className="timeline-date">

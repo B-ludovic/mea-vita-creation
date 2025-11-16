@@ -28,6 +28,7 @@ import { useModal } from '../../../hooks/useModal';
 
 // Import du composant StarRating et du CSS des avis
 import StarRating from '../../../components/StarRating';
+import { getAccessToken } from '../../../utils/auth';
 import '../../../styles/Reviews.css';
 import '../../../styles/StarRating.css';
 
@@ -147,7 +148,7 @@ export default function ProductPage() {
                     }
 
                     // Vérifier si le produit est dans la wishlist
-                    const token = localStorage.getItem('token');
+                    const token = getAccessToken();
                     if (token) {
                         try {
                             const wishlistResponse = await fetch(
@@ -192,7 +193,7 @@ export default function ProductPage() {
 
     // Fonction pour gérer l'ajout/retrait de la wishlist
     const handleWishlistToggle = async () => {
-        const token = localStorage.getItem('token');
+        const token = getAccessToken();
 
         if (!token) {
             showAlert(
@@ -305,7 +306,7 @@ const handleReviewSubmit = async (e) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${getAccessToken()}`
             },
             body: JSON.stringify({
                 productId: product.id,
@@ -365,7 +366,7 @@ const availableStock = getAvailableStock();
 // Si en cours de chargement
 if (loading) {
     return (
-        <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
+        <div className="container product-loading">
             <h2>Chargement...</h2>
         </div>
     );
@@ -374,9 +375,9 @@ if (loading) {
 // Si erreur
 if (error || !product) {
     return (
-        <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
-            <h2 style={{ color: 'var(--primary-orange)' }}>{error || 'Produit non trouvé'}</h2>
-            <Link href="/categories" className="btn-secondary" style={{ marginTop: '2rem' }}>
+        <div className="container product-error">
+            <h2 className="product-error-title">{error || 'Produit non trouvé'}</h2>
+            <Link href="/categories" className="btn-secondary product-error-link">
                 Retour aux catégories
             </Link>
         </div>
@@ -465,20 +466,13 @@ return (
                             alt="Logo"
                             width={35}
                             height={35}
-                            style={{ display: 'inline-block', marginRight: '12px', verticalAlign: 'middle' }}
+                            className="product-title-logo"
                         />
                         {product.name}
                         <button
                             className="wishlist-btn"
                             onClick={handleWishlistToggle}
                             title={inWishlist ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                            style={{
-                                background: 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                marginLeft: '1rem',
-                                verticalAlign: 'middle'
-                            }}
                         >
                             <Image
                                 src={inWishlist ? '/icones/favori.png' : '/icones/favori-empty.png'}
@@ -532,7 +526,7 @@ return (
         </div>
 
         {/* SECTION AVIS */}
-        <div className="reviews-section" style={{ maxWidth: '1200px', margin: '4rem auto 0 auto', padding: '0 2rem' }}>
+        <div className="reviews-section">
             <div className="reviews-header">
                 <h2>Avis clients</h2>
 
@@ -545,7 +539,7 @@ return (
                         alt="Laisser un avis"
                         width={20}
                         height={20}
-                        style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                        className="review-icon"
                     />
                     Laisser un avis
                 </button>
@@ -592,7 +586,7 @@ return (
                             <p className="error-message">{reviewError}</p>
                         )}
 
-                        <div style={{ display: 'flex', gap: '1rem' }}>
+                        <div className="review-form-actions">
                             <button
                                 type="submit"
                                 className="admin-btn admin-btn-primary"
@@ -607,7 +601,7 @@ return (
                                             alt="Publier"
                                             width={18}
                                             height={18}
-                                            style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                                            className="review-icon"
                                         />
                                         Publier mon avis
                                     </>
@@ -634,13 +628,13 @@ return (
                                 <div className="review-author">
                                     <div className="review-author-name">
                                         {review.User.firstName} {review.User.lastName}
-                                        <span className="verified-badge" style={{ marginLeft: '0.5rem' }}>
+                                        <span className="verified-badge">
                                             <Image
                                                 src="/icones/ok.png"
                                                 alt="Vérifié"
                                                 width={16}
                                                 height={16}
-                                                style={{ marginRight: '0.25rem', verticalAlign: 'middle' }}
+                                                className="verified-icon"
                                             />
                                             Achat vérifié
                                         </span>

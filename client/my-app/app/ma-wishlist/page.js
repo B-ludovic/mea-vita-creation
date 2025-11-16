@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useCart } from '../../contexts/CartContext';
 import { useModal } from '../../hooks/useModal';
 import Modal from '../../components/Modal';
+import { getAccessToken } from '../../utils/auth';
 import '../../styles/ma-wishlist.css';
 
 export default function WishlistPage() {
@@ -24,7 +25,7 @@ export default function WishlistPage() {
 
   const fetchWishlist = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       if (!token) {
         setError('Vous devez être connecté pour voir vos favoris');
@@ -63,7 +64,7 @@ export default function WishlistPage() {
 
   const handleRemove = async (wishlistItemId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
 
       if (!token) {
         showAlert('Vous devez être connecté', 'Erreur', '/icones/error.png');
@@ -167,14 +168,9 @@ export default function WishlistPage() {
                     width={280}
                     height={280}
                     className="wishlist-card-image"
-                    style={{ objectFit: 'cover' }}
                   />
                 ) : (
-                  <div className="wishlist-card-image" style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center'
-                  }}>
+                  <div className="wishlist-card-image wishlist-image-fallback">
                     <Image src="/icones/shopping.png" alt="Produit" width={80} height={80} />
                   </div>
                 )}
@@ -188,7 +184,7 @@ export default function WishlistPage() {
                       alt="Logo" 
                       width={24} 
                       height={24} 
-                      style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} 
+                      className="wishlist-title-logo"
                     />
                     {item.Product.name}
                   </h3>

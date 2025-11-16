@@ -66,7 +66,7 @@ export default function HomePage() {
                     alt="Logo" 
                     width={30} 
                     height={30} 
-                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                    className="category-icon"
                   />
                   Pochettes Unisexe
                 </h3>
@@ -100,7 +100,7 @@ export default function HomePage() {
                     alt="Logo" 
                     width={30} 
                     height={30} 
-                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                    className="category-icon"
                   />
                   Porte-Carte
                 </h3>
@@ -134,9 +134,9 @@ export default function HomePage() {
                     alt="Logo" 
                     width={30} 
                     height={30} 
-                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                    className="category-icon"
                   />
-                  Sac Cylindre
+                  Sacs & Accessoires
                 </h3>
                 <p>
                   Design unique et original, nos sacs cylindres se démarquent par leur forme distinctive. 
@@ -168,9 +168,9 @@ export default function HomePage() {
                     alt="Logo" 
                     width={30} 
                     height={30} 
-                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }} 
+                    className="category-icon"
                   />
-                  Sac U
+                  Trousses
                 </h3>
                 <p>
                   Spacieux et élégant, le sac U est parfait pour toutes les occasions. 
@@ -195,19 +195,19 @@ export default function HomePage() {
           </p>
           <ul className="craft-features">
             <li>
-              <Image src="/icones/qualite.png" alt="Qualité" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/qualite.png" alt="Qualité" width={24} height={24} className="craftsmanship-list-icon" />
               Cuirs sélectionnés pour leur qualité exceptionnelle
             </li>
             <li>
-              <Image src="/icones/tissus_wax.png" alt="Tissus Wax" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/tissus_wax.png" alt="Tissus Wax" width={24} height={24} className="craftsmanship-list-icon" />
               Tissus wax authentiques aux motifs uniques
             </li>
             <li>
-              <Image src="/icones/confection.png" alt="Confection" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/confection.png" alt="Confection" width={24} height={24} className="craftsmanship-list-icon" />
               Confection entièrement manuelle
             </li>
             <li>
-              <Image src="/icones/finition_luxe.png" alt="Finitions" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/finition_luxe.png" alt="Finitions" width={24} height={24} className="craftsmanship-list-icon" />
               Finitions de luxe et attention aux détails
             </li>
           </ul>

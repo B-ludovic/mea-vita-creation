@@ -165,7 +165,7 @@ export default function Header() {
                             </li>
                             <li>
                                 <Link href="/ma-wishlist" className="wishlist-link" onClick={closeMenu}>
-                                    Ma wishlist
+                                    Mes Favoris
                                 </Link>
                             </li>
                             <li>

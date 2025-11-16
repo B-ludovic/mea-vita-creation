@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 
 export default function AdminUsersPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -60,7 +61,7 @@ export default function AdminUsersPage() {
       `Voulez-vous vraiment ${action} le compte de "${userEmail}" ?`,
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
@@ -107,7 +108,7 @@ export default function AdminUsersPage() {
       `Voulez-vous vraiment ${action} l'utilisateur "${userEmail}" ?`,
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
@@ -152,7 +153,7 @@ export default function AdminUsersPage() {
       `Êtes-vous sûr de vouloir supprimer l'utilisateur "${userEmail}" ?\n\nCette action est irréversible.`,
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
             router.push('/login');
@@ -207,7 +208,7 @@ export default function AdminUsersPage() {
       </div>
 
       <div className="admin-table-container">
-        <h2 style={{ marginBottom: '1.5rem', color: 'var(--text-dark)' }}>Liste des utilisateurs</h2>
+        <h2 className="users-section-title">Liste des utilisateurs</h2>
 
         <table className="admin-table">
           <thead>
@@ -238,17 +239,16 @@ export default function AdminUsersPage() {
                     {user.isActive ? 'Actif' : 'Inactif'}
                   </span>
                 </td>
-                <td data-label="Commandes" style={{ textAlign: 'center' }}>
+                <td data-label="Commandes" className="user-orders-count">
                   {user._count.Order}
                 </td>
-                <td data-label="Inscription" style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                <td data-label="Inscription" className="user-inscription-date">
                   {new Date(user.createdAt).toLocaleDateString('fr-FR')}
                 </td>
                 <td data-label="Actions">
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <div className="user-actions">
                     <button 
-                      className="admin-btn admin-btn-user-toggle"
-                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      className="admin-btn admin-btn-user-toggle user-action-btn"
                       onClick={() => handleToggleActive(user.id, user.isActive, user.email)}
                     >
                       <Image 
@@ -256,13 +256,12 @@ export default function AdminUsersPage() {
                         alt="" 
                         width={12} 
                         height={12} 
-                        style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} 
+                        className="user-action-icon"
                       />
                       {user.isActive ? 'Désactiver' : 'Activer'}
                     </button>
                     <button 
-                      className="admin-btn admin-btn-promote"
-                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      className="admin-btn admin-btn-promote user-action-btn"
                       onClick={() => handleToggleRole(user.id, user.role, user.email)}
                     >
                       <Image 
@@ -270,16 +269,15 @@ export default function AdminUsersPage() {
                         alt="" 
                         width={12} 
                         height={12} 
-                        style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} 
+                        className="user-action-icon"
                       />
                       {user.role === 'ADMIN' ? 'Rétrograder' : 'Promouvoir'}
                     </button>
                     <button 
-                      className="admin-btn admin-btn-danger"
-                      style={{ padding: '4px 8px', fontSize: '0.75rem', whiteSpace: 'nowrap' }}
+                      className="admin-btn admin-btn-danger user-action-btn"
                       onClick={() => handleDelete(user.id, user.email, user.role)}
                     >
-                      <Image src="/icones/trash.png" alt="" width={12} height={12} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/trash.png" alt="" width={12} height={12} className="user-action-icon" />
                       Supprimer
                     </button>
                   </div>

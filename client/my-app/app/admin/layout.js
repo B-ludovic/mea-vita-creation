@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { getAccessToken } from '../../utils/auth';
 import '../../styles/variables.css'; // 1. Variables d'abord
 import '../../styles/globals.css';   // 2. Styles globaux
 import '../../styles/Admin.css';     // 3. Styles admin EN DERNIER pour surcharger
@@ -22,7 +23,7 @@ export default function AdminLayout({ children }) {
     const checkAdminAccess = async () => {
       try {
         // Récupérer le token depuis localStorage
-        const token = localStorage.getItem('token');
+        const token = getAccessToken();
         const userData = localStorage.getItem('user');
 
         // Si pas de token ou pas de user, rediriger vers login

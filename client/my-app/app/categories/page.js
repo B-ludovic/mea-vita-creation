@@ -59,7 +59,7 @@ export default function CategoriesPage() {
   // Si en cours de chargement
   if (loading) {
     return (
-      <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
+      <div className="container categories-loading">
         <h2>Chargement des catégories...</h2>
       </div>
     );
@@ -68,8 +68,8 @@ export default function CategoriesPage() {
   // Si erreur
   if (error) {
     return (
-      <div className="container" style={{ paddingTop: '2rem', textAlign: 'center' }}>
-        <h2 style={{ color: 'var(--primary-orange)' }}>{error}</h2>
+      <div className="container categories-error">
+        <h2>{error}</h2>
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function CategoriesPage() {
                       alt="Logo"
                       width={30}
                       height={30}
-                      style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }}
+                      className="category-logo-icon"
                     />
                     {category.name}
                   </h3>

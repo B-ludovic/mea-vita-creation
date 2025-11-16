@@ -1,5 +1,9 @@
 /* Dashboard Analytics */
 
+.dashboard-error {
+    color: var(--primary-orange);
+}
+
 /* Grid pour les graphiques */
 .charts-grid {
   display: grid;

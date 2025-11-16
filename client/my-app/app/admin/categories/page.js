@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 
 // Import des styles
 import '../../../styles/Admin.css';
@@ -54,7 +55,7 @@ export default function AdminCategoriesPage() {
   const fetchCategories = async () => {
     try {
       // Récupérer le token JWT depuis localStorage (pour l'authentification)
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       // Si pas de token, rediriger vers login
       if (!token) {
@@ -138,7 +139,7 @@ export default function AdminCategoriesPage() {
     e.preventDefault(); // Empêcher le rechargement de la page
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       // Déterminer si on AJOUTE ou MODIFIE
       const url = editingId 
@@ -208,7 +209,7 @@ export default function AdminCategoriesPage() {
       `Êtes-vous sûr de vouloir supprimer la catégorie "${categoryName}" ?`,
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
 
           // APPEL API : Demander au backend de supprimer la catégorie
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${id}`, {
@@ -275,9 +276,8 @@ export default function AdminCategoriesPage() {
       {/* BOUTON POUR AFFICHER LE FORMULAIRE D'AJOUT */}
       {!showForm && (
         <button 
-          className="btn-primary" 
+          className="btn-primary btn-add-category" 
           onClick={() => setShowForm(true)}
-          style={{ marginBottom: '2rem' }}
         >
           + Ajouter une catégorie
         </button>
@@ -285,7 +285,7 @@ export default function AdminCategoriesPage() {
 
       {/* FORMULAIRE D'AJOUT/MODIFICATION */}
       {showForm && (
-        <div className="admin-form-container" style={{ marginBottom: '3rem' }}>
+        <div className="admin-form-container">
           <h2>{editingId ? 'Modifier la catégorie' : 'Ajouter une catégorie'}</h2>
           
           <form onSubmit={handleSubmit} className="admin-form">
@@ -386,7 +386,7 @@ export default function AdminCategoriesPage() {
         <h2>Liste des catégories ({categories.length})</h2>
         
         {categories.length === 0 ? (
-          <p style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-light)' }}>
+          <p className="categories-empty-state">
             Aucune catégorie pour le moment. Cliquez sur &quot;Ajouter une catégorie&quot; pour commencer.
           </p>
         ) : (
@@ -421,19 +421,19 @@ export default function AdminCategoriesPage() {
                     {category._count?.Product || 0}
                   </td>
                   <td data-label="Actions">
-                    <div className="action-buttons" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                    <div className="category-actions">
                       <button 
                         className="admin-btn admin-btn-secondary"
                         onClick={() => handleEdit(category)}
                       >
-                        <Image src="/icones/modify.png" alt="Modifier" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                        <Image src="/icones/modify.png" alt="Modifier" width={16} height={16} className="category-action-icon" />
                         Modifier
                       </button>
                       <button 
                         className="admin-btn admin-btn-danger"
                         onClick={() => handleDelete(category.id, category.name)}
                       >
-                        <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} style={{ marginRight: '5px', verticalAlign: 'middle' }} />
+                        <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} className="category-action-icon" />
                         Supprimer
                       </button>
                     </div>
@@ -446,9 +446,9 @@ export default function AdminCategoriesPage() {
       </div>
 
       {/* AIDE */}
-      <div className="admin-help" style={{ marginTop: '3rem', padding: '1.5rem', background: 'var(--cream)', borderRadius: '10px' }}>
+      <div className="admin-help-section">
         <h3>
-          <Image src="/icones/help.png" alt="Aide" width={20} height={20} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+          <Image src="/icones/help.png" alt="Aide" width={20} height={20} className="admin-help-icon" />
           Aide
         </h3>
         <ul>

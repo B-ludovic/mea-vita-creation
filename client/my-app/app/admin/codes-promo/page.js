@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { useModal } from '../../../hooks/useModal';
 import Modal from '../../../components/Modal';
+import { getAccessToken } from '../../../utils/auth';
 
 export default function AdminPromoCodesPage() {
   const [promoCodes, setPromoCodes] = useState([]);
@@ -24,7 +25,7 @@ export default function AdminPromoCodesPage() {
 
   const fetchPromoCodes = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promo-codes`, {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -54,7 +55,7 @@ export default function AdminPromoCodesPage() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promo-codes`, {
         method: 'POST',
         headers: {
@@ -91,7 +92,7 @@ export default function AdminPromoCodesPage() {
 
   const handleToggleActive = async (promoCodeId, currentStatus) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promo-codes/${promoCodeId}`, {
         method: 'PUT',
         headers: {
@@ -124,7 +125,7 @@ export default function AdminPromoCodesPage() {
       'Êtes-vous sûr de vouloir supprimer ce code promo ?',
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/promo-codes/${promoCodeId}`, {
             method: 'DELETE',
             headers: {
@@ -199,12 +200,12 @@ export default function AdminPromoCodesPage() {
         >
           {showForm ? (
             <>
-              <Image src="/icones/annuler.png" alt="" width={20} height={20} style={{ marginRight: '0.5rem' }} />
+              <Image src="/icones/annuler.png" alt="" width={20} height={20} className="promo-header-icon" />
               Annuler
             </>
           ) : (
             <>
-              <Image src="/icones/promotion.png" alt="" width={20} height={20} style={{ marginRight: '0.5rem' }} />
+              <Image src="/icones/promotion.png" alt="" width={20} height={20} className="promo-header-icon" />
               Nouveau code promo
             </>
           )}
@@ -213,15 +214,15 @@ export default function AdminPromoCodesPage() {
 
       {/* Formulaire de création */}
       {showForm && (
-        <div className="admin-table-container" style={{ marginBottom: '2rem' }}>
-          <h2 style={{ marginBottom: '1.5rem' }}>Créer un code promo</h2>
+        <div className="admin-table-container promo-form-container">
+          <h2 className="promo-form-title">Créer un code promo</h2>
           
           <form onSubmit={handleSubmit}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            <div className="promo-form-grid">
               
               {/* Code */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Code promo *
                 </label>
                 <input
@@ -230,34 +231,20 @@ export default function AdminPromoCodesPage() {
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
                   placeholder="ex: NOEL2024"
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Type de réduction */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Type de réduction *
                 </label>
                 <select
                   required
                   value={formData.discountType}
                   onChange={(e) => setFormData({ ...formData, discountType: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    height: '44px',
-                    backgroundColor: 'white'
-                  }}
+                  className="promo-form-select"
                 >
                   <option value="PERCENTAGE">Pourcentage (%)</option>
                   <option value="FIXED_AMOUNT">Montant fixe (€)</option>
@@ -266,7 +253,7 @@ export default function AdminPromoCodesPage() {
 
               {/* Valeur */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Valeur *
                 </label>
                 <input
@@ -277,19 +264,13 @@ export default function AdminPromoCodesPage() {
                   value={formData.discountValue}
                   onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
                   placeholder={formData.discountType === 'PERCENTAGE' ? 'ex: 20' : 'ex: 10.00'}
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Montant minimum */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Montant minimum (€)
                 </label>
                 <input
@@ -299,19 +280,13 @@ export default function AdminPromoCodesPage() {
                   value={formData.minOrderAmount}
                   onChange={(e) => setFormData({ ...formData, minOrderAmount: e.target.value })}
                   placeholder="Optionnel"
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Nombre max d'utilisations */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Utilisations max
                 </label>
                 <input
@@ -320,19 +295,13 @@ export default function AdminPromoCodesPage() {
                   value={formData.maxUses}
                   onChange={(e) => setFormData({ ...formData, maxUses: e.target.value })}
                   placeholder="Optionnel"
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Date de début */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Date de début *
                 </label>
                 <input
@@ -340,19 +309,13 @@ export default function AdminPromoCodesPage() {
                   required
                   value={formData.startDate}
                   onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Date de fin */}
               <div>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+                <label className="promo-form-label">
                   Date de fin *
                 </label>
                 <input
@@ -360,19 +323,13 @@ export default function AdminPromoCodesPage() {
                   required
                   value={formData.endDate}
                   onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem'
-                  }}
+                  className="promo-form-input"
                 />
               </div>
 
               {/* Description */}
-              <div style={{ gridColumn: '1 / -1' }}>
-                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>
+              <div className="promo-form-description">
+                <label className="promo-form-label">
                   Description
                 </label>
                 <textarea
@@ -380,23 +337,14 @@ export default function AdminPromoCodesPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="Description du code promo (optionnel)"
                   rows="3"
-                  style={{
-                    width: '100%',
-                    padding: '10px 15px',
-                    border: '2px solid var(--light-beige)',
-                    borderRadius: '10px',
-                    fontSize: '1rem',
-                    fontFamily: 'inherit',
-                    resize: 'vertical'
-                  }}
+                  className="promo-form-textarea"
                 />
               </div>
             </div>
 
             <button 
               type="submit"
-              className="admin-btn admin-btn-primary"
-              style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              className="admin-btn admin-btn-primary promo-submit-btn"
             >
               <Image src="/icones/validation.png" alt="" width={20} height={20} />
               Créer le code promo
@@ -427,7 +375,7 @@ export default function AdminPromoCodesPage() {
                   <td data-label="Code">
                     <strong>{promo.code}</strong>
                     {promo.description && (
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
+                      <div className="promo-code-description">
                         {promo.description}
                       </div>
                     )}
@@ -436,20 +384,20 @@ export default function AdminPromoCodesPage() {
                     {promo.discountType === 'PERCENTAGE' ? 'Pourcentage' : 'Montant fixe'}
                   </td>
                   <td data-label="Réduction">
-                    <strong style={{ color: 'var(--primary-orange)' }}>
+                    <strong className="promo-discount-value">
                       {promo.discountType === 'PERCENTAGE' 
                         ? `${promo.discountValue}%`
                         : `${promo.discountValue}€`
                       }
                     </strong>
                     {promo.minOrderAmount && (
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      <div className="promo-min-amount">
                         Min: {promo.minOrderAmount}€
                       </div>
                     )}
                   </td>
                   <td data-label="Période">
-                    <div style={{ fontSize: '0.9rem' }}>
+                    <div className="promo-period">
                       Du {formatDate(promo.startDate)}<br/>
                       au {formatDate(promo.endDate)}
                     </div>
@@ -464,10 +412,9 @@ export default function AdminPromoCodesPage() {
                     </span>
                   </td>
                   <td data-label="Actions">
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div className="promo-actions">
                       <button
-                        className={`admin-btn ${promo.isActive ? 'admin-btn-secondary' : 'admin-btn-primary'}`}
-                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                        className={`admin-btn ${promo.isActive ? 'admin-btn-secondary' : 'admin-btn-primary'} admin-action-btn`}
                         onClick={() => handleToggleActive(promo.id, promo.isActive)}
                       >
                         <Image 
@@ -479,8 +426,7 @@ export default function AdminPromoCodesPage() {
                         {promo.isActive ? 'Désactiver' : 'Activer'}
                       </button>
                       <button
-                        className="admin-btn admin-btn-danger"
-                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+                        className="admin-btn admin-btn-danger admin-action-btn"
                         onClick={() => handleDelete(promo.id)}
                       >
                         <Image src="/icones/trash.png" alt="" width={16} height={16} />
@@ -495,7 +441,7 @@ export default function AdminPromoCodesPage() {
         </table>
 
         {promoCodes.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+          <div className="promo-empty-state">
             <p>Aucun code promo pour le moment</p>
           </div>
         )}

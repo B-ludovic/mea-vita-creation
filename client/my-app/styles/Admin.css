@@ -1,5 +1,15 @@
 /* Dashboard Admin */
 
+/* Variables CSS pour standardisation */
+:root {
+    --admin-btn-height: 34px;
+    --admin-btn-padding: 6px 10px;
+    --admin-btn-min-width: 125px;
+    --admin-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --admin-input-height: 34px;
+    --admin-input-padding: 6px 12px;
+}
+
 /* Force le comportement normal du texte dans tout l'admin */
 .admin-layout,
 .admin-layout *,
@@ -15,9 +25,9 @@
     hyphens: none;
 }
 
-/* ------------------------------------------ */
+
 /* LAYOUT PRINCIPAL (Desktop) */
-/* ------------------------------------------ */
+
 .admin-layout {
     display: grid;
     grid-template-columns: 250px 1fr;
@@ -38,7 +48,7 @@
     top: 0;
     overflow-y: auto; /* Scroll interne si le menu est trop long */
     /* Transition pour le menu burger mobile */
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--admin-transition);
 }
 
 .admin-sidebar-header {
@@ -48,7 +58,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--admin-transition);
 }
 
 .sidebar-header-content {
@@ -90,8 +100,7 @@
     padding: 1rem 1.5rem;
     color: rgba(255,255,255,0.8);
     text-decoration: none;
-    /* Transition uniformisée */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--admin-transition);
     border-left: 3px solid transparent;
 }
 
@@ -112,8 +121,7 @@
     overflow-x: hidden; /* Empêcher le débordement horizontal */
     max-width: 100%; /* Limiter la largeur */
     height: 100vh; /* Prendre toute la hauteur du viewport */
-    /* Transition pour le glissement du contenu */
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .admin-header {
@@ -133,9 +141,8 @@
     color: var(--text-light);
 }
 
-/* ------------------------------------------ */
 /* STATS CARDS */
-/* ------------------------------------------ */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -148,8 +155,7 @@
     padding: 1.5rem;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    /* Transition uniformisée */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--admin-transition);
     display: flex;
     flex-direction: column;
     min-height: 150px;
@@ -167,7 +173,7 @@
 .stat-card-header {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Changé de flex-start à center */
+    align-items: center; 
     gap: 0.5rem;
     margin-bottom: 1rem;
     flex-shrink: 0;
@@ -229,9 +235,9 @@
     color: #c62828;
 }
 
-/* ------------------------------------------ */
+
 /* TABLES */
-/* ------------------------------------------ */
+
 .admin-table-container {
     background: var(--white);
     border-radius: 15px;
@@ -247,6 +253,74 @@
     word-break: keep-all;
     white-space: nowrap;
     overflow: visible;
+}
+
+.products-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.products-header-title {
+    margin: 0;
+    color: var(--text-dark);
+}
+
+.product-table-image {
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.product-table-image-fallback {
+    width: 60px;
+    height: 60px;
+    background: var(--light-beige);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-table-slug {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.product-table-price {
+    color: var(--primary-orange);
+}
+
+.product-table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Classe de base pour TOUS les boutons d'action admin */
+.admin-action-btn {
+    padding: var(--admin-btn-padding);
+    font-size: 0.85rem;
+    height: var(--admin-btn-height);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: var(--admin-transition);
+}
+
+/* Classe consolidée pour TOUTES les icônes admin */
+.admin-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.product-action-icon {
+    margin-right: 4px;
+}
+
+.add-product-icon {
+    margin-right: 6px;
 }
 
 .admin-table-container p,
@@ -331,8 +405,7 @@
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
-    /* Transition uniformisée */
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: var(--admin-transition);
     font-size: 0.9rem;
     min-width: 120px; /* Largeur minimale pour uniformiser les boutons */
     text-align: center;
@@ -393,12 +466,11 @@
 }
 
 
-/* ------------------------------------------ */
+
 /* MENU BURGER */
-/* ------------------------------------------ */
 
 .admin-burger-icon {
-    display: flex;
+    display: none; /* Cacher sur desktop */
     flex-direction: column;
     justify-content: space-around;
     width: 30px;
@@ -433,9 +505,9 @@
     transform: translateY(-11px) rotate(-45deg);
 }
 
-/* ------------------------------------------ */
+
 /* RESPONSIVE - VERSION MOBILE */
-/* ------------------------------------------ */
+
 
 /* Tablette et petits écrans - Menu Burger */
 @media (max-width: 1024px) {
@@ -452,6 +524,7 @@
         border-bottom: none;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         cursor: pointer;
+        /* 💥 Animer le header fixe pour glisser avec le menu */
         transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         background: linear-gradient(180deg, var(--text-dark) 0%, #1a1a1a 100%);
     }
@@ -473,7 +546,8 @@
     
     .admin-layout {
         grid-template-columns: 1fr;
-        overflow: hidden;
+        /* Empêche le scroll sur le layout principal quand la sidebar est ouverte */
+        overflow: hidden; 
     }
     
     .admin-sidebar {
@@ -492,16 +566,20 @@
     }
     
     .admin-content {
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 💥 Transition du contenu pour l'animation PUSH */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
         overflow-x: hidden;
         margin-left: 0;
         padding: 1.5rem;
+        /* 💥 Padding pour compenser la hauteur du header fixe */
         padding-top: 90px;
     }
     
     .admin-layout.sidebar-open .admin-content {
-        transform: translateX(250px);
+        /* 💥 ANIMATION GLISSEMENT ET OMBRE */
+        transform: translateX(250px) scale(0.98); 
+        box-shadow: -5px 0 20px rgba(0,0,0,0.3);
         overflow-y: hidden;
     }
     
@@ -790,4 +868,352 @@
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Admin Commandes - Styles spécifiques */
+.order-client-email {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.order-client-guest {
+    color: var(--text-light);
+}
+
+.order-amount {
+    color: var(--primary-orange);
+}
+
+.order-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.order-status-select {
+    padding: var(--admin-btn-padding);
+    border-radius: 8px;
+    border: 2px solid var(--light-beige);
+    font-size: 0.85rem;
+    height: var(--admin-btn-height);
+    background-color: white;
+    cursor: pointer;
+    transition: var(--admin-transition);
+}
+
+.order-status-select:hover {
+    border-color: var(--primary-orange);
+}
+
+.order-tracking-btn {
+    /* Hérite de .admin-action-btn */
+    min-width: auto;
+}
+
+.order-empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+/* Modal Tracking */
+.tracking-modal-content {
+    max-width: 500px;
+}
+
+.tracking-order-info {
+    margin-bottom: 1.5rem;
+    color: var(--text-light);
+}
+
+.tracking-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tracking-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.tracking-form-input {
+    width: 100%;
+    padding: var(--admin-input-padding);
+    border-radius: 10px;
+    border: 2px solid var(--light-beige);
+    font-size: 1rem;
+    height: var(--admin-input-height);
+}
+
+.tracking-form-input[type="url"] {
+    height: var(--admin-input-height);
+}
+
+.tracking-form-hint {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.5rem;
+}
+
+.tracking-modal-footer {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.tracking-cancel-btn {
+    background: var(--light-beige);
+    color: var(--text-dark);
+}
+
+.tracking-submit-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Admin Codes Promo - Styles spécifiques */
+.promo-header-icon {
+    margin-right: 0.5rem;
+}
+
+.promo-form-container {
+    margin-bottom: 2rem;
+}
+
+.promo-form-title {
+    margin-bottom: 1.5rem;
+}
+
+.promo-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.promo-form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.promo-form-input {
+    width: 100%;
+    padding: var(--admin-input-padding);
+    border: 2px solid var(--light-beige);
+    border-radius: 10px;
+    font-size: 1rem;
+    height: var(--admin-input-height);
+}
+
+.promo-form-select {
+    width: 100%;
+    padding: var(--admin-input-padding);
+    border: 2px solid var(--light-beige);
+    border-radius: 10px;
+    font-size: 1rem;
+    height: var(--admin-input-height);
+    background-color: white;
+}
+
+.promo-form-textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border: 2px solid var(--light-beige);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.promo-form-description {
+    grid-column: 1 / -1;
+}
+
+.promo-submit-btn {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.promo-code-description {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+.promo-discount-value {
+    color: var(--primary-orange);
+}
+
+.promo-min-amount {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.promo-period {
+    font-size: 0.9rem;
+}
+
+.promo-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.promo-empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+/* Admin Factures - Styles spécifiques */
+.invoices-stats {
+    margin-bottom: 2rem;
+}
+
+.invoices-filters-container {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+}
+
+.invoices-filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.invoices-filter-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.invoices-filter-input {
+    width: 100%;
+    padding: var(--admin-input-padding);
+    border: 2px solid var(--light-beige);
+    border-radius: 10px;
+    font-size: 1rem;
+    height: var(--admin-input-height);
+}
+
+.invoice-client-email {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.invoice-client-guest {
+    color: var(--text-light);
+}
+
+.invoice-amount {
+    color: var(--primary-orange);
+}
+
+.invoice-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.invoice-download-btn {
+    /* Hérite de .admin-action-btn */
+    cursor: pointer;
+}
+
+.invoice-empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+/* Admin Avis - Styles spécifiques */
+.reviews-section-pending {
+    margin-bottom: 2rem;
+}
+
+.reviews-section-title {
+    margin-bottom: 1rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.review-row-pending {
+    background: #fff3e0;
+}
+
+.review-client-email {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.review-comment-cell {
+    max-width: 300px;
+}
+
+.review-no-comment {
+    color: var(--text-light);
+}
+
+.review-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.review-empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+/* Admin Utilisateurs - Styles spécifiques */
+.users-section-title {
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.user-orders-count {
+    text-align: center;
+}
+
+.user-inscription-date {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.user-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.user-action-btn {
+    /* Hérite de .admin-action-btn */
+    font-size: 0.75rem;
+    min-width: var(--admin-btn-min-width);
+    white-space: nowrap;
+}
+
+.user-action-icon {
+    margin-right: 4px;
+}
+
+
+/* INPUTS ET SELECTS */
+
+.admin-content select,
+.modal-body select {
+    text-align: center;
+    text-align-last: center;
+}
+
+.admin-content select option,
+.modal-body select option {
+    text-align: center;
 }

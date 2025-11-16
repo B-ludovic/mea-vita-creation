@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 import '../../../styles/Admin.css';
 
 export default function AdminOrdersPage() {
@@ -46,7 +47,7 @@ export default function AdminOrdersPage() {
   const fetchOrders = async () => {
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -83,7 +84,7 @@ export default function AdminOrdersPage() {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -142,7 +143,7 @@ export default function AdminOrdersPage() {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
         router.push('/login');
@@ -254,12 +255,12 @@ export default function AdminOrdersPage() {
                   {order.User ? (
                     <div>
                       <div>{order.User.firstName} {order.User.lastName}</div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      <div className="order-client-email">
                         {order.User.email}
                       </div>
                     </div>
                   ) : (
-                    <span style={{ color: 'var(--text-light)' }}>Invité</span>
+                    <span className="order-client-guest">Invité</span>
                   )}
                 </td>
                 <td data-label="Date">{formatDate(order.createdAt)}</td>
@@ -267,7 +268,7 @@ export default function AdminOrdersPage() {
                   {order.OrderItem.length} article{order.OrderItem.length > 1 ? 's' : ''}
                 </td>
                 <td data-label="Montant">
-                  <strong style={{ color: 'var(--primary-orange)' }}>
+                  <strong className="order-amount">
                     {order.totalAmount.toFixed(2)}€
                   </strong>
                 </td>
@@ -277,16 +278,11 @@ export default function AdminOrdersPage() {
                   </span>
                 </td>
                 <td data-label="Actions">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div className="order-actions">
                     <select
                       value={order.status}
                       onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                      style={{
-                        padding: '8px',
-                        borderRadius: '8px',
-                        border: '2px solid var(--light-beige)',
-                        fontSize: '0.9rem'
-                      }}
+                      className="order-status-select"
                     >
                       <option value="PENDING">En attente</option>
                       <option value="PAID">Payé</option>
@@ -298,8 +294,7 @@ export default function AdminOrdersPage() {
                     </select>
 
                     <button
-                      className="admin-btn admin-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', justifyContent: 'center' }}
+                      className="admin-btn admin-btn-secondary admin-action-btn"
                       onClick={() => openTrackingModal(order)}
                     >
                       <Image src="/icones/delivery-box.png" alt="Tracking" width={16} height={16} />
@@ -313,7 +308,7 @@ export default function AdminOrdersPage() {
         </table>
 
         {orders.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+          <div className="order-empty-state">
             <p>Aucune commande pour le moment</p>
           </div>
         )}
@@ -335,20 +330,20 @@ export default function AdminOrdersPage() {
       {/* Modal de tracking */}
       {showTrackingModal && (
         <div className="modal-overlay" onClick={() => setShowTrackingModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px' }}>
+          <div className="modal-content tracking-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <Image src="/icones/delivery-box.png" alt="Tracking" width={40} height={40} />
               <h2>Informations de suivi</h2>
             </div>
 
             <div className="modal-body">
-              <p style={{ marginBottom: '1.5rem', color: 'var(--text-light)' }}>
+              <p className="tracking-order-info">
                 Commande : <strong>{selectedOrder?.orderNumber}</strong>
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="tracking-form-fields">
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                  <label className="tracking-form-label">
                     Numéro de suivi *
                   </label>
                   <input
@@ -356,30 +351,18 @@ export default function AdminOrdersPage() {
                     value={trackingData.trackingNumber}
                     onChange={(e) => setTrackingData({ ...trackingData, trackingNumber: e.target.value })}
                     placeholder="Ex: 6A12345678901"
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      borderRadius: '10px',
-                      border: '2px solid var(--light-beige)',
-                      fontSize: '1rem'
-                    }}
+                    className="tracking-form-input"
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                  <label className="tracking-form-label">
                     Transporteur *
                   </label>
                   <select
                     value={trackingData.carrier}
                     onChange={(e) => setTrackingData({ ...trackingData, carrier: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      borderRadius: '10px',
-                      border: '2px solid var(--light-beige)',
-                      fontSize: '1rem'
-                    }}
+                    className="tracking-form-input"
                   >
                     <option value="">Sélectionner un transporteur</option>
                     {carriers.map(carrier => (
@@ -387,13 +370,13 @@ export default function AdminOrdersPage() {
                     ))}
                     <option value="Autre">Autre</option>
                   </select>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.5rem' }}>
+                  <p className="tracking-form-hint">
                     💡 L&apos;URL sera générée automatiquement si vous laissez le champ URL vide
                   </p>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                  <label className="tracking-form-label">
                     URL de suivi (optionnel)
                   </label>
                   <input
@@ -401,30 +384,18 @@ export default function AdminOrdersPage() {
                     value={trackingData.trackingUrl}
                     onChange={(e) => setTrackingData({ ...trackingData, trackingUrl: e.target.value })}
                     placeholder="Laissez vide pour génération automatique"
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      borderRadius: '10px',
-                      border: '2px solid var(--light-beige)',
-                      fontSize: '1rem'
-                    }}
+                    className="tracking-form-input"
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                  <label className="tracking-form-label">
                     Statut de la commande
                   </label>
                   <select
                     value={trackingData.status}
                     onChange={(e) => setTrackingData({ ...trackingData, status: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px',
-                      borderRadius: '10px',
-                      border: '2px solid var(--light-beige)',
-                      fontSize: '1rem'
-                    }}
+                    className="tracking-form-input"
                   >
                     <option value="SHIPPED">Expédié</option>
                     <option value="DELIVERED">Livré</option>
@@ -433,18 +404,16 @@ export default function AdminOrdersPage() {
               </div>
             </div>
 
-            <div className="modal-footer" style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+            <div className="modal-footer tracking-modal-footer">
               <button
                 onClick={() => setShowTrackingModal(false)}
-                className="admin-btn"
-                style={{ background: 'var(--light-beige)', color: 'var(--text-dark)' }}
+                className="admin-btn tracking-cancel-btn"
               >
                 Annuler
               </button>
               <button
                 onClick={handleUpdateTracking}
-                className="admin-btn admin-btn-primary"
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                className="admin-btn admin-btn-primary tracking-submit-btn"
               >
                 <Image src="/icones/validation.png" alt="Valider" width={20} height={20} />
                 Enregistrer

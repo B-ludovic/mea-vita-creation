@@ -17,7 +17,8 @@ export default function ContactPage() {
     email: '',
     phone: '',
     interest: '',
-    message: ''
+    message: '',
+    website: '' // ← Champ honeypot (invisible)
   });
 
   const [loading, setLoading] = useState(false);
@@ -55,13 +56,14 @@ export default function ContactPage() {
           'Message envoyé',
           '/icones/sent-mail.png'
         );
-        // Réinitialiser le formulaire
+        // Réinitialiser le formulaire (SANS réinitialiser website pour ne pas alerter les bots)
         setFormData({
           name: '',
           email: '',
           phone: '',
           interest: '',
-          message: ''
+          message: '',
+          website: '' // ← Toujours réinitialiser le honeypot
         });
       } else {
         showAlert(
@@ -108,6 +110,30 @@ export default function ContactPage() {
               </p>
               
               <form className="contact-form" onSubmit={handleSubmit}>
+                
+                {/* HONEYPOT - Champ invisible anti-bot */}
+                
+                <div 
+                  style={{ 
+                    position: 'absolute', 
+                    left: '-5000px',
+                    width: '1px',
+                    height: '1px',
+                    overflow: 'hidden'
+                  }} 
+                  aria-hidden="true"
+                >
+                  <label htmlFor="website">Site web (ne pas remplir)</label>
+                  <input
+                    type="text"
+                    id="website"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    tabIndex="-1"
+                    autoComplete="off"
+                  />
+                </div>
                 
                 {/* Champ Nom */}
                 <div className="form-group">

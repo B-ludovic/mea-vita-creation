@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { setTokens } from '../../utils/auth';
 
 // Import du CSS
 import '../../styles/Auth.css';
@@ -12,13 +13,13 @@ import '../../styles/Auth.css';
 export default function LoginPage() {
   // Router pour rediriger l'utilisateur après connexion
   const router = useRouter();
-  
+
   // États (variables qui peuvent changer)
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -32,12 +33,11 @@ export default function LoginPage() {
 
   // Fonction qui s'exécute quand on soumet le formulaire
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Empêche le rechargement de la page
+    e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      // Appel au back-end pour se connecter
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -49,20 +49,18 @@ export default function LoginPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Succès ! On sauvegarde le token et on redirige
-        localStorage.setItem('token', data.token);
+        // Stocker les 2 tokens (Access + Refresh)
+        setTokens(data.accessToken, data.refreshToken);
         localStorage.setItem('user', JSON.stringify(data.user));
-        
-        // Déclencher un événement personnalisé pour notifier la connexion
-        window.dispatchEvent(new Event('userLoggedIn'));
-        
-        router.push('/'); // Redirection vers la page d'accueil
+
+        // Redirection avec rechargement complet pour mettre à jour le header
+        window.location.href = '/';
       } else {
-        // Erreur : on affiche le message
-        setError(data.message || 'Email ou mot de passe incorrect');
+        setError(data.message || 'Erreur de connexion');
       }
-    } catch (err) {
-      setError('Impossible de se connecter au serveur');
+    } catch (error) {
+      console.error('Erreur:', error);
+      setError('Erreur de connexion au serveur');
     } finally {
       setLoading(false);
     }
@@ -101,8 +99,8 @@ export default function LoginPage() {
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="submit-btn"
             disabled={loading}
           >
@@ -111,8 +109,8 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-footer">
-          <div style={{ marginBottom: '0.5rem' }}>
-            <Link href="/forgot-password" style={{ fontWeight: '600' }}>
+          <div className="auth-forgot-password">
+            <Link href="/forgot-password">
               Mot de passe oublié ?
             </Link>
           </div>

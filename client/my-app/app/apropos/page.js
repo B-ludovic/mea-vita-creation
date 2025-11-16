@@ -42,7 +42,7 @@ export default function AProposPage() {
                     alt="Notre Philosophie" 
                     width={40} 
                     height={40}
-                    style={{ display: 'inline-block', marginRight: '10px', verticalAlign: 'middle' }}
+                    className="bio-icon"
                   />
                   Notre Philosophie
                 </h3>
@@ -141,7 +141,7 @@ export default function AProposPage() {
                       alt="Cuir Recyclé" 
                       width={30} 
                       height={30}
-                      style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}
+                      className="material-icon"
                     />
                     Cuir Recyclé
                   </h4>
@@ -157,7 +157,7 @@ export default function AProposPage() {
                       alt="Bois de Hêtre" 
                       width={30} 
                       height={30}
-                      style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}
+                      className="material-icon"
                     />
                     Bois de Hêtre
                   </h4>
@@ -172,7 +172,7 @@ export default function AProposPage() {
                       alt="Tissus Wax" 
                       width={30} 
                       height={30}
-                      style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }}
+                      className="material-icon"
                     />
                     Tissus Wax
                   </h4>

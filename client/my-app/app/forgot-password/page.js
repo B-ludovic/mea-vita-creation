@@ -43,7 +43,7 @@ export default function ForgotPasswordPage() {
     return (
       <div className="auth-container">
         <div className="auth-card">
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div className="auth-success-icon">
             <Image 
               src="/icones/sent-mail.png" 
               alt="Email envoyé" 
@@ -51,14 +51,14 @@ export default function ForgotPasswordPage() {
               height={80}
             />
           </div>
-          <h1 style={{ textAlign: 'center' }}>Email envoyé</h1>
-          <p style={{ textAlign: 'center', color: 'var(--text-light)', marginBottom: '2rem' }}>
+          <h1 className="auth-success-title">Email envoyé</h1>
+          <p className="auth-success-message">
             Si un compte existe avec cette adresse email, vous recevrez un lien de réinitialisation.
           </p>
-          <p style={{ textAlign: 'center', color: 'var(--text-light)', fontSize: '0.9rem' }}>
+          <p className="auth-success-hint">
             Pensez à vérifier vos spams si vous ne le trouvez pas.
           </p>
-          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div className="auth-success-actions">
             <Link href="/login" className="btn-secondary">
               Retour à la connexion
             </Link>

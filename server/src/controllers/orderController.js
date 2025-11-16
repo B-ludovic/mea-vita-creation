@@ -260,14 +260,12 @@ const updateTracking = async (req, res) => {
     if (status === 'SHIPPED' && order.User) {
       // Vérifier que les infos de tracking sont présentes
       if (order.trackingNumber && order.carrier) {
-        console.log(`Envoi email d'expédition à ${order.User.email}...`);
+        // Envoi email d'expédition (log retiré pour sécurité - pas d'exposition d'email)
         
         // Envoyer l'email (sans bloquer la réponse)
         sendShippingEmail(order.User.email, order.User.firstName, order)
           .then(result => {
-            if (result.success) {
-              console.log('Email d\'expédition envoyé avec succès');
-            } else {
+            if (!result.success) {
               console.error('❌ Erreur envoi email:', result.error);
             }
           })

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useModal } from '../../../hooks/useModal';
 import Modal from '../../../components/Modal';
+import { getAccessToken } from '../../../utils/auth';
 import '../../../styles/Admin.css';
 
 export default function AdminInvoicesPage() {
@@ -27,7 +28,7 @@ export default function AdminInvoicesPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orders, searchTerm, filterStatus]);    const fetchOrders = async () => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getAccessToken();
             if (!token) {
                 router.push('/login');
                 return;
@@ -92,7 +93,7 @@ export default function AdminInvoicesPage() {
 
     const handleDownloadInvoice = async (orderId) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = getAccessToken();
             if (!token) {
                 showAlert(
                     'Vous devez être connecté pour télécharger une facture',
@@ -190,7 +191,7 @@ export default function AdminInvoicesPage() {
             </div>
 
             {/* Statistiques */}
-            <div className="stats-grid" style={{ marginBottom: '2rem' }}>
+            <div className="stats-grid invoices-stats">
                 <div className="stat-card">
                     <div className="stat-card-header">
                         <span className="stat-card-title">Factures générées</span>
@@ -211,10 +212,10 @@ export default function AdminInvoicesPage() {
             </div>
 
             {/* Filtres */}
-            <div className="admin-table-container" style={{ marginBottom: '2rem', padding: '1.5rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem' }}>
+            <div className="admin-table-container invoices-filters-container">
+                <div className="invoices-filters-grid">
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                        <label className="invoices-filter-label">
                             Rechercher
                         </label>
                         <input
@@ -222,30 +223,18 @@ export default function AdminInvoicesPage() {
                             placeholder="N° commande, client, email..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '10px 15px',
-                                border: '2px solid var(--light-beige)',
-                                borderRadius: '10px',
-                                fontSize: '1rem'
-                            }}
+                            className="invoices-filter-input"
                         />
                     </div>
 
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: 'var(--text-dark)' }}>
+                        <label className="invoices-filter-label">
                             Filtrer par statut
                         </label>
                         <select
                             value={filterStatus}
                             onChange={(e) => setFilterStatus(e.target.value)}
-                            style={{
-                                width: '100%',
-                                padding: '10px 15px',
-                                border: '2px solid var(--light-beige)',
-                                borderRadius: '10px',
-                                fontSize: '1rem'
-                            }}
+                            className="invoices-filter-input"
                         >
                             <option value="ALL">Tous les statuts</option>
                             <option value="PAID">Payé</option>
@@ -280,17 +269,17 @@ export default function AdminInvoicesPage() {
                                     {order.User ? (
                                         <div>
                                             <div><strong>{order.User.firstName} {order.User.lastName}</strong></div>
-                                            <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                                            <div className="invoice-client-email">
                                                 {order.User.email}
                                             </div>
                                         </div>
                                     ) : (
-                                        <span style={{ color: 'var(--text-light)' }}>Invité</span>
+                                        <span className="invoice-client-guest">Invité</span>
                                     )}
                                 </td>
                                 <td data-label="Date">{formatDate(order.createdAt)}</td>
                                 <td data-label="Montant">
-                                    <strong style={{ color: 'var(--primary-orange)' }}>
+                                    <strong className="invoice-amount">
                                         {order.totalAmount.toFixed(2)}€
                                     </strong>
                                 </td>
@@ -300,18 +289,10 @@ export default function AdminInvoicesPage() {
                                     </span>
                                 </td>
                                 <td data-label="Actions">
-                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <div className="invoice-actions">
                                         <button
                                             onClick={() => handleDownloadInvoice(order.id)}
-                                            className="admin-btn admin-btn-primary"
-                                            style={{
-                                                padding: '6px 12px',
-                                                fontSize: '0.85rem',
-                                                display: 'inline-flex',
-                                                alignItems: 'center',
-                                                gap: '0.5rem',
-                                                cursor: 'pointer'
-                                            }}
+                                            className="admin-btn admin-btn-primary admin-action-btn"
                                         >
                                             <Image src="/icones/invoice.png" alt="Télécharger" width={16} height={16} />
                                             Télécharger
@@ -324,7 +305,7 @@ export default function AdminInvoicesPage() {
                 </table>
 
                 {filteredOrders.length === 0 && (
-                    <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+                    <div className="invoice-empty-state">
                         <p>
                             {searchTerm || filterStatus !== 'ALL'
                                 ? 'Aucune facture ne correspond aux critères de recherche'

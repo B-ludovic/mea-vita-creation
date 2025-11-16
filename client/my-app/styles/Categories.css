@@ -42,6 +42,31 @@
     margin-bottom: 3rem;
 }
 
+.categories-loading, .categories-error {
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.categories-error h2 {
+    color: var(--primary-orange);
+}
+
+.categories-error-link {
+    margin-top: 2rem;
+}
+
+.category-logo-icon {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.product-card-logo {
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 .categories-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));

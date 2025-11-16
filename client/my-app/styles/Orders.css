@@ -212,6 +212,39 @@
     object-fit: contain;
 }
 
+.order-item-img {
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.order-item-img-fallback {
+    object-fit: contain;
+}
+
+.order-item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.order-item-logo {
+    object-fit: contain;
+}
+
+.order-item-title {
+    margin: 0;
+}
+
+.tracking-timeline-container {
+    margin-top: 2rem;
+}
+
+.timeline-icon {
+    display: inline;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 /* --- RESPONSIVE BREAKPOINTS --- */
 
 /* Mobile et Tablettes (< 768px) */

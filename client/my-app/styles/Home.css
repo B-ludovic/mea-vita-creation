@@ -263,6 +263,18 @@
     }
 }
 
+.category-icon, .craftsmanship-icon {
+    display: inline-block;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.craftsmanship-list-icon {
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 /* Très petits mobiles (< 480px) */
 @media (max-width: 480px) {
     .hero {

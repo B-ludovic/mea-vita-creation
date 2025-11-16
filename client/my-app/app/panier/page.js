@@ -11,6 +11,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Modal from '../../components/Modal';
 import { useModal } from '../../hooks/useModal';
+import { getAccessToken } from '../../utils/auth';
 
 // Import du CSS
 import '../../styles/Cart.css';
@@ -95,7 +96,7 @@ export default function CartPage() {
       // Appel API pour récupérer les adresses
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/user/${userId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getAccessToken()}`
         }
       });
 
@@ -144,7 +145,7 @@ export default function CartPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getAccessToken()}`
         },
         body: JSON.stringify({
           ...newAddress,
@@ -250,7 +251,7 @@ export default function CartPage() {
       <div className="container">
         <div className="cart-header">
           <h1>Mon Panier</h1>
-          <p style={{ color: 'var(--text-light)' }}>
+          <p className="cart-header-count">
             {getCartCount()} article{getCartCount() > 1 ? 's' : ''} dans votre panier
           </p>
         </div>
@@ -267,7 +268,7 @@ export default function CartPage() {
                       alt={item.name}
                       width={80}
                       height={80}
-                      style={{ objectFit: 'cover', borderRadius: '10px' }}
+                      className="cart-item-img"
                     />
                   ) : (
                     <div className="cart-item-image-placeholder">
@@ -325,7 +326,7 @@ export default function CartPage() {
                     alt="Adresse" 
                     width={24} 
                     height={24}
-                    style={{ marginRight: '0.5rem', verticalAlign: 'middle' }}
+                    className="clear-cart-icon"
                   />
                   Adresse de livraison
                 </h2>

@@ -206,6 +206,57 @@
     color: var(--primary-orange);
 }
 
+.product-loading {
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.product-error {
+    padding-top: 2rem;
+    text-align: center;
+}
+
+.product-error-title {
+    color: var(--primary-orange);
+}
+
+.product-error-link {
+    margin-top: 2rem;
+}
+
+.product-title-logo {
+    display: inline-block;
+    margin-right: 12px;
+    vertical-align: middle;
+}
+
+.wishlist-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    margin-left: 1rem;
+    vertical-align: middle;
+}
+
+.review-form-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.review-icon {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+.verified-badge {
+    margin-left: 0.5rem;
+}
+
+.verified-icon {
+    margin-right: 0.25rem;
+    vertical-align: middle;
+}
+
 /* --- RESPONSIVE BREAKPOINTS --- */
 
 /* Tablettes et petits ordinateurs (< 968px) */

@@ -78,22 +78,22 @@ function ResetPasswordForm() {
     return (
       <div className="auth-container">
         <div className="auth-card">
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div className="auth-success-icon">
             <Image 
-              src="/icones/congratulation.png" 
+              src="/icones/validation.png" 
               alt="Succès" 
               width={80} 
               height={80}
             />
           </div>
-          <h1 style={{ textAlign: 'center', color: 'var(--success)' }}>
+          <h1 className="auth-success-title verify-text-success">
             Mot de passe réinitialisé !
           </h1>
-          <p style={{ textAlign: 'center', color: 'var(--text-light)', marginTop: '1rem' }}>
-            Votre mot de passe a été mis à jour avec succès.
+          <p className="auth-success-message">
+            Votre mot de passe a été modifié avec succès.
           </p>
-          <p style={{ textAlign: 'center', color: 'var(--text-light)', marginTop: '1rem' }}>
-            Redirection vers la page de connexion...
+          <p className="auth-success-hint">
+            Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.
           </p>
         </div>
       </div>
@@ -123,7 +123,7 @@ function ResetPasswordForm() {
               minLength="8"
               placeholder="Minimum 8 caractères"
             />
-            <small style={{ color: 'var(--text-light)', fontSize: '0.85rem' }}>
+            <small className="reset-password-hint">
               Minimum 8 caractères avec majuscule, minuscule et chiffre
             </small>
           </div>
@@ -164,7 +164,7 @@ export default function ResetPasswordPage() {
     <Suspense fallback={
       <div className="auth-container">
         <div className="auth-card">
-          <p style={{ textAlign: 'center' }}>Chargement...</p>
+          <p className="reset-password-loading">Chargement...</p>
         </div>
       </div>
     }>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 
 export default function AdminProductsPage() {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         showAlert('Vous devez être connecté', 'Erreur', '/icones/annuler.png');
         router.push('/login');
@@ -71,7 +72,7 @@ export default function AdminProductsPage() {
       `Êtes-vous sûr de vouloir supprimer "${productName}" ?`,
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           if (!token) {
             showAlert('Vous devez être connecté', 'Erreur', '/icones/annuler.png');
             router.push('/login');
@@ -127,13 +128,13 @@ export default function AdminProductsPage() {
       </div>
 
       <div className="admin-table-container">
-        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ margin: 0, color: 'var(--text-dark)' }}>Liste des produits</h2>
+        <div className="products-header">
+          <h2 className="products-header-title">Liste des produits</h2>
           <button 
             className="admin-btn admin-btn-primary"
             onClick={() => router.push('/admin/produits/ajouter')}
           >
-            <Image src="/icones/validation.png" alt="" width={16} height={16} style={{ display: 'inline-block', marginRight: '6px', verticalAlign: 'middle' }} />
+            <Image src="/icones/validation.png" alt="" width={16} height={16} className="add-product-icon" />
             Ajouter un produit
           </button>
         </div>
@@ -160,21 +161,10 @@ export default function AdminProductsPage() {
                       alt={product.name}
                       width={60}
                       height={60}
-                      style={{
-                        objectFit: 'cover',
-                        borderRadius: '8px'
-                      }}
+                      className="product-table-image"
                     />
                   ) : (
-                    <div style={{
-                      width: '60px',
-                      height: '60px',
-                      background: 'var(--light-beige)',
-                      borderRadius: '8px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}>
+                    <div className="product-table-image-fallback">
                       <Image src="/icones/shopping.png" alt="Produit" width={30} height={30} />
                     </div>
                   )}
@@ -182,14 +172,14 @@ export default function AdminProductsPage() {
                 <td data-label="Nom">
                   <div>
                     <strong>{product.name}</strong>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '4px' }}>
+                    <div className="product-table-slug">
                       {product.slug}
                     </div>
                   </div>
                 </td>
                 <td data-label="Catégorie">{product.Category.name}</td>
                 <td data-label="Prix">
-                  <strong style={{ color: 'var(--primary-orange)' }}>
+                  <strong className="product-table-price">
                     {product.price.toFixed(2)}€
                   </strong>
                 </td>
@@ -204,21 +194,19 @@ export default function AdminProductsPage() {
                   </span>
                 </td>
                 <td data-label="Actions">
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <div className="product-table-actions">
                     <button 
-                      className="admin-btn admin-btn-secondary"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      className="admin-btn admin-btn-secondary admin-action-btn"
                       onClick={() => router.push(`/admin/produits/modifier/${product.id}`)}
                     >
-                      <Image src="/icones/modify.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/modify.png" alt="" width={14} height={14} className="product-action-icon" />
                       Modifier
                     </button>
                     <button 
-                      className="admin-btn admin-btn-danger"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem' }}
+                      className="admin-btn admin-btn-danger admin-action-btn"
                       onClick={() => handleDelete(product.id, product.name)}
                     >
-                      <Image src="/icones/trash.png" alt="" width={14} height={14} style={{ display: 'inline-block', marginRight: '4px', verticalAlign: 'middle' }} />
+                      <Image src="/icones/trash.png" alt="" width={14} height={14} className="product-action-icon" />
                       Supprimer
                     </button>
                   </div>

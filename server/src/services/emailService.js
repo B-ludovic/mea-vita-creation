@@ -52,7 +52,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
       return { success: false, error };
     }
 
-    console.log('✅ Email de bienvenue envoyé à:', userEmail);
+    // Email de bienvenue envoyé (log retiré pour sécurité - pas d'exposition d'email)
     return { success: true, data };
 
   } catch (error) {
@@ -99,7 +99,7 @@ const sendShippingEmail = async (userEmail, userName, order) => {
       return { success: false, error };
     }
 
-    console.log('✅ Email d\'expédition envoyé à:', userEmail);
+    // Email d'expédition envoyé (log retiré pour sécurité - pas d'exposition d'email)
     return { success: true, data };
 
   } catch (error) {
@@ -148,7 +148,7 @@ const sendContactEmail = async (name, email, subject, message) => {
       return { success: false, error };
     }
 
-    console.log('✅ Email de contact envoyé');
+    // Email de contact envoyé (log retiré pour sécurité)
     return { success: true, data };
 
   } catch (error) {

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Modal from '../../components/Modal';
 import { useModal } from '../../hooks/useModal';
+import { setTokens } from '../../utils/auth';
 
 // Import du CSS
 import '../../styles/Auth.css';
@@ -173,7 +174,7 @@ export default function RegisterPage() {
               required
               minLength="8"
             />
-            <small style={{ color: '#666', fontSize: '0.85rem', display: 'block', marginTop: '5px' }}>
+            <small className="password-hint">
               • Minimum 8 caractères<br />
               • Au moins une majuscule<br />
               • Au moins une minuscule<br />

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../components/Modal';
 import { useModal } from '../../hooks/useModal';
+import { getAccessToken } from '../../utils/auth';
 import '../../styles/Addresses.css';
 
 // COMPOSANT PRINCIPAL - Page de gestion des adresses
@@ -54,7 +55,7 @@ export default function MesAdresses() {
       // Appel API pour récupérer les adresses
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/user/${userId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getAccessToken()}`
         }
       });
 
@@ -95,7 +96,7 @@ export default function MesAdresses() {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getAccessToken()}`
         },
         body: JSON.stringify({
           ...formData,
@@ -131,7 +132,7 @@ export default function MesAdresses() {
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/${addressId}`, {
             method: 'DELETE',
             headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              'Authorization': `Bearer ${getAccessToken()}`
             }
           });
 
@@ -160,7 +161,7 @@ export default function MesAdresses() {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/addresses/${addressId}/default`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${getAccessToken()}`
         }
       });
 

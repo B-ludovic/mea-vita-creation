@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { getAccessToken } from '../../../../utils/auth';
 import '../../../../styles/AdminForms.css';
 
 export default function AddProductPage() {
@@ -28,7 +29,7 @@ export default function AddProductPage() {
     const fetchCategories = async () => {
       try {
         // Récupérer le token depuis localStorage
-        const token = localStorage.getItem('token');
+        const token = getAccessToken();
         if (!token) {
           router.push('/login');
           return;
@@ -96,7 +97,7 @@ export default function AddProductPage() {
 
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       if (!token) {
         alert('Vous devez être connecté');
         router.push('/login');
@@ -176,7 +177,7 @@ export default function AddProductPage() {
               required
               placeholder="Ex: atlas-fogo"
             />
-            <small style={{ color: 'var(--text-light)', fontSize: '0.85rem' }}>
+            <small className="product-form-hint">
               Généré automatiquement à partir du nom
             </small>
           </div>
@@ -255,7 +256,7 @@ export default function AddProductPage() {
                 checked={formData.isActive}
                 onChange={handleChange}
               />
-              <label htmlFor="isActive" style={{ fontWeight: 'normal' }}>
+              <label htmlFor="isActive" className="form-checkbox-label-normal">
                 Produit actif (visible sur le site)
               </label>
             </div>
@@ -267,7 +268,7 @@ export default function AddProductPage() {
               className="admin-btn admin-btn-primary"
               disabled={loading}
             >
-              <Image src="/icones/validation.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/validation.png" alt="" width={20} height={20} className="btn-icon-inline" />
               {loading ? 'Création en cours...' : 'Créer le produit'}
             </button>
             <button
@@ -275,7 +276,7 @@ export default function AddProductPage() {
               className="admin-btn admin-btn-secondary"
               onClick={() => router.push('/admin/produits')}
             >
-              <Image src="/icones/annuler.png" alt="" width={20} height={20} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
+              <Image src="/icones/annuler.png" alt="" width={20} height={20} className="btn-icon-inline" />
               Annuler
             </button>
           </div>

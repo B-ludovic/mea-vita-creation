@@ -95,6 +95,18 @@
     margin-bottom: 1.5rem;
 }
 
+.wishlist-image-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wishlist-title-logo {
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
 .wishlist-card-actions {
     display: flex;
     gap: 1rem;

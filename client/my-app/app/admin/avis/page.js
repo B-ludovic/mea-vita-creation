@@ -6,6 +6,7 @@ import Image from 'next/image';
 import StarRating from '../../../components/StarRating';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
+import { getAccessToken } from '../../../utils/auth';
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState([]);
@@ -19,7 +20,7 @@ export default function AdminReviewsPage() {
   const fetchReviews = async () => {
     try {
       // Récupérer le token depuis localStorage
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       if (!token) {
         console.error('Pas de token d\'authentification');
@@ -51,7 +52,7 @@ export default function AdminReviewsPage() {
 
   const handleApprove = async (reviewId) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = getAccessToken();
       
       if (!token) {
         showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
@@ -84,7 +85,7 @@ export default function AdminReviewsPage() {
       'Êtes-vous sûr de vouloir supprimer cet avis ? Cette action est irréversible.',
       async () => {
         try {
-          const token = localStorage.getItem('token');
+          const token = getAccessToken();
           
           if (!token) {
             showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
@@ -147,8 +148,8 @@ export default function AdminReviewsPage() {
 
       {/* Avis en attente */}
       {pendingReviews.length > 0 && (
-        <div className="admin-table-container" style={{ marginBottom: '2rem' }}>
-          <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="admin-table-container reviews-section-pending">
+          <h2 className="reviews-section-title">
             <Image src="/icones/sand-timer.png" alt="En attente" width={24} height={24} />
             Avis en attente de modération ({pendingReviews.length})
           </h2>
@@ -165,11 +166,11 @@ export default function AdminReviewsPage() {
             </thead>
             <tbody>
               {pendingReviews.map((review) => (
-                <tr key={review.id} style={{ background: '#fff3e0' }}>
+                <tr key={review.id} className="review-row-pending">
                   <td data-label="Client">
                     <div>
                       <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      <div className="review-client-email">
                         {review.User.email}
                       </div>
                     </div>
@@ -178,23 +179,21 @@ export default function AdminReviewsPage() {
                   <td data-label="Note">
                     <StarRating rating={review.rating} readonly size="small" />
                   </td>
-                  <td data-label="Commentaire" style={{ maxWidth: '300px' }}>
-                    {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
+                  <td data-label="Commentaire" className="review-comment-cell">
+                    {review.comment || <em className="review-no-comment">Pas de commentaire</em>}
                   </td>
                   <td data-label="Date">{formatDate(review.createdAt)}</td>
                   <td data-label="Actions">
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div className="review-actions">
                       <button
-                        className="admin-btn admin-btn-primary"
-                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                        className="admin-btn admin-btn-primary admin-action-btn"
                         onClick={() => handleApprove(review.id)}
                       >
                         <Image src="/icones/ok.png" alt="Approuver" width={16} height={16} />
                         Approuver
                       </button>
                       <button
-                        className="admin-btn admin-btn-danger"
-                        style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                        className="admin-btn admin-btn-danger admin-action-btn"
                         onClick={() => handleDelete(review.id)}
                       >
                         <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} />
@@ -211,7 +210,7 @@ export default function AdminReviewsPage() {
 
       {/* Avis approuvés */}
       <div className="admin-table-container">
-        <h2 style={{ marginBottom: '1rem', color: 'var(--text-dark)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h2 className="reviews-section-title">
           <Image src="/icones/validation.png" alt="Approuvés" width={24} height={24} />
           Avis approuvés ({approvedReviews.length})
         </h2>
@@ -233,7 +232,7 @@ export default function AdminReviewsPage() {
                   <td data-label="Client">
                     <div>
                       <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
+                      <div className="review-client-email">
                         {review.User.email}
                       </div>
                     </div>
@@ -242,14 +241,13 @@ export default function AdminReviewsPage() {
                   <td data-label="Note">
                     <StarRating rating={review.rating} readonly size="small" />
                   </td>
-                  <td data-label="Commentaire" style={{ maxWidth: '300px' }}>
-                    {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
+                  <td data-label="Commentaire" className="review-comment-cell">
+                    {review.comment || <em className="review-no-comment">Pas de commentaire</em>}
                   </td>
                   <td data-label="Date">{formatDate(review.createdAt)}</td>
                   <td data-label="Actions">
                     <button
-                      className="admin-btn admin-btn-danger"
-                      style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+                      className="admin-btn admin-btn-danger admin-action-btn"
                       onClick={() => handleDelete(review.id)}
                     >
                       <Image src="/icones/trash.png" alt="Supprimer" width={16} height={16} />
@@ -261,14 +259,14 @@ export default function AdminReviewsPage() {
             </tbody>
           </table>
         ) : (
-          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+          <div className="review-empty-state">
             <p>Aucun avis approuvé</p>
           </div>
         )}
       </div>
 
       {reviews.length === 0 && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-light)' }}>
+        <div className="review-empty-state">
           <p>Aucun avis pour le moment</p>
         </div>
       )}

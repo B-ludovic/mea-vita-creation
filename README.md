@@ -56,6 +56,7 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 📜 **Politique confidentialité** : Page RGPD complète avec droits utilisateurs
 - 🧾 **Historique factures admin** : Interface admin pour consulter et télécharger les factures
 - 🎠 **Navigation produits** : Carousel latéral avec boutons gauche/droite pour naviguer dans une catégorie
+- 🎟️ **Codes promo** : Système complet de codes promotionnels avec validation dates, limites, admin CRUD, intégration Stripe
 
 ---
 
@@ -240,11 +241,13 @@ francois-maroquinerie/
 │   │       ├── produits/   # Gestion produits
 │   │       ├── commandes/  # Gestion commandes + modal tracking
 │   │       ├── factures/   # Historique factures avec téléchargement
+│   │       ├── codes-promo/# Gestion codes promotionnels (CRUD)
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
 │   ├── components/         # Composants React
 │   │   ├── Header.jsx      # En-tête navigation
 │   │   ├── Modal.jsx       # Composant modal réutilisable
+│   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
 │   │   ├── StarRating.jsx  # Composant notation étoiles
 │   │   ├── CookieConsent.jsx # Bannière consentement RGPD
 │   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
@@ -266,6 +269,7 @@ francois-maroquinerie/
 │   │   ├── globals.css
 │   │   ├── variables.css   # Variables couleurs du projet
 │   │   ├── Modal.css       # Styles modal avec animations
+│   │   ├── PromoCode.css   # Styles composant code promo
 │   │   ├── Header.css
 │   │   ├── Home.css
 │   │   ├── Auth.css
@@ -305,7 +309,8 @@ francois-maroquinerie/
 │   │   │   ├── paymentController.js
 │   │   │   ├── addressController.js
 │   │   │   ├── wishlistController.js # Gestion wishlist
-│   │   │   └── reviewController.js # Gestion avis produits
+│   │   │   ├── reviewController.js # Gestion avis produits
+│   │   │   └── promoCodeController.js # Gestion codes promo
 │   │   ├── routes/         # Routes API
 │   │   │   ├── auth.js
 │   │   │   ├── products.js
@@ -316,6 +321,7 @@ francois-maroquinerie/
 │   │   │   ├── invoices.js # Routes factures PDF
 │   │   │   ├── wishlist.js # Routes wishlist
 │   │   │   ├── reviews.js  # Routes reviews
+│   │   │   ├── promoCodes.js # Routes codes promo
 │   │   │   └── users.js
 │   │   ├── middleware/     # Middlewares
 │   │   │   ├── authMiddleware.js
@@ -515,6 +521,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Contrainte unique BDD pour éviter doublons (wishlist, reviews)
 - ✅ Sanitization HTML dans templates emails (protection XSS)
 - ✅ Validation données avant envoi emails (tracking complet requis)
+- ✅ Routes codes promo : validation publique sans JWT, routes admin protégées
+- ✅ Validation dates (début/fin), limites d'usage, montant minimum commande
 
 ---
 
@@ -540,7 +548,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Envoi automatique des factures par email
 - [x] ~~Historique des factures dans l'admin~~ ✅ Fait (page factures avec recherche/filtres)
 - [ ] Système de relances clients (emails automatiques)
-- [ ] Bon de réduction / codes promo
+- [x] ~~Bon de réduction / codes promo~~ ✅ Fait (système complet avec admin, validation, Stripe)
 - [x] ~~Suivi de livraison (tracking)~~ ✅ Fait (tracking avec timeline animée)
 - [x] ~~Email automatique lors de l'expédition~~ ✅ Fait (shippingEmailTemplate avec sanitization)
 - [ ] Export Excel des commandes

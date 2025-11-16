@@ -169,6 +169,17 @@ export default function AdminLayout({ children }) {
             </li>
             <li>
               <Link
+                href="/admin/codes-promo"
+                className={pathname === '/admin/codes-promo' ? 'active' : ''}
+              >
+                <span className="admin-nav-icon">
+                  <Image src="/icones/promotion.png" alt="Codes promo" width={20} height={20} />
+                </span>
+                <span>Codes promo</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/admin/utilisateurs"
                 className={pathname === '/admin/utilisateurs' ? 'active' : ''}
               >

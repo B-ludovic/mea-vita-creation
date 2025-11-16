@@ -1,6 +1,9 @@
 // Directive pour indiquer que c'est un composant client
 'use client';
 
+//import de promo code
+import PromoCodeInput from '../../components/PromoCodeInput';
+
 // Import des hooks et contexte
 import { useCart } from '../../contexts/CartContext';
 import Link from 'next/link';
@@ -54,6 +57,9 @@ export default function CartPage() {
     phone: '',
     isDefault: false
   });
+
+  // État pour stocker le code promo appliqué
+  const [appliedPromo, setAppliedPromo] = useState(null);
 
   // Charger les images depuis la BDD
   useEffect(() => {
@@ -199,7 +205,8 @@ export default function CartPage() {
         body: JSON.stringify({
           items: cart,
           userId: userObj?.id || null,
-          addressId: selectedAddressId // Envoyer l'adresse sélectionnée
+          addressId: selectedAddressId, // Envoyer l'adresse sélectionnée
+          promoCodeId: appliedPromo?.id || null // Envoyer le code promo si appliqué
         })
       });
       
@@ -450,6 +457,12 @@ export default function CartPage() {
           <div className="cart-summary">
             <h2>Récapitulatif</h2>
 
+            {/* Code promo */}
+            <PromoCodeInput 
+              cartTotal={getCartTotal()}
+              onPromoApplied={(promo) => setAppliedPromo(promo)}
+            />
+
             <div className="summary-line">
               <span>Sous-total</span>
               <span>{getCartTotal().toFixed(2)}€</span>
@@ -460,9 +473,21 @@ export default function CartPage() {
               <span>Gratuite</span>
             </div>
 
+            {appliedPromo && (
+              <div className="summary-line discount">
+                <span>Réduction ({appliedPromo.code})</span>
+                <span className="discount-amount">-{appliedPromo.discountAmount.toFixed(2)}€</span>
+              </div>
+            )}
+
             <div className="summary-line total">
               <span>Total</span>
-              <span>{getCartTotal().toFixed(2)}€</span>
+              <span>
+                {appliedPromo 
+                  ? (getCartTotal() - appliedPromo.discountAmount).toFixed(2)
+                  : getCartTotal().toFixed(2)
+                }€
+              </span>
             </div>
 
             <button

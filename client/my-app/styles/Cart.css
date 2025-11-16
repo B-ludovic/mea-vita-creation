@@ -123,7 +123,7 @@
 .remove-btn {
     background: transparent;
     border: none;
-    color: #c62828;
+    color: var(--primary-orange);
     cursor: pointer;
     font-size: 0.9rem;
     text-decoration: underline;
@@ -131,7 +131,7 @@
 }
 
 .remove-btn:hover {
-    color: #b71c1c;
+    color: var(--secondary-orange);
 }
 
 .cart-summary {
@@ -169,8 +169,8 @@
 .checkout-btn {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
-    color: var(--white);
+    background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
+    color: var(--text-dark);
     border: none;
     border-radius: 50px;
     font-size: 1.2rem;
@@ -178,11 +178,13 @@
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 2rem;
+    box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
 }
 
 .checkout-btn:hover {
+    background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
 .clear-cart-btn {

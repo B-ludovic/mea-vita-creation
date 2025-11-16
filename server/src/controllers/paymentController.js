@@ -3,13 +3,15 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const prisma = require('../config/prisma');
 // Importer le service d'email
 const { sendOrderConfirmationEmail } = require('../services/emailService');
+// Importer la fonction pour incrémenter l'usage du code promo
+const { incrementPromoCodeUsage } = require('./promoCodeController');
 
 // FONCTION POUR CRÉER UNE SESSION DE PAIEMENT STRIPE
 // Cette fonction crée une session Stripe et renvoie l'URL pour payer
 const createCheckoutSession = async (req, res) => {
     try {
         // Récupérer les données envoyées par le front-end (y compris addressId)
-        const { items, userId, addressId } = req.body;
+        const { items, userId, addressId, promoCodeId, discountAmount } = req.body;
 
         // Vérifier que les données sont présentes
         if (!items || items.length === 0) {
@@ -58,6 +60,49 @@ const createCheckoutSession = async (req, res) => {
             });
         }
 
+        // VALIDATION ET APPLICATION DU CODE PROMO
+        let promoCode = null;
+        let discountAmountCalculated = 0;
+
+        if (promoCodeId) {
+            // Récupérer le code promo
+            promoCode = await prisma.promoCode.findUnique({
+                where: { id: promoCodeId }
+            });
+
+            if (!promoCode) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Code promo invalide'
+                });
+            }
+
+            // Vérifier si le code est actif
+            if (!promoCode.isActive) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ce code promo n\'est plus actif'
+                });
+            }
+
+            // Vérifier les dates
+            const now = new Date();
+            if (new Date(promoCode.startDate) > now || new Date(promoCode.endDate) < now) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ce code promo n\'est pas valide actuellement'
+                });
+            }
+
+            // Vérifier le nombre d'utilisations
+            if (promoCode.maxUses && promoCode.currentUses >= promoCode.maxUses) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Ce code promo a atteint sa limite d\'utilisation'
+                });
+            }
+        }
+
         // Transformer les items du panier au format Stripe
         const lineItems = items.map((item) => ({
             price_data: {
@@ -70,6 +115,37 @@ const createCheckoutSession = async (req, res) => {
             },
             quantity: item.quantity,
         }));
+
+        // Calculer le total des items
+        const totalAmount = lineItems.reduce((sum, item) => 
+            sum + (item.price_data.unit_amount * item.quantity), 0
+        ) / 100; // Convertir de centimes en euros
+
+        // Calculer la réduction si code promo
+        if (promoCode) {
+            if (promoCode.discountType === 'PERCENTAGE') {
+                discountAmountCalculated = (totalAmount * promoCode.discountValue) / 100;
+            } else if (promoCode.discountType === 'FIXED_AMOUNT') {
+                discountAmountCalculated = promoCode.discountValue;
+            }
+
+            // Ne pas dépasser le montant total
+            if (discountAmountCalculated > totalAmount) {
+                discountAmountCalculated = totalAmount;
+            }
+
+            // Ajouter la réduction comme line item négatif
+            lineItems.push({
+                price_data: {
+                    currency: 'eur',
+                    product_data: {
+                        name: `Réduction: ${promoCode.code}`,
+                    },
+                    unit_amount: -Math.round(discountAmountCalculated * 100), // Montant négatif
+                },
+                quantity: 1,
+            });
+        }
 
         // Ne stocker que les données essentielles pour le webhook (limite 500 caractères)
         const itemsForMetadata = items.map(item => ({
@@ -88,6 +164,7 @@ const createCheckoutSession = async (req, res) => {
             metadata: {
                 userId: userId || 'guest',
                 addressId: addressId || null, // Stocker l'ID de l'adresse dans les metadata
+                promoCodeId: promoCodeId || null, // Stocker l'ID du code promo
                 items: JSON.stringify(itemsForMetadata) // Seulement id, quantity, price
             },
         });
@@ -164,17 +241,23 @@ const handleStripeWebhook = async (req, res) => {
             console.log('✅ Paiement réussi pour la session:', session.id);
 
             try {
-                // 🆕 Récupérer les items ET l'addressId depuis les metadata
+                // Récupérer les items ET l'addressId depuis les metadata
                 const items = JSON.parse(session.metadata.items);
                 const userId = session.metadata.userId !== 'guest' ? session.metadata.userId : null;
                 const addressId = session.metadata.addressId || null;
+                const promoCodeId = session.metadata.promoCodeId || null;
+
+                // Incrémenter l'usage du code promo si utilisé
+                if (promoCodeId) {
+                    await incrementPromoCodeUsage(promoCodeId);
+                }
 
                 // Créer la commande
                 const order = await prisma.order.create({
                     data: {
                         orderNumber: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
                         userId,
-                        addressId, // 🆕 Enregistrer l'adresse de livraison
+                        addressId, // Enregistrer l'adresse de livraison
                         status: 'PAID', // Le paiement est déjà confirmé
                         subtotal: session.amount_total / 100, // Stripe envoie en centimes
                         shippingCost: 0,

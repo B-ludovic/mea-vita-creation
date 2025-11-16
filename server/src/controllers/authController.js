@@ -52,9 +52,10 @@ const register = async (req, res) => {
             where: { email }
         });
 
+        // SÉCURITÉ : Message générique pour éviter l'énumération d'emails
         if (existingUser) {
             return res.status(400).json({
-                message: 'Cet email est déjà utilisé'
+                message: 'Une erreur est survenue lors de l\'inscription. Veuillez vérifier vos informations.'
             });
         }
 
@@ -138,9 +139,10 @@ const login = async (req, res) => {
         }
 
         // 4.5. Vérifier si le compte est activé
+        // SÉCURITÉ : Même message que si l'email n'existe pas (évite énumération)
         if (!user.isActive) {
-            return res.status(403).json({
-                message: 'Votre compte n\'est pas encore activé. Veuillez vérifier votre email.'
+            return res.status(401).json({
+                message: 'Email ou mot de passe incorrect'
             });
         }
 

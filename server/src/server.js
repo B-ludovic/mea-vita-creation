@@ -52,6 +52,8 @@ const paymentRoutes = require('./routes/payment');
 const orderRoutes = require('./routes/orders');
 // Importer les routes des codes promo
 const promoCodeRoutes = require('./routes/promoCodes');
+// Importer les routes des contacts
+const contactRoutes = require('./routes/contact');
 // Importer les routes des adresses
 const addressRoutes = require('./routes/addresses');
 // Importer les routes des avis
@@ -189,6 +191,8 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/orders', orderRoutes);
 // ROUTES DES CODES PROMO
 app.use('/api/promo-codes', promoCodeRoutes);
+// ROUTES DES CONTACTS
+app.use('/api/contact', contactRoutes);
 // ROUTES DES ADRESSES
 app.use('/api/addresses', addressRoutes);
 // ROUTES DES AVIS

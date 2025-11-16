@@ -48,3 +48,56 @@
     justify-content: center;
     flex-wrap: wrap;
 }
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
+@media (max-width: 768px) {
+    .success-card {
+        padding: 3rem 1.5rem;
+    }
+    
+    .success-title {
+        font-size: 1.8rem;
+    }
+    
+    .success-message {
+        font-size: 1rem;
+    }
+
+    .success-actions {
+        /* Les boutons passent en colonne sur mobile */
+        flex-direction: column; 
+        gap: 0.75rem;
+    }
+    
+    /* Assurer que les boutons prennent toute la largeur s'ils sont dans .success-actions */
+    .success-actions .btn-primary,
+    .success-actions .btn-secondary {
+        width: 100%;
+        max-width: 300px; /* Limiter la largeur max même en colonne */
+        margin: 0 auto;
+        /* Désactiver les transformations au survol sur mobile */
+        transform: none !important;
+        box-shadow: none !important;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .success-card {
+        padding: 2rem 1rem;
+    }
+
+    .success-icon {
+        font-size: 3rem;
+    }
+    
+    .success-title {
+        font-size: 1.5rem;
+    }
+    
+    .success-message {
+        font-size: 0.95rem;
+    }
+}

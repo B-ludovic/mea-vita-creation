@@ -15,6 +15,7 @@ export default function AdminLayout({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     // Fonction pour vérifier l'authentification et les droits admin
@@ -84,19 +85,53 @@ export default function AdminLayout({ children }) {
     checkAdminAccess();
   }, [router]);
 
+  // Gestion du menu burger
+  useEffect(() => {
+    const handleOverlayClick = (e) => {
+      // Fermer le menu si on clique sur l'overlay (admin-content::before)
+      if (sidebarOpen && e.target.classList.contains('admin-content')) {
+        setSidebarOpen(false);
+      }
+    };
+
+    return () => {
+      // Cleanup
+    };
+  }, [sidebarOpen]);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   // Ne rien afficher tant que la vérification n'est pas terminée
   if (loading || !user) return null;
 
   return (
-    <div className="admin-layout">
+    <div className={`admin-layout ${sidebarOpen ? 'sidebar-open' : ''}`}>
       {/* Sidebar */}
       <aside className="admin-sidebar">
-        <div className="admin-sidebar-header">
-          <h2>
-            <Image src="/icones/satistic.png" alt="Admin" width={24} height={24} style={{ display: 'inline-block', marginRight: '8px', verticalAlign: 'middle' }} />
-            Admin
-          </h2>
-          <p>François Maroquinerie</p>
+        <div className={`admin-sidebar-header ${sidebarOpen ? 'open' : ''}`} onClick={toggleSidebar}>
+          <div className="sidebar-header-content">
+            <Image src="/icones/satistic.png" alt="Administratif" width={24} height={24} />
+            <div className="sidebar-header-text">
+              <h2>Administratif</h2>
+              <p>Mea Vita Créations</p>
+            </div>
+          </div>
+
+          {/* Burger (visible uniquement sur mobile) */}
+          <button
+            className={`admin-burger-icon ${sidebarOpen ? 'active' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSidebar();
+            }}
+            aria-label="Toggle menu"
+          >
+            <span className="admin-burger-line"></span>
+            <span className="admin-burger-line"></span>
+            <span className="admin-burger-line"></span>
+          </button>
         </div>
 
         <nav>
@@ -105,6 +140,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/dashboard"
                 className={pathname === '/admin/dashboard' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/satistic.png" alt="Dashboard" width={20} height={20} />
@@ -116,6 +152,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/commandes"
                 className={pathname === '/admin/commandes' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/delivery-box.png" alt="Commandes" width={20} height={20} />
@@ -127,6 +164,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/produits"
                 className={pathname === '/admin/produits' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/shopping.png" alt="Produits" width={20} height={20} />
@@ -138,6 +176,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/categories"
                 className={pathname === '/admin/categories' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/category.png" alt="Catégories" width={20} height={20} />
@@ -149,6 +188,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/avis"
                 className={pathname === '/admin/avis' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/review.png" alt="Avis clients" width={20} height={20} />
@@ -160,6 +200,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/factures"
                 className={pathname.startsWith('/admin/factures') ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/invoice.png" alt="Factures" width={20} height={20} />
@@ -171,6 +212,7 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/codes-promo"
                 className={pathname === '/admin/codes-promo' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/promotion.png" alt="Codes promo" width={20} height={20} />
@@ -180,8 +222,21 @@ export default function AdminLayout({ children }) {
             </li>
             <li>
               <Link
+                href="/admin/messages"
+                className={pathname === '/admin/messages' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <span className="admin-nav-icon">
+                  <Image src="/icones/mail.png" alt="Messages" width={20} height={20} />
+                </span>
+                <span>Messages</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 href="/admin/utilisateurs"
                 className={pathname === '/admin/utilisateurs' ? 'active' : ''}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className="admin-nav-icon">
                   <Image src="/icones/users.png" alt="Utilisateurs" width={20} height={20} />
@@ -190,7 +245,7 @@ export default function AdminLayout({ children }) {
               </Link>
             </li>
             <li style={{ marginTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '1rem' }}>
-              <Link href="/">
+              <Link href="/" onClick={() => setSidebarOpen(false)}>
                 <span className="admin-nav-icon">
                   <Image src="/icones/home.png" alt="Retour au site" width={20} height={20} />
                 </span>
@@ -202,7 +257,11 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Contenu principal */}
-      <main className="admin-content">
+      <main className="admin-content" onClick={(e) => {
+        if (sidebarOpen && e.target === e.currentTarget) {
+          setSidebarOpen(false);
+        }
+      }}>
         {children}
       </main>
     </div>

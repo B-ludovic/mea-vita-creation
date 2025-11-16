@@ -55,12 +55,15 @@
     border-radius: 10px;
     font-size: 1rem;
     font-family: var(--font-secondary);
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Utilisation de la fonction de timing globale */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .form-group input:focus {
     border-color: var(--primary-orange);
     outline: none;
+    /* Cohérence: Ajout d'une ombre subtile au focus */
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1); 
 }
 
 .form-row {
@@ -90,19 +93,21 @@
 .submit-btn {
     padding: 15px;
     background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
-    color: var(--white);
+    color: var(--text-dark); /* Changé de --white à --text-dark, car le gradient solaire est jaune/clair */
     border: none;
     border-radius: 50px;
     font-size: 1.1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Utilisation de la fonction de timing globale */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 1rem;
 }
 
 .submit-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 218, 68, 0.4);
+    /* Cohérence: Maintien de l'ombre forte */
+    box-shadow: 0 8px 25px rgba(255, 218, 68, 0.6); 
 }
 
 .submit-btn:disabled {
@@ -126,13 +131,52 @@
     text-decoration: underline;
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
-    .auth-card {
-        padding: 2rem;
+    .auth-container {
+        /* Réduit l'espace vertical autour de la carte */
+        padding: 1.5rem 1rem;
     }
     
+    .auth-card {
+        padding: 2rem 1.5rem; /* Padding réduit sur les bords */
+        border-radius: 15px;
+    }
+    
+    .auth-card .subtitle {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Formulaire en 1 colonne sur mobile */
     .form-row {
         grid-template-columns: 1fr;
+    }
+    
+    .submit-btn {
+        padding: 12px 15px;
+        font-size: 1rem;
+        /* Désactiver la transformation sur les boutons pleine largeur */
+        transform: none; 
+        box-shadow: none;
+    }
+    
+    .submit-btn:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 1.5rem 1rem;
+    }
+
+    .form-group input {
+        padding: 12px;
+        font-size: 0.95rem;
     }
 }

@@ -273,10 +273,10 @@ export default function AdminInvoicesPage() {
                     <tbody>
                         {filteredOrders.map((order) => (
                             <tr key={order.id}>
-                                <td>
+                                <td data-label="N° Facture">
                                     <strong>{order.orderNumber}</strong>
                                 </td>
-                                <td>
+                                <td data-label="Client">
                                     {order.User ? (
                                         <div>
                                             <div><strong>{order.User.firstName} {order.User.lastName}</strong></div>
@@ -288,18 +288,18 @@ export default function AdminInvoicesPage() {
                                         <span style={{ color: 'var(--text-light)' }}>Invité</span>
                                     )}
                                 </td>
-                                <td>{formatDate(order.createdAt)}</td>
-                                <td>
+                                <td data-label="Date">{formatDate(order.createdAt)}</td>
+                                <td data-label="Montant">
                                     <strong style={{ color: 'var(--primary-orange)' }}>
                                         {order.totalAmount.toFixed(2)}€
                                     </strong>
                                 </td>
-                                <td>
+                                <td data-label="Statut">
                                     <span className={`badge ${getStatusBadge(order.status)}`}>
                                         {getStatusLabel(order.status)}
                                     </span>
                                 </td>
-                                <td>
+                                <td data-label="Actions">
                                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                                         <button
                                             onClick={() => handleDownloadInvoice(order.id)}

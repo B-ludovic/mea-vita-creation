@@ -5,6 +5,7 @@ const welcomeEmailTemplate = require('../templates/welcomeEmailTemplate');
 const orderConfirmationTemplate = require('../templates/orderConfirmationTemplate');
 const passwordResetTemplate = require('../templates/passwordResetTemplate');
 const shippingEmailTemplate = require('../templates/shippingEmailTemplate');
+const contactEmailTemplate = require('../templates/contactEmailTemplate');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -47,7 +48,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
     });
 
     if (error) {
-      console.error('Erreur envoi email:', error);
+      console.error('Erreur envoi email:', error.message);
       return { success: false, error };
     }
 
@@ -55,7 +56,7 @@ const sendWelcomeEmail = async (userEmail, userName) => {
     return { success: true, data };
 
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    console.error('Erreur lors de l\'envoi de l\'email:', error.message);
     return { success: false, error };
   }
 };
@@ -71,14 +72,14 @@ const sendOrderConfirmationEmail = async (userEmail, userName, order) => {
     });
 
     if (error) {
-      console.error('Erreur envoi email:', error);
+      console.error('Erreur envoi email:', error.message);
       return { success: false, error };
     }
 
     return { success: true, data };
 
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error);
+    console.error('Erreur lors de l\'envoi de l\'email:', error.message);
     return { success: false, error };
   }
 };
@@ -94,7 +95,7 @@ const sendShippingEmail = async (userEmail, userName, order) => {
     });
 
     if (error) {
-      console.error('Erreur envoi email d\'expédition:', error);
+      console.error('Erreur envoi email d\'expédition:', error.message);
       return { success: false, error };
     }
 
@@ -102,7 +103,7 @@ const sendShippingEmail = async (userEmail, userName, order) => {
     return { success: true, data };
 
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email d\'expédition:', error);
+    console.error('Erreur lors de l\'envoi de l\'email d\'expédition:', error.message);
     return { success: false, error };
   }
 };
@@ -131,11 +132,37 @@ const sendPasswordResetEmail = async (userEmail, userName, resetToken) => {
   }
 };
 
+// FONCTION POUR ENVOYER UN EMAIL DE CONTACT À L'ADMIN
+const sendContactEmail = async (name, email, subject, message) => {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'François Maroquinerie <onboarding@resend.dev>',
+      to: ['ton-email@exemple.com'], // REMPLACE par vrai email plus tard 
+      replyTo: email, // Le client peut répondre directement
+      subject: `📧 Nouveau message : ${subject}`,
+      html: contactEmailTemplate(name, email, subject, message)
+    });
+
+    if (error) {
+      console.error('Erreur envoi email de contact:', error.message);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de contact envoyé');
+    return { success: true, data };
+
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email de contact:', error.message);
+    return { success: false, error };
+  }
+};
+
 // Exporter les fonctions
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendOrderConfirmationEmail,
   sendPasswordResetEmail,
-  sendShippingEmail
+  sendShippingEmail,
+  sendContactEmail
 };

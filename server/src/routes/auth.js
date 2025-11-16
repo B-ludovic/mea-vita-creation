@@ -6,7 +6,7 @@ const router = express.Router();
 const { register, login, verifyEmail, forgotPassword, resetPassword } = require('../controllers/authController');
 
 // Importer les limiteurs de tentatives (protection anti brute-force)
-const { loginLimiter, registerLimiter } = require('../middleware/rateLimiter');
+const { loginLimiter, registerLimiter, forgotPasswordLimiter, resetPasswordLimiter } = require('../middleware/rateLimiter');
 
 // ROUTE D'INSCRIPTION
 // POST /api/auth/register
@@ -26,11 +26,13 @@ router.get('/verify-email/:token', verifyEmail);
 
 // ROUTE POUR DEMANDER LA RÉINITIALISATION DU MOT DE PASSE
 // POST /api/auth/forgot-password
-router.post('/forgot-password', forgotPassword);
+// Limiteur : Maximum 3 tentatives par 15 minutes (protection spam emails)
+router.post('/forgot-password', forgotPasswordLimiter, forgotPassword);
 
 // ROUTE POUR RÉINITIALISER LE MOT DE PASSE
 // POST /api/auth/reset-password
-router.post('/reset-password', resetPassword);
+// Limiteur : Maximum 5 tentatives par 15 minutes (protection brute-force tokens)
+router.post('/reset-password', resetPasswordLimiter, resetPassword);
 
 // Exporter le router pour l'utiliser dans server.js
 module.exports = router;

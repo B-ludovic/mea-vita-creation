@@ -8,7 +8,8 @@
 
 .star-wrapper {
   display: inline-block;
-  transition: transform 0.2s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .star-wrapper.interactive {
@@ -21,7 +22,8 @@
 
 .star-icon {
   display: block;
-  transition: filter 0.2s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Étoile remplie - Utilise la couleur or du projet */

@@ -41,9 +41,37 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Limiteur pour FORGOT PASSWORD (demande de réinitialisation)
+// Protège contre le spam d'emails : 3 tentatives par 15 minutes
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 3, // Maximum 3 tentatives
+  message: {
+    success: false,
+    message: 'Trop de demandes de réinitialisation. Réessayez dans 15 minutes.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Limiteur pour RESET PASSWORD (réinitialisation avec token)
+// Protège contre le brute-force de tokens : 5 tentatives par 15 minutes
+const resetPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Maximum 5 tentatives
+  message: {
+    success: false,
+    message: 'Trop de tentatives de réinitialisation. Réessayez dans 15 minutes.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 // Exporter les limiteurs
 module.exports = {
   loginLimiter,
   registerLimiter,
-  apiLimiter
+  apiLimiter,
+  forgotPasswordLimiter,
+  resetPasswordLimiter
 };

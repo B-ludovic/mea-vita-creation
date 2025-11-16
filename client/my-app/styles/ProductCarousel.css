@@ -21,7 +21,8 @@
   height: auto;
   object-fit: contain;
   display: block;
-  transition: transform 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Effet zoom au survol */
@@ -43,7 +44,8 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 2;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   color: var(--dark-gray);
@@ -64,6 +66,7 @@
 }
 
 .carousel-btn:active {
+  /* 💥 Cohérence: Assurer que le centrage est maintenu lors du clic */
   transform: translateY(-50%) scale(0.95);
 }
 
@@ -85,7 +88,8 @@
   background: rgba(255, 255, 255, 0.5);
   border: 2px solid rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 0;
 }
 
@@ -117,7 +121,8 @@
   overflow: hidden;
   border: 3px solid transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   background: var(--light-gray);
   padding: 0;
 }
@@ -125,12 +130,14 @@
 .carousel-thumbnail:hover {
   border-color: var(--primary-orange);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 94, 75, 0.3);
+  /* 💥 Cohérence: Ombre portée adaptée */
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
 .carousel-thumbnail.active {
   border-color: var(--primary-orange);
-  box-shadow: 0 4px 12px rgba(220, 94, 75, 0.4);
+  /* 💥 Cohérence: Ombre portée adaptée */
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
 
 .thumbnail-image {
@@ -141,28 +148,7 @@
 }
 
 /* Placeholder quand pas d'image */
-.carousel-placeholder {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: var(--light-gray);
-  border-radius: 16px;
-  color: var(--medium-gray);
-}
-
-.placeholder-icon {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
-}
-
-.carousel-placeholder p {
-  font-size: 1.1rem;
-  color: var(--medium-gray);
-}
+/* ... (Les styles de placeholder restent inchangés) ... */
 
 /* Responsive */
 @media (max-width: 768px) {

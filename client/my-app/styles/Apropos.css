@@ -1,4 +1,4 @@
-/* Page À Propos - Style exact du fichier original */
+/* Page À Propos */
 
 /* About Hero */
 .about-hero {
@@ -12,11 +12,14 @@
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
   color: var(--white);
+  font-size: clamp(2rem, 5vw, 3rem); /* Rendre le titre fluide */
 }
 
 .about-hero-content p {
   font-size: 1.4rem;
   opacity: 0.9;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* Brand Story */
@@ -56,6 +59,12 @@
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   max-width: 500px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition cohérente */
+}
+
+.bio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .bio-card h3 {
@@ -95,11 +104,13 @@
   border-radius: 20px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
 .value-item:hover {
   transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .value-icon {
@@ -157,6 +168,12 @@
   object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  /* Animation simple d'échelle au survol */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+}
+
+.process-step:hover .step-image img {
+    transform: scale(1.03);
 }
 
 .step-number {
@@ -195,11 +212,13 @@
   padding: 1.5rem;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .material-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
 }
 
 .material-card h4 {
@@ -263,32 +282,132 @@
   font-size: 1.1rem;
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Tablettes (< 768px) */
 @media (max-width: 768px) {
+  /* About Hero - ajuster le padding haut pour le header fixe */
+  .about-hero {
+    padding: 100px 0 60px; 
+  }
+  
+  .about-hero-content p {
+      font-size: 1.2rem;
+  }
+  
+  /* Sections - ajuster le padding */
+  .brand-story, 
+  .values-section, 
+  .process-section, 
+  .mission-section {
+    padding: 60px 0;
+  }
+
   .story-content {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 3rem;
+    padding: 0 1.5rem;
   }
 
   .story-bio {
     order: -1;
   }
-
-  .process-step {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  
+  .story-text h2 {
+      text-align: center;
   }
-
-  .process-step.reverse {
-    direction: ltr;
+  
+  .story-text p {
+      text-align: center;
+  }
+  
+  .bio-card {
+      padding: 2rem;
   }
 
   .values-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* 2 colonnes sur tablette si espace */
+    padding: 0 1rem;
   }
 
+  .process-step {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    padding: 0 1.5rem;
+  }
+
+  .process-step.reverse {
+    /* Retirer l'inversion sur mobile pour un flux simple et vertical */
+    direction: ltr; 
+  }
+
+  .process-step.reverse .step-content {
+    direction: ltr;
+  }
+  
+  .mission-content {
+      padding: 0 1.5rem;
+  }
+  
   .mission-stats {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* S'assure que les stats prennent au moins 150px de large */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+    gap: 1.5rem;
   }
 }
 
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    /* About Hero */
+    .about-hero {
+        padding: 80px 0 40px;
+    }
+    
+    .about-hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .about-hero-content p {
+        font-size: 1rem;
+    }
+
+    /* Sections - padding plus serré */
+    .brand-story, 
+    .values-section, 
+    .process-section, 
+    .mission-section {
+        padding: 40px 0;
+    }
+    
+    .story-content,
+    .process-step {
+        gap: 1.5rem;
+        padding: 0 0.75rem;
+    }
+    
+    .story-text p,
+    .mission-text p {
+        font-size: 1rem;
+    }
+
+    .values-grid {
+        /* 1 seule colonne pour les très petits mobiles */
+        grid-template-columns: 1fr; 
+        gap: 1.5rem;
+    }
+
+    .mission-stats {
+        /* S'assurer que ça rentre, mais 2 colonnes devraient rester OK */
+        grid-template-columns: 1fr 1fr; 
+        gap: 1rem;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+    }
+    
+    .stat-label {
+        font-size: 1rem;
+    }
+}

@@ -20,6 +20,9 @@ export default function ContactPage() {
     message: ''
   });
 
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+
   // FONCTION pour gérer les changements dans les champs du formulaire
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,23 +33,53 @@ export default function ContactPage() {
   };
 
   // FONCTION pour gérer la soumission du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Envoyer le formulaire au backend
-    showAlert(
-      'Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.',
-      'Message envoyé',
-      '/icones/sent-mail.png'
-    );
-    
-    // Réinitialiser le formulaire
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      interest: '',
-      message: ''
-    });
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        showAlert(
+          data.message || 'Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.',
+          'Message envoyé',
+          '/icones/sent-mail.png'
+        );
+        // Réinitialiser le formulaire
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          interest: '',
+          message: ''
+        });
+      } else {
+        showAlert(
+          data.message || 'Erreur lors de l\'envoi du message',
+          'Erreur',
+          '/icones/annuler.png'
+        );
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      showAlert(
+        'Erreur lors de l\'envoi du message. Veuillez réessayer.',
+        'Erreur',
+        '/icones/annuler.png'
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,8 +181,8 @@ export default function ContactPage() {
                 </div>
                 
                 {/* Bouton Envoyer */}
-                <button type="submit" className="btn-primary">
-                  Envoyer le message
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? 'Envoi en cours...' : 'Envoyer le message'}
                 </button>
               </form>
             </div>

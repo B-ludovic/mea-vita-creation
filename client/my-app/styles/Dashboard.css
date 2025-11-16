@@ -3,6 +3,7 @@
 /* Grid pour les graphiques */
 .charts-grid {
   display: grid;
+  /* Utilisation de auto-fit pour adapter les graphiques */
   grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
@@ -19,12 +20,15 @@
 .chart-header h2 {
   color: var(--text-dark);
   margin: 0;
+  /* Assurer une taille fluide pour les titres */
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem); 
 }
 
 .chart-header img {
   width: 24px;
   height: 24px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* Section informations */
@@ -63,6 +67,7 @@
   width: 20px;
   height: 20px;
   object-fit: contain;
+  flex-shrink: 0;
 }
 
 /* Icônes dans les stat-cards déjà stylées dans Admin.css */
@@ -78,21 +83,62 @@
   font-weight: bold;
 }
 
-/* Responsive pour les graphiques */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Tablettes larges et ordinateurs (< 1200px) */
 @media (max-width: 1200px) {
   .charts-grid {
+    /* Passage en colonne unique pour maximiser la largeur des graphiques */
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 }
 
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
   .charts-grid {
     margin-top: 1rem;
     gap: 1rem;
   }
+  
+  .chart-header {
+      margin-bottom: 1rem;
+  }
 
   .chart-header h2 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
+  
+  .chart-header img {
+      width: 20px;
+      height: 20px;
+  }
+  
+  .info-section {
+      margin-top: 1.5rem;
+  }
+  
+  .info-section li img {
+      width: 18px;
+      height: 18px;
+  }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .charts-grid {
+        gap: 0.75rem;
+    }
+    
+    .chart-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .info-section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .info-section p {
+        font-size: 0.95rem;
+    }
 }

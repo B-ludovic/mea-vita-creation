@@ -47,6 +47,8 @@
 .form-group textarea:focus {
     border-color: var(--primary-orange);
     outline: none;
+    /* Cohérence: Ajout d'une ombre subtile au focus */
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1); 
 }
 
 .form-group textarea {
@@ -85,7 +87,8 @@
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Utilisation de la fonction de timing globale */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -103,7 +106,8 @@
 
 .admin-btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    /* 💥 Cohérence: Ombre portée plus forte */
+    box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
 }
 
 .admin-btn-secondary {
@@ -114,6 +118,8 @@
 
 .admin-btn-secondary:hover:not(:disabled) {
     background: var(--light-beige);
+    /* Retrait du transform pour les boutons secondaires, cohérent avec les autres */
+    transform: none; 
 }
 
 .admin-btn-danger {
@@ -124,7 +130,8 @@
 .admin-btn-danger:hover:not(:disabled) {
     background: #b71c1c;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+    /* 💥 Cohérence: Ombre portée plus forte */
+    box-shadow: 0 6px 15px rgba(198, 40, 40, 0.4);
 }
 
 .error-message {
@@ -143,9 +150,9 @@
     font-size: 0.95rem;
 }
 
-/*  RESPONSIVE - VERSION MOBILE  */
+/* RESPONSIVE - VERSION MOBILE  */
 
-/* Tablette */
+/* Tablette (< 968px) */
 @media (max-width: 968px) {
     .admin-form-container {
         padding: 1.5rem;
@@ -156,7 +163,7 @@
     }
 }
 
-/* Mobile (smartphones) */
+/* Mobile (< 768px) */
 @media (max-width: 768px) {
     .admin-form-container {
         padding: 1rem;
@@ -198,10 +205,19 @@
         width: 100%;
         justify-content: center;
         padding: 12px 20px;
+        /* Désactiver la transformation sur les boutons pleine largeur pour une meilleure expérience tactile */
+        transform: none !important;
+        box-shadow: none !important;
+    }
+
+    .admin-btn:hover:not(:disabled) {
+        /* Assurer l'absence de transformation/ombre au survol sur mobile */
+        transform: none !important;
+        box-shadow: none !important;
     }
 }
 
-/* Très petits mobiles */
+/* Très petits mobiles (< 480px) */
 @media (max-width: 480px) {
     .admin-form-container {
         padding: 0.75rem;

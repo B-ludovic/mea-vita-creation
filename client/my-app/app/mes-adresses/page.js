@@ -225,7 +225,7 @@ export default function MesAdresses() {
       <div className="addresses-header">
         <h1>Mes Adresses</h1>
         <button 
-          className="btn-add-address"
+          className="btn-primary"
           onClick={() => {
             resetForm();
             setShowForm(true);
@@ -339,12 +339,12 @@ export default function MesAdresses() {
               </div>
 
               <div className="form-actions">
-                <button type="submit" className="btn-submit">
+                <button type="submit" className="btn-primary">
                   {editingAddress ? 'Modifier' : 'Ajouter'}
                 </button>
                 <button 
                   type="button" 
-                  className="btn-cancel"
+                  className="btn-secondary"
                   onClick={() => {
                     setShowForm(false);
                     resetForm();
@@ -391,7 +391,7 @@ export default function MesAdresses() {
                 {/* Bouton "Définir par défaut" (seulement si ce n'est pas déjà le cas) */}
                 {!address.isDefault && (
                   <button 
-                    className="btn-action btn-default"
+                    className="btn-secondary btn-action"
                     onClick={() => handleSetDefault(address.id)}
                   >
                     <Image 
@@ -406,7 +406,7 @@ export default function MesAdresses() {
                 )}
 
                 <button 
-                  className="btn-action btn-edit"
+                  className="btn-secondary btn-action"
                   onClick={() => handleEdit(address)}
                 >
                   <Image 
@@ -420,7 +420,7 @@ export default function MesAdresses() {
                 </button>
 
                 <button 
-                  className="btn-action btn-delete"
+                  className="btn-secondary btn-action btn-delete"
                   onClick={() => handleDelete(address.id)}
                 >
                   <Image 

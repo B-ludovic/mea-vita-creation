@@ -255,7 +255,7 @@ export default function AdminDashboard() {
           <div className="admin-table-container">
             <div className="chart-header">
               <Image src="/icones/satistic.png" alt="Statistiques" width={24} height={24} />
-              <h2>Commandes par statut</h2>
+              <h2>Commandes/statut</h2>
             </div>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -284,7 +284,7 @@ export default function AdminDashboard() {
           <div className="admin-table-container">
             <div className="chart-header">
               <Image src="/icones/excellence.png" alt="Excellence" width={24} height={24} />
-              <h2>Détails des meilleures ventes</h2>
+              <h2>Meilleures ventes</h2>
             </div>
             <table className="admin-table">
               <thead>

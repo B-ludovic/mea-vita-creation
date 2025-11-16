@@ -57,13 +57,16 @@
     border-radius: 50px;
     font-weight: 600;
     font-family: var(--font-secondary);
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .tracking-link:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    /* 💥 Cohérence: Ombre portée uniformisée pour les liens / boutons secondaires */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+    /* La variation de dégradé est conservée pour un effet unique */
     background: linear-gradient(135deg, var(--solar-gradient-end), var(--solar-gradient-start));
 }
 
@@ -109,7 +112,8 @@
     background: var(--solar-gradient-end);
     border-color: var(--solar-gradient-end);
     box-shadow: 0 0 0 4px rgba(255, 171, 0, 0.15);
-    animation: pulse 2s ease-in-out infinite;
+    /* 💥 Cohérence: Utilisation de la fonction de timing globale pour le "pulse" */
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 .timeline-content {
@@ -145,9 +149,57 @@
     }
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
+    .tracking-section {
+        padding: 1.5rem;
+    }
+    
     .tracking-info {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tracking-link {
+        width: 100%;
+        justify-content: center;
+        /* Désactiver la transformation sur les boutons pleine largeur */
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .tracking-link:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .tracking-timeline {
+        padding-left: 1.5rem;
+    }
+    
+    .tracking-timeline::before {
+        left: 0.5rem;
+    }
+    
+    .timeline-dot {
+        left: -1.3rem;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .tracking-section {
+        padding: 1rem;
+    }
+
+    .tracking-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .timeline-title {
+        font-size: 0.95rem;
     }
 }

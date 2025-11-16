@@ -3,7 +3,7 @@
 /* Contact Hero */
 .contact-hero {
   background: linear-gradient(135deg, var(--royal-purple), var(--primary-teal));
-  padding: 150px 0 80px;
+  padding: 120px 0 60px; /* Ajusté pour header fixe */
   text-align: center;
   color: var(--white);
 }
@@ -11,11 +11,14 @@
 .contact-hero-content h1 {
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-size: clamp(2rem, 5vw, 3rem); /* Titre fluide */
 }
 
 .contact-hero-content p {
   font-size: 1.4rem;
   opacity: 0.9;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 /* Contact Content */
@@ -61,7 +64,7 @@
   border: 2px solid var(--cream);
   border-radius: 10px;
   font-size: 1rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition uniformisée */
   font-family: var(--font-secondary);
 }
 
@@ -70,6 +73,7 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1); /* Ombre subtile au focus */
 }
 
 .form-group textarea {
@@ -95,11 +99,12 @@
   background: var(--cream);
   border-radius: 15px;
   margin-bottom: 1.5rem;
-  transition: transform 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition uniformisée */
 }
 
 .contact-method:hover {
-  transform: translateX(5px);
+  transform: translateY(-5px); /* Effet vertical */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Ombre subtile */
 }
 
 .contact-icon {
@@ -145,12 +150,13 @@
   text-decoration: none;
   color: var(--text-dark);
   border: 2px solid var(--cream);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition uniformisée */
 }
 
 .social-link-item:hover {
   border-color: var(--primary-orange);
   transform: translateX(5px);
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.05); /* Ombre subtile pour les liens */
 }
 
 .social-icon {
@@ -181,6 +187,12 @@
   padding: 1.5rem;
   border-radius: 10px;
   margin-bottom: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Transition uniformisée */
+}
+
+.faq-item:hover {
+  transform: translateY(-5px); /* Effet vertical */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Ombre subtile */
 }
 
 .faq-item h4 {
@@ -212,6 +224,7 @@
   position: relative;
   max-width: 1000px;
   margin: 0 auto;
+  padding: 0 2rem; /* Padding pour mobile */
 }
 
 .process-timeline::before {
@@ -259,18 +272,106 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+  .contact-hero {
+    padding: 80px 0 50px; /* Marge haute ajustée pour header fixe */
+  }
+  
+  .contact-hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .contact-hero-content p {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+  
+  .contact-content,
+  .contact-process {
+    padding: 50px 0;
   }
 
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding: 0 1.5rem;
+  }
+
+  /* Timeline en colonne sur mobile */
   .process-timeline {
     flex-direction: column;
-    gap: 2rem;
+    gap: 2.5rem;
+    padding: 0 1rem;
   }
 
   .process-timeline::before {
     display: none;
+  }
+  
+  .timeline-item {
+    text-align: left;
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .timeline-number {
+    margin: 0;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .timeline-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+  .contact-hero {
+    padding: 70px 0 30px;
+  }
+  
+  .contact-content,
+  .contact-process {
+    padding: 30px 0;
+  }
+  
+  .contact-grid {
+    padding: 0 0.75rem;
+  }
+  
+  .contact-methods {
+    margin-bottom: 2rem;
+  }
+  
+  .contact-method {
+    padding: 1rem;
+  }
+  
+  .contact-icon {
+    width: 40px;
+  }
+  
+  .social-link-item {
+    padding: 0.75rem;
+  }
+  
+  .process-timeline {
+    padding: 0 0.5rem;
+  }
+  
+  .timeline-item {
+    gap: 0.75rem;
+  }
+  
+  .timeline-number {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+  
+  .faq-item {
+    padding: 1rem;
   }
 }
 

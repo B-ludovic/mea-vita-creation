@@ -166,7 +166,7 @@ export default function AdminReviewsPage() {
             <tbody>
               {pendingReviews.map((review) => (
                 <tr key={review.id} style={{ background: '#fff3e0' }}>
-                  <td>
+                  <td data-label="Client">
                     <div>
                       <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
@@ -174,15 +174,15 @@ export default function AdminReviewsPage() {
                       </div>
                     </div>
                   </td>
-                  <td>{review.Product.name}</td>
-                  <td>
+                  <td data-label="Produit">{review.Product.name}</td>
+                  <td data-label="Note">
                     <StarRating rating={review.rating} readonly size="small" />
                   </td>
-                  <td style={{ maxWidth: '300px' }}>
+                  <td data-label="Commentaire" style={{ maxWidth: '300px' }}>
                     {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
                   </td>
-                  <td>{formatDate(review.createdAt)}</td>
-                  <td>
+                  <td data-label="Date">{formatDate(review.createdAt)}</td>
+                  <td data-label="Actions">
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button
                         className="admin-btn admin-btn-primary"
@@ -230,7 +230,7 @@ export default function AdminReviewsPage() {
             <tbody>
               {approvedReviews.map((review) => (
                 <tr key={review.id}>
-                  <td>
+                  <td data-label="Client">
                     <div>
                       <div><strong>{review.User.firstName} {review.User.lastName}</strong></div>
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-light)' }}>
@@ -238,15 +238,15 @@ export default function AdminReviewsPage() {
                       </div>
                     </div>
                   </td>
-                  <td>{review.Product.name}</td>
-                  <td>
+                  <td data-label="Produit">{review.Product.name}</td>
+                  <td data-label="Note">
                     <StarRating rating={review.rating} readonly size="small" />
                   </td>
-                  <td style={{ maxWidth: '300px' }}>
+                  <td data-label="Commentaire" style={{ maxWidth: '300px' }}>
                     {review.comment || <em style={{ color: 'var(--text-light)' }}>Pas de commentaire</em>}
                   </td>
-                  <td>{formatDate(review.createdAt)}</td>
-                  <td>
+                  <td data-label="Date">{formatDate(review.createdAt)}</td>
+                  <td data-label="Actions">
                     <button
                       className="admin-btn admin-btn-danger"
                       style={{ padding: '6px 12px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}

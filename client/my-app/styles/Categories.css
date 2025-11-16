@@ -3,7 +3,8 @@
 /* Categories Hero - Bannière jaune élégante */
 .categories-hero {
     background: linear-gradient(135deg, var(--primary-gold), var(--accent-orange));
-    padding: 150px 0 80px;
+    /* Garder le padding large sur desktop pour l'impact visuel */
+    padding: 150px 0 80px; 
     text-align: center;
     color: var(--white);
 }
@@ -12,11 +13,14 @@
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     color: var(--white);
+    font-size: clamp(2rem, 5vw, 3rem); /* Rendre le titre fluide */
 }
 
 .categories-hero-content p {
     font-size: 1.4rem;
     opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 /* Section Catégories */
@@ -50,7 +54,8 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .category-card:hover {
@@ -59,78 +64,42 @@
 }
 
 /* Gradients spécifiques pour chaque catégorie */
-/* Pochettes Unisexe - Terre Cuite Marocaine */
+/* Tous les gradients before ont besoin de la transition cohérente */
+.category-card .category-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-card:hover .category-image::before {
+    opacity: 1;
+}
+
+/* Réutilisation du gradient spécifique du code original */
 .category-card:nth-child(1) .category-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(135deg, rgba(230, 126, 34, 0.7), rgba(196, 70, 1, 0.7));
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
-.category-card:nth-child(1):hover .category-image::before {
-    opacity: 1;
-}
-
-/* Porte-Carte - Safran Royal */
 .category-card:nth-child(2) .category-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(135deg, rgba(243, 156, 18, 0.7), rgba(230, 126, 34, 0.7));
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
-.category-card:nth-child(2):hover .category-image::before {
-    opacity: 1;
-}
-
-/* Sac Cylindre - Ocre Désert */
 .category-card:nth-child(3) .category-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(135deg, rgba(244, 164, 96, 0.7), rgba(205, 133, 63, 0.7));
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
-.category-card:nth-child(3):hover .category-image::before {
-    opacity: 1;
-}
-
-/* Sac U - Coucher de Soleil Africain */
 .category-card:nth-child(4) .category-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
     background: linear-gradient(135deg, rgba(255, 142, 83, 0.7), rgba(255, 171, 76, 0.7));
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
 
-.category-card:nth-child(4):hover .category-image::before {
-    opacity: 1;
-}
-
+/* Mise en page de l'image */
 .category-image {
     width: 100%;
     overflow: hidden;
@@ -142,7 +111,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .category-card:hover .category-img {
@@ -172,18 +142,23 @@
     font-weight: 600;
     font-size: 1.1rem;
     text-decoration: none;
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .category-link:hover {
     color: var(--secondary-orange);
-    transform: translateX(5px);
+    /* 💥 Translation réduite pour plus d'élégance */
+    transform: translateX(3px);
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
     .categories-hero {
-        padding: 120px 0 60px;
+        /* Marge haute ajustée pour le header fixe (cohérence) */
+        padding: 100px 0 50px; 
     }
 
     .categories-hero-content h1 {
@@ -195,7 +170,62 @@
     }
 
     .categories-grid {
-        grid-template-columns: 1fr;
+        /* Colonne unique pour la plupart des tablettes/mobiles */
+        grid-template-columns: 1fr; 
         gap: 2rem;
+        padding: 0 1.5rem;
+    }
+    
+    .categories-section {
+        padding: 60px 0;
+    }
+    
+    .category-card {
+        transform: none; /* Désactiver la translation sur mobile */
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .category-card:hover {
+        transform: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .category-info {
+        padding: 1.5rem;
+    }
+    
+    .category-info h3 {
+        font-size: 1.3rem;
+    }
+    
+    .category-link {
+        transform: none;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .categories-hero {
+        padding: 80px 0 30px;
+    }
+    
+    .categories-hero-content h1 {
+        font-size: 1.8rem;
+    }
+    
+    .categories-hero-content p {
+        font-size: 1rem;
+    }
+    
+    .categories-grid {
+        padding: 0 0.75rem;
+    }
+    
+    .categories-section {
+        padding: 40px 0;
+    }
+    
+    .category-info {
+        padding: 1rem;
     }
 }

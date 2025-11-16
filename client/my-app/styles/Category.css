@@ -2,12 +2,14 @@
 
 .category-hero {
     background: linear-gradient(135deg, var(--warm-beige) 0%, var(--light-beige) 100%);
-    padding: 4rem 0 3rem;
+    /* 💥 Cohérence: Ajuster le padding haut pour le header fixe */
+    padding: 120px 0 4rem; 
     text-align: center;
 }
 
 /* Gradients spécifiques pour chaque catégorie */
-/* Pochettes Unisexe - Terre Cuite Marocaine */
+/* Note : Les styles de gradients spécifiques restent tels quels, car ils utilisent des couleurs spécifiques */
+
 .category-hero.pochettes-unisexe {
     background: linear-gradient(135deg, #E67E22 0%, #C44601 100%);
 }
@@ -18,7 +20,6 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Porte-Carte - Safran Royal */
 .category-hero.porte-carte {
     background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
 }
@@ -29,7 +30,6 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Sac Cylindre - Ocre Désert */
 .category-hero.sac-cylindre {
     background: linear-gradient(135deg, #F4A460 0%, #CD853F 100%);
 }
@@ -40,7 +40,6 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* Sac U - Coucher de Soleil Africain */
 .category-hero.sac-u {
     background: linear-gradient(135deg, #FF8E53 0%, #FFAB4C 100%);
 }
@@ -54,6 +53,7 @@
 .category-hero h1 {
     color: var(--text-dark);
     margin-bottom: 1rem;
+    font-size: clamp(2rem, 5vw, 3rem); /* Rendre le titre fluide */
 }
 
 .category-hero p {
@@ -76,8 +76,12 @@
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    /* Utilisation de auto-fill pour s'assurer que la grille remplisse toujours l'espace */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
     gap: 2.5rem;
+    /* Centrer la grille */
+    max-width: var(--container-width);
+    margin: 3rem auto 0;
 }
 
 .product-card {
@@ -85,7 +89,8 @@
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
 }
@@ -106,7 +111,8 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .product-card:hover .product-img {
@@ -117,7 +123,7 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* Prend tout l'espace disponible */
+    flex-grow: 1; 
 }
 
 .product-info h3 {
@@ -130,7 +136,7 @@
     color: var(--text-light);
     margin-bottom: 1rem;
     line-height: 1.6;
-    flex-grow: 1; /* La description prend l'espace disponible */
+    flex-grow: 1;
 }
 
 .product-price {
@@ -138,27 +144,29 @@
     font-weight: 700;
     color: var(--primary-orange);
     margin-bottom: 1rem;
-    margin-top: auto; /* Pousse le prix vers le bas */
+    margin-top: auto; 
 }
 
 .product-btn {
     width: 100%;
     padding: 12px;
     background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
-    color: var(--text-dark);
+    color: var(--text-dark); /* Cohérence avec le bouton de soumission */
     border: none;
     border-radius: 50px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* 💥 Cohérence: Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
 }
 
 .product-btn:hover {
     background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
+    /* 💥 Cohérence: Ombre portée uniformisée */
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.6); 
 }
 
 .no-products {
@@ -187,10 +195,89 @@
     margin-bottom: 2rem;
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
+    .category-hero {
+        /* Marge haute ajustée pour le header fixe (cohérence) */
+        padding: 80px 0 30px; 
+    }
+    
+    .category-hero h1 {
+        font-size: 2rem;
+    }
+    
+    .category-hero p {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+    
+    .products-section {
+        padding: 40px 0;
+    }
+    
     .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        /* Deux colonnes min. pour mieux utiliser l'espace horizontal sur tablette */
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
         gap: 1.5rem;
+        padding: 0 1.5rem;
+    }
+    
+    .product-card:hover {
+        transform: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .product-info {
+        padding: 1.5rem;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .category-hero {
+        padding: 70px 0 20px;
+    }
+    
+    .category-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .category-hero p {
+        font-size: 1rem;
+        padding: 0 0.75rem;
+    }
+
+    .products-grid {
+        /* Revenir à minmax(250px) si l'on souhaite forcer une seule colonne sur le très petit */
+        grid-template-columns: 1fr; 
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+    
+    .product-info {
+        padding: 1rem;
+    }
+    
+    .product-info h3 {
+        font-size: 1.3rem;
+    }
+    
+    .product-price {
+        font-size: 1.2rem;
+    }
+    
+    .product-btn {
+        padding: 10px;
+        font-size: 0.95rem;
+        /* Désactiver la transformation sur le bouton pleine largeur */
+        transform: none; 
+        box-shadow: none;
+    }
+    
+    .product-btn:hover {
+        transform: none;
+        box-shadow: none;
     }
 }

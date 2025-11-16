@@ -121,6 +121,9 @@ const createCheckoutSession = async (req, res) => {
             sum + (item.price_data.unit_amount * item.quantity), 0
         ) / 100; // Convertir de centimes en euros
 
+        // Variable pour le coupon Stripe (si promo code)
+        let stripeCoupon = null;
+
         // Calculer la réduction si code promo
         if (promoCode) {
             if (promoCode.discountType === 'PERCENTAGE') {
@@ -134,16 +137,12 @@ const createCheckoutSession = async (req, res) => {
                 discountAmountCalculated = totalAmount;
             }
 
-            // Ajouter la réduction comme line item négatif
-            lineItems.push({
-                price_data: {
-                    currency: 'eur',
-                    product_data: {
-                        name: `Réduction: ${promoCode.code}`,
-                    },
-                    unit_amount: -Math.round(discountAmountCalculated * 100), // Montant négatif
-                },
-                quantity: 1,
+            // Créer un coupon Stripe dynamique pour cette réduction
+            stripeCoupon = await stripe.coupons.create({
+                amount_off: Math.round(discountAmountCalculated * 100), // En centimes
+                currency: 'eur',
+                duration: 'once',
+                name: `Code promo: ${promoCode.code}`
             });
         }
 
@@ -155,7 +154,7 @@ const createCheckoutSession = async (req, res) => {
         }));
 
         // Créer la session de paiement Stripe
-        const session = await stripe.checkout.sessions.create({
+        const sessionConfig = {
             payment_method_types: ['card'],
             line_items: lineItems,
             mode: 'payment',
@@ -163,11 +162,20 @@ const createCheckoutSession = async (req, res) => {
             cancel_url: `${process.env.CLIENT_URL || 'http://localhost:3000'}/panier`,
             metadata: {
                 userId: userId || 'guest',
-                addressId: addressId || null, // Stocker l'ID de l'adresse dans les metadata
-                promoCodeId: promoCodeId || null, // Stocker l'ID du code promo
-                items: JSON.stringify(itemsForMetadata) // Seulement id, quantity, price
-            },
-        });
+                addressId: addressId || null,
+                promoCodeId: promoCodeId || null,
+                items: JSON.stringify(itemsForMetadata)
+            }
+        };
+
+        // Ajouter le coupon s'il existe
+        if (stripeCoupon) {
+            sessionConfig.discounts = [{
+                coupon: stripeCoupon.id
+            }];
+        }
+
+        const session = await stripe.checkout.sessions.create(sessionConfig);
 
         // Renvoyer l'URL de paiement au front-end
         res.json({
@@ -318,7 +326,7 @@ const handleStripeWebhook = async (req, res) => {
                 console.log('✅ Stock mis à jour');
 
             } catch (error) {
-                console.error('Erreur lors de la création de la commande:', error);
+                console.error('Erreur lors de la création de la commande:', error.message);
             }
 
             break;

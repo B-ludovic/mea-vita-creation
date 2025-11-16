@@ -156,15 +156,21 @@ const generateInvoice = async (order, user) => {
       // Total
       y += 20;
       
+      // CORRECTION : Les prix sont déjà TTC, on extrait le HT et la TVA
+      // Formule : HT = TTC / 1.20
+      // Formule : TVA = TTC - HT
+      const totalTTC = order.totalAmount; // Le montant payé est déjà TTC
+      const totalHT = totalTTC / 1.20; // Calculer le HT à partir du TTC
+      const tva = totalTTC - totalHT; // Extraire la TVA
+      
       doc
         .fontSize(12)
         .fillColor('#333333')
         .text('TOTAL HT:', 380, y)
-        .text(`${order.totalAmount.toFixed(2)}€`, 480, y);
+        .text(`${totalHT.toFixed(2)}€`, 480, y);
 
       y += 20;
       
-      const tva = order.totalAmount * 0.2; // TVA 20%
       doc
         .fontSize(10)
         .text('TVA (20%):', 380, y)
@@ -172,7 +178,6 @@ const generateInvoice = async (order, user) => {
 
       y += 20;
       
-      const totalTTC = order.totalAmount + tva;
       doc
         .fontSize(14)
         .fillColor('#FFAB00')

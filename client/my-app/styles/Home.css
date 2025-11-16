@@ -3,10 +3,10 @@
 /* Section Hero - Gradient de transition harmonieux */
 .hero {
     background: linear-gradient(135deg, 
-        var(--warm-beige) 0%,           /* Début comme le header */
-        var(--light-beige) 30%,          /* Transition douce */
-        var(--cream) 60%,                /* Éclaircissement */
-        rgba(218, 165, 32, 0.15) 100%   /* Touche subtile de wax-mustard */
+        var(--warm-beige) 0%,           
+        var(--light-beige) 30%,          
+        var(--cream) 60%,                
+        rgba(218, 165, 32, 0.15) 100%   
     );
     min-height: 80vh;
     display: flex;
@@ -211,7 +211,9 @@
     padding-left: 0.5rem;
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Tablettes (< 768px) */
 @media (max-width: 768px) {
     .hero {
         min-height: 60vh;
@@ -221,17 +223,68 @@
     .hero-content {
         padding: 2rem 1rem;
     }
-    
+
+    /* Centrer le paragraphe et les boutons du Hero */
     .hero p {
-        margin-left: auto;
-        margin-right: auto;
+        margin: 0 auto 2.5rem;
+        font-size: 1.1rem;
     }
     
     .hero-buttons {
         justify-content: center;
     }
     
+    /* Réduire la marge de la bannière */
+    .categories-hero {
+        padding: 60px 0 40px;
+    }
+
+    .categories-hero-content p {
+        font-size: 1.1rem;
+    }
+
+    /* Passer la grille en 1 seule colonne */
     .categories-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .category-info {
+        padding: 1.5rem;
+    }
+    
+    .category-info h3 {
+        font-size: 1.3rem;
+    }
+
+    /* Réduire la taille de la police dans la section Savoir-Faire */
+    .craftsmanship-section p {
+        font-size: 1.1rem;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .hero {
+        min-height: 50vh;
+    }
+
+    .hero-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-content h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Réduire l'espacement des boutons sur très petit écran */
+    .hero-buttons {
+        gap: 1rem;
+    }
+
+    /* Réduire le padding des sections */
+    .categories-section,
+    .craftsmanship-section {
+        padding: 3rem 1rem;
     }
 }

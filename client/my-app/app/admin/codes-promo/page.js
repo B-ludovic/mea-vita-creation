@@ -424,7 +424,7 @@ export default function AdminPromoCodesPage() {
               const status = getStatusBadge(promo);
               return (
                 <tr key={promo.id}>
-                  <td>
+                  <td data-label="Code">
                     <strong>{promo.code}</strong>
                     {promo.description && (
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginTop: '0.25rem' }}>
@@ -432,10 +432,10 @@ export default function AdminPromoCodesPage() {
                       </div>
                     )}
                   </td>
-                  <td>
+                  <td data-label="Type">
                     {promo.discountType === 'PERCENTAGE' ? 'Pourcentage' : 'Montant fixe'}
                   </td>
-                  <td>
+                  <td data-label="Réduction">
                     <strong style={{ color: 'var(--primary-orange)' }}>
                       {promo.discountType === 'PERCENTAGE' 
                         ? `${promo.discountValue}%`
@@ -448,22 +448,22 @@ export default function AdminPromoCodesPage() {
                       </div>
                     )}
                   </td>
-                  <td>
+                  <td data-label="Période">
                     <div style={{ fontSize: '0.9rem' }}>
                       Du {formatDate(promo.startDate)}<br/>
                       au {formatDate(promo.endDate)}
                     </div>
                   </td>
-                  <td>
+                  <td data-label="Utilisation">
                     {promo.currentUses}
                     {promo.maxUses && ` / ${promo.maxUses}`}
                   </td>
-                  <td>
+                  <td data-label="Statut">
                     <span className={`badge ${status.class}`}>
                       {status.text}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="Actions">
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button
                         className={`admin-btn ${promo.isActive ? 'admin-btn-secondary' : 'admin-btn-primary'}`}

@@ -19,7 +19,7 @@
     align-items: center;
     padding: 0 1.5rem;
     gap: 0.75rem;
-    flex-wrap: wrap; /* Permet l'enroulement sur petits écrans */
+    flex-wrap: wrap; 
 }
 
 .logo {
@@ -46,8 +46,8 @@
     font-size: clamp(0.9rem, 1.5vw, 1.2rem);
     font-weight: 700;
     letter-spacing: 1px;
-    max-width: 250px; /* Limite la largeur */
-    line-height: 1.2; /* Meilleur espacement si retour à la ligne */
+    max-width: 250px; 
+    line-height: 1.2; 
 }
 
 .nav-menu {
@@ -57,12 +57,7 @@
     align-items: center;
     flex: 1;
     justify-content: center;
-    flex-wrap: wrap; /* Permet l'enroulement des liens */
-}
-
-.nav-menu li:not(.mobile-auth) {
-    display: flex;
-    align-items: center;
+    flex-wrap: wrap; 
 }
 
 .nav-menu a {
@@ -94,7 +89,6 @@
     width: 100%;
 }
 
-/* Style pour le lien panier avec icône */
 .cart-link,
 .orders-link,
 .addresses-link,
@@ -123,7 +117,6 @@
     transform: scale(1.1);
 }
 
-/* Boutons d'authentification */
 .auth-buttons {
     display: flex;
     gap: 0.75rem;
@@ -166,7 +159,6 @@
     box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
-/* Affichage utilisateur connecté */
 .user-greeting {
     color: var(--text-dark);
     font-weight: 600;
@@ -199,60 +191,57 @@
     transform: translateY(-2px);
 }
 
-/* Responsive */
-
-/* Écrans très larges - optimal */
-@media (min-width: 1501px) {
-    .nav-menu {
-        gap: 2.5rem;
-    }
+/* Burger Button - Mobile Only */
+.burger-button {
+    display: none; 
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
 }
 
-/* Écrans larges - Réduire légèrement */
-@media (max-width: 1500px) {
-    .nav {
-        padding: 0 1rem;
-        gap: 0.5rem;
-    }
-
-    .nav-menu {
-        gap: 2rem;
-    }
-
-    .nav-menu a {
-        font-size: 0.85rem;
-    }
-
-    .logo h1 {
-        font-size: clamp(0.85rem, 1.3vw, 1.1rem);
-    }
-
-    .auth-buttons {
-        gap: 0.5rem;
-    }
-
-    .auth-buttons button {
-        padding: 8px 16px;
-        font-size: 0.8rem;
-    }
-
-    .user-greeting {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
-
-    .btn-logout {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-    }
+.burger-button:hover {
+    transform: scale(1.1);
 }
 
-/* Tablettes larges - Réduction progressive */
+.burger-line {
+    width: 100%;
+    height: 3px;
+    background: var(--text-dark);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.burger-button.active .burger-line:nth-child(1) {
+    transform: translateY(11px) rotate(45deg);
+}
+
+.burger-button.active .burger-line:nth-child(2) {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.burger-button.active .burger-line:nth-child(3) {
+    transform: translateY(-11px) rotate(-45deg);
+}
+
+/* Cacher mobile-auth sur desktop */
+.mobile-auth {
+    display: none;
+}
+
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Écrans larges (< 1200px) */
 @media (max-width: 1200px) {
-    .nav {
-        padding: 0 1rem;
-    }
-
     .nav-menu {
         gap: 1.5rem;
     }
@@ -267,14 +256,10 @@
     }
 }
 
-/* Tablettes - Masquer certains liens secondaires */
+/* Tablettes et petits ordinateurs (< 1024px) */
 @media (max-width: 1024px) {
-    .nav {
-        padding: 0 0.75rem;
-    }
-
     .nav-menu {
-        gap: 1.2rem;
+        gap: 1rem;
     }
     
     .nav-menu a {
@@ -292,111 +277,60 @@
     }
 }
 
-/* Petites tablettes - Préparation au burger */
-@media (max-width: 900px) {
-    .nav-menu {
-        gap: 1rem;
-    }
-
-    .nav-menu a {
-        font-size: 0.7rem;
-    }
-
-    .logo h1 {
-        font-size: 0.8rem;
-        max-width: 150px;
-    }
-}
-
-/* MENU BURGER - VERSION MOBILE */
-
-/* Bouton burger (visible uniquement sur mobile) */
-.burger-button {
-    display: none; /* Caché par défaut sur desktop */
-    flex-direction: column;
-    justify-content: space-around;
-    width: 30px;
-    height: 25px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    z-index: 1001;
-    transition: transform 0.3s ease;
-    flex-shrink: 0; /* Empêche le bouton de rétrécir */
-}
-
-.burger-button:hover {
-    transform: scale(1.1);
-}
-
-/* Lignes du burger */
-.burger-line {
-    width: 100%;
-    height: 3px;
-    background: var(--text-dark);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    transform-origin: center;
-}
-
-/* Animation du burger en X quand ouvert */
-.burger-button.active .burger-line:nth-child(1) {
-    transform: translateY(11px) rotate(45deg);
-}
-
-.burger-button.active .burger-line:nth-child(2) {
-    opacity: 0;
-    transform: scale(0);
-}
-
-.burger-button.active .burger-line:nth-child(3) {
-    transform: translateY(-11px) rotate(-45deg);
-}
-
-/* Cacher les auth buttons desktop sur mobile */
-.desktop-only {
-    display: flex;
-}
-
-/* Cacher mobile-auth sur desktop */
-.mobile-auth {
-    display: none;
-}
-
+/* Mobile - Menu Burger ON (< 768px) */
 @media (max-width: 768px) {
-    /* Réinitialiser certains styles pour mobile */
     .header {
         padding: 1rem 0;
     }
 
     .nav {
         padding: 0 1rem;
-        flex-wrap: nowrap; /* Sur mobile, pas d'enroulement car menu burger */
+        flex-wrap: nowrap; 
     }
 
     .logo h1 {
         font-size: 0.75rem;
         max-width: 120px;
-        white-space: nowrap; /* Sur mobile, garder sur une ligne */
+        white-space: nowrap; 
     }
 
-    .logo-img {
-        width: 35px;
-        height: 35px;
-    }
-
-    /* Afficher le bouton burger sur mobile */
+    /* Afficher le bouton burger */
     .burger-button {
         display: flex;
     }
 
-    /* Cacher les auth buttons desktop sur mobile */
-    .desktop-only {
+    /* Cacher navigation et auth buttons desktop */
+    .nav-menu, 
+    .auth-buttons {
         display: none;
     }
 
-    /* Afficher mobile-auth sur mobile */
+    /* Menu navigation - mobile sidebar */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%; 
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(135deg, var(--warm-beige) 0%, var(--light-beige) 100%);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0;
+        padding: 80px 2rem 2rem;
+        box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Animation plus courte et plus réactive */
+        overflow-y: auto;
+        z-index: 999; 
+        display: flex; /* Rendre visible pour l'animation */
+    }
+
+    /* Menu ouvert */
+    .nav-menu.mobile-open {
+        right: 0;
+    }
+    
+    /* Afficher mobile-auth */
     .mobile-auth {
         display: block;
         width: 100%;
@@ -411,161 +345,42 @@
         align-items: stretch;
     }
 
-    /* GARDER le même style de boutons que desktop */
-    .mobile-auth-content button {
-        width: 100%;
-        padding: 12px 20px; /* Même padding que desktop */
-        border-radius: 50px; /* Même border-radius que desktop */
-        font-size: 0.9rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: none;
-    }
-
-    /* Style Connexion - identique desktop */
-    .mobile-auth-content .btn-login {
-        background: transparent;
-        color: var(--primary-teal);
-        border: 2px solid var(--primary-teal);
-    }
-
-    .mobile-auth-content .btn-login:hover {
-        background: var(--primary-teal);
-        color: var(--white);
-    }
-
-    /* Style Inscription - identique desktop */
-    .mobile-auth-content .btn-signup {
-        background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
-        color: var(--text-dark);
-        border: none;
-        box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
-    }
-
-    .mobile-auth-content .btn-signup:hover {
-        background: linear-gradient(135deg, var(--solar-yellow-light), var(--solar-yellow));
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
-    }
-
-    /* Style Déconnexion - identique desktop */
-    .mobile-auth-content .btn-logout {
-        background: transparent;
-        color: #c62828;
-        border: 2px solid #c62828;
-    }
-
-    .mobile-auth-content .btn-logout:hover {
-        background: #c62828;
-        color: var(--white);
-        transform: translateY(-2px);
-    }
-
-    .mobile-auth-content .user-greeting {
-        text-align: center;
-        justify-content: center;
-        padding: 10px 15px; /* Même padding que desktop */
-        background: var(--cream);
-        border-radius: 50px; /* Même border-radius que desktop */
-    }
-
-    /* Menu navigation - transformé en menu mobile */
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%; /* Caché par défaut hors écran à droite */
-        width: 280px;
-        height: 100vh;
-        background: linear-gradient(135deg, var(--warm-beige) 0%, var(--light-beige) 100%);
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: stretch;
-        gap: 0;
-        padding: 80px 2rem 2rem;
-        box-shadow: -5px 0 25px rgba(0,0,0,0.2);
-        /* Animation plus douce et fluide */
-        transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow-y: auto;
-        border: none;
-        z-index: 999; /* Au-dessus de l'overlay (998) */
-    }
-
-    /* Menu ouvert - glisse depuis la droite */
-    .nav-menu.mobile-open {
-        right: 0;
-    }
-
-    /* Style des items du menu mobile */
+    /* Styles des liens et animations staggered */
     .nav-menu li {
         width: 100%;
         opacity: 0;
-        transform: translateX(30px); /* Moins de distance = moins brutal */
+        transform: translateX(20px); 
         transition: all 0.3s ease;
     }
 
-    /* Animation STAGGERED plus douce - délais plus courts et plus progressifs */
-    .nav-menu.mobile-open li:nth-child(1) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.05s; 
-    }
-    .nav-menu.mobile-open li:nth-child(2) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.1s; 
-    }
-    .nav-menu.mobile-open li:nth-child(3) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.15s; 
-    }
-    .nav-menu.mobile-open li:nth-child(4) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.2s; 
-    }
-    .nav-menu.mobile-open li:nth-child(5) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.25s; 
-    }
-    .nav-menu.mobile-open li:nth-child(6) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.3s; 
-    }
-    .nav-menu.mobile-open li:nth-child(7) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.35s; 
-    }
-    .nav-menu.mobile-open li:nth-child(8) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.4s; 
-    }
-    .nav-menu.mobile-open li:nth-child(9) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.45s; 
-    }
-    .nav-menu.mobile-open li:nth-child(10) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.5s; 
-    }
-    .nav-menu.mobile-open li:nth-child(11) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.55s; 
-    }
-    .nav-menu.mobile-open li:nth-child(12) { 
-        animation: slideInSmooth 0.5s ease-out forwards 0.6s; 
+    .nav-menu.mobile-open li {
+        animation: slideInStaggered 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    /* Keyframe pour l'animation staggered plus douce */
-    @keyframes slideInSmooth {
-        from {
-            opacity: 0;
-            transform: translateX(30px);
-        }
+    /* Délais Staggered (réduit pour plus de concision) */
+    .nav-menu.mobile-open li:nth-child(2) { animation-delay: 0.05s; }
+    .nav-menu.mobile-open li:nth-child(3) { animation-delay: 0.1s; }
+    .nav-menu.mobile-open li:nth-child(4) { animation-delay: 0.15s; }
+    .nav-menu.mobile-open li:nth-child(5) { animation-delay: 0.2s; }
+    .nav-menu.mobile-open li:nth-child(6) { animation-delay: 0.25s; }
+    .nav-menu.mobile-open li:nth-child(7) { animation-delay: 0.3s; }
+
+    @keyframes slideInStaggered {
         to {
             opacity: 1;
             transform: translateX(0);
         }
     }
 
-    /* Style des liens dans le menu mobile */
     .nav-menu a {
         display: block;
         padding: 1rem;
         width: 100%;
         font-size: 1rem;
         border-radius: 12px;
-        transition: all 0.3s ease;
-        position: relative; /* Pour l'effet de soulignement */
+        position: relative; 
     }
 
-    /* Masquer toutes les images/icônes dans le menu burger mobile pour un design épuré */
     .nav-menu .cart-icon,
     .nav-menu .orders-icon,
     .nav-menu .addresses-icon,
@@ -573,58 +388,36 @@
         display: none;
     }
 
-    /* GARDER l'effet hover desktop sur mobile */
-    .nav-menu a:hover {
-        color: var(--primary-orange); /* Même couleur que desktop */
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* GARDER l'effet de soulignement desktop sur mobile */
     .nav-menu a::after {
-        content: '';
-        position: absolute;
         bottom: 8px;
         left: 1rem;
         right: 1rem;
-        width: 0;
-        height: 2px;
-        background: var(--primary-orange);
-        transition: width 0.3s ease;
     }
 
     .nav-menu a:hover::after {
-        width: calc(100% - 2rem); /* Adapter la largeur au padding */
+        width: calc(100% - 2rem); 
     }
 
-    /* Overlay sombre quand le menu est ouvert - apparition plus douce */
+    /* Overlay sombre quand le menu est ouvert */
     .menu-overlay {
         position: fixed;
         top: 0;
         left: 0;
-        width: calc(100vw - 280px); /* Couvre tout sauf le menu (280px à droite) */
+        width: 100vw;
         height: 100vh;
         background: rgba(0,0,0,0.5);
-        z-index: 998; /* Juste en dessous du menu (999) */
+        z-index: 998; 
         animation: fadeInSmooth 0.4s ease;
         cursor: pointer;
     }
 
-    /* Retirer l'ancien overlay ::before qui ne fonctionnait pas pour les clics */
-    .nav-menu.mobile-open::before {
-        display: none;
-    }
-
     @keyframes fadeInSmooth {
-        from { 
-            opacity: 0; 
-        }
-        to { 
-            opacity: 1; 
-        }
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
 }
 
-/* Media query pour petits mobiles */
+/* Très petits mobiles (< 480px) */
 @media (max-width: 480px) {
     .header {
         padding: 0.75rem 0;
@@ -644,16 +437,7 @@
         height: 30px;
     }
 
-    .burger-button {
-        width: 28px;
-        height: 22px;
-    }
-
-    .burger-line {
-        height: 2.5px;
-    }
-
     .nav-menu {
-        width: 260px; /* Menu plus étroit sur très petits écrans */
+        width: 260px; 
     }
 }

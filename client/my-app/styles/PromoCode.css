@@ -6,7 +6,8 @@
   border-radius: 15px;
   margin: 2rem 0;
   border: 2px solid transparent;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .promo-code-section:hover {
@@ -36,12 +37,14 @@
   border-radius: 10px;
   font-size: 1rem;
   text-transform: uppercase;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .promo-code-input:focus {
   outline: none;
   border-color: var(--primary-orange);
+  /* Cohérence: Ombre de focus subtile */
   box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
@@ -61,13 +64,15 @@
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
 .promo-code-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+  /* 💥 Cohérence: Ombre portée uniformisée */
+  box-shadow: 0 6px 15px rgba(255, 107, 53, 0.4);
 }
 
 .promo-code-btn:disabled {
@@ -80,7 +85,8 @@
 }
 
 .promo-code-btn.remove:hover:not(:disabled) {
-  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
 }
 
 .promo-code-message {
@@ -91,7 +97,8 @@
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-  animation: slideDown 0.3s ease;
+  /* 💥 Cohérence: Utilisation de la fonction de timing globale */
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .promo-code-message.success {
@@ -170,13 +177,15 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 💥 Cohérence: Transition uniformisée */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 0.9rem;
 }
 
 .promo-code-btn-remove:hover {
   background: #dc3545;
   color: white;
+  transform: translateY(-2px);
 }
 
 .promo-code-applied-description {
@@ -196,18 +205,59 @@
   }
 }
 
-/* Responsive */
+/* --- RESPONSIVE BREAKPOINTS --- */
+
+/* Mobile et Tablettes (< 768px) */
 @media (max-width: 768px) {
-  .promo-code-input-group {
-    flex-direction: column;
-  }
+    .promo-code-input-group {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
 
-  .promo-code-input {
-    flex: none;
-    width: 100%; 
-  }
+    .promo-code-input {
+        flex: none;
+        width: 100%; 
+        padding: 10px 12px;
+    }
 
-  .promo-code-btn {
-    width: 100%;
-  }
+    .promo-code-btn {
+        width: 100%;
+        padding: 12px 20px;
+        /* Désactiver la transformation sur les boutons pleine largeur */
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .promo-code-btn:hover:not(:disabled) {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .promo-code-btn-remove {
+        transform: none;
+    }
+    
+    .promo-code-btn-remove:hover {
+        transform: none;
+    }
+    
+    .promo-code-applied {
+        padding: 1rem;
+    }
+    
+    .promo-code-applied-top {
+        gap: 0.5rem;
+    }
+}
+
+/* Très petits mobiles (< 480px) */
+@media (max-width: 480px) {
+    .promo-code-section {
+        padding: 1rem;
+        margin: 1.5rem 0;
+    }
+    
+    .promo-code-section h3 {
+        font-size: 1rem;
+    }
 }

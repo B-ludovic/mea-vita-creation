@@ -10,7 +10,6 @@
 .carousel-main {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
   border-radius: 16px;
   overflow: hidden;
   background: var(--light-gray);
@@ -19,8 +18,8 @@
 
 .carousel-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
   display: block;
   transition: transform 0.3s ease;
 }

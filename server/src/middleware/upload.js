@@ -6,6 +6,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const { optimizeImage } = require('../utils/imageOptimizer');
 
 
 // ÉTAPE 1 : DÉFINIR OÙ ET COMMENT SAUVEGARDER LES FICHIERS
@@ -100,3 +101,45 @@ const upload = multer({
 // router.post('/upload', upload.single('image'), controller)
 
 module.exports = upload;
+
+
+// MIDDLEWARE SUPPLÉMENTAIRE: OPTIMISER L'IMAGE APRÈS L'UPLOAD
+
+// Cette fonction s'utilise APRÈS le middleware upload
+// Elle prend l'image uploadée et crée des versions optimisées
+const optimizeUploadedImage = async (req, res, next) => {
+  try {
+    // Vérifier qu'un fichier a bien été uploadé
+    if (!req.file) {
+      return next(); // Pas de fichier = passer au middleware suivant
+    }
+
+    // Récupérer le chemin complet de l'image uploadée
+    const imagePath = req.file.path;
+    
+    // Créer le dossier de destination pour les images optimisées
+    const optimizedDir = path.join(__dirname, '../../../client/my-app/public/images/optimized/products');
+    
+    // Extraire le nom du fichier sans extension
+    const filename = path.parse(req.file.filename).name;
+    
+    console.log(`🚀 Optimisation de l'image uploadée: ${req.file.filename}`);
+    
+    // Appeler la fonction d'optimisation (crée 4 versions)
+    const result = await optimizeImage(imagePath, optimizedDir, filename);
+    
+    console.log(`✅ Image optimisée avec succès: ${result.thumbnail}, ${result.medium}, ${result.large}, ${result.original}`);
+    
+    // Continuer vers le controller
+    next();
+    
+  } catch (error) {
+    console.error('❌ Erreur lors de l\'optimisation de l\'image:', error.message);
+    // Ne pas bloquer l'upload si l'optimisation échoue
+    // L'image originale est déjà sauvegardée
+    next();
+  }
+};
+
+// Exporter aussi le middleware d'optimisation
+module.exports.optimizeUploadedImage = optimizeUploadedImage;

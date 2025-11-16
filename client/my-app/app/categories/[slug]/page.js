@@ -10,6 +10,9 @@ import Image from 'next/image';
 // Import de la configuration des images
 import { getProductMainImage, getCategoryImages } from '../../../config/productImages';
 
+// Import du composant OptimizedImage
+import OptimizedImage from '../../../components/OptimizedImage';
+
 // Import du CSS
 import '../../../styles/Category.css';
 
@@ -135,17 +138,21 @@ export default function CategoryPage() {
                   {/* Image du produit */}
                   <div className="product-image">
                     {product.ProductImage && product.ProductImage.length > 0 ? (
-                      <Image 
+                      <OptimizedImage 
                         src={product.ProductImage[0].url} 
                         alt={product.ProductImage[0].alt}
+                        size="medium"
+                        context="grid"
                         width={300}
                         height={300}
                         className="product-img"
                       />
                     ) : (
-                      <Image
+                      <OptimizedImage
                         src={getProductImageForDisplay(product, index)}
                         alt={product.name}
+                        size="medium"
+                        context="grid"
                         width={300}
                         height={300}
                         className="product-img"

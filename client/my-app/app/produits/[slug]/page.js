@@ -19,6 +19,9 @@ import ProductCarousel from '../../../components/ProductCarousel';
 // Import de la configuration des images
 import { getProductImages, getCategoryImages } from '../../../config/productImages';
 
+// Import du composant OptimizedImage
+import OptimizedImage from '../../../components/OptimizedImage';
+
 // Import du Modal
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
@@ -70,9 +73,21 @@ export default function ProductPage() {
     const [inWishlist, setInWishlist] = useState(false);
     const [wishlistItemId, setWishlistItemId] = useState(null);
 
+    // États pour la navigation entre produits
+    const [categoryProducts, setCategoryProducts] = useState([]);
+    const [currentProductIndex, setCurrentProductIndex] = useState(-1);
+    const [previousProduct, setPreviousProduct] = useState(null);
+    const [nextProduct, setNextProduct] = useState(null);
+
     // Charger le produit et les avis
     useEffect(() => {
         const fetchData = async () => {
+            // Réinitialiser tous les états de navigation
+            setPreviousProduct(null);
+            setNextProduct(null);
+            setCategoryProducts([]);
+            setCurrentProductIndex(-1);
+            
             try {
                 // Récupérer le produit
                 const productResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`);
@@ -80,6 +95,43 @@ export default function ProductPage() {
 
                 if (productData.success) {
                     setProduct(productData.product);
+
+                    // Récupérer tous les produits de la même catégorie pour la navigation
+                    const categoryResponse = await fetch(
+                        `${process.env.NEXT_PUBLIC_API_URL}/api/products?categoryId=${productData.product.categoryId}`
+                    );
+                    const categoryData = await categoryResponse.json();
+
+                    if (categoryData.success) {
+                        // Utiliser tous les produits de la catégorie (pas de filtrage par collection)
+                        const products = categoryData.products;
+                        
+                        setCategoryProducts(products);
+
+                        // Trouver l'index du produit actuel
+                        const currentIndex = products.findIndex(p => p.slug === slug);
+                        setCurrentProductIndex(currentIndex);
+
+                        console.log('Navigation debug:', {
+                            totalProducts: products.length,
+                            currentIndex: currentIndex,
+                            currentSlug: slug,
+                            hasPrevious: currentIndex > 0,
+                            hasNext: currentIndex < products.length - 1
+                        });
+
+                        // Déterminer le produit précédent et suivant
+                        if (currentIndex > 0) {
+                            setPreviousProduct(products[currentIndex - 1]);
+                        } else {
+                            setPreviousProduct(null);
+                        }
+                        if (currentIndex < products.length - 1) {
+                            setNextProduct(products[currentIndex + 1]);
+                        } else {
+                            setNextProduct(null);
+                        }
+                    }
 
                     // Obtenir les images spécifiques du produit
                     const images = getProductImages(productData.product.slug);
@@ -349,6 +401,41 @@ return (
                     __html: JSON.stringify(generateProductJsonLd(product))
                 }}
             />
+        )}
+        
+        {/* Boutons de navigation latérale */}
+        {categoryProducts.length > 0 && previousProduct && (
+            <Link 
+                href={`/produits/${previousProduct.slug}`}
+                className="product-nav-button product-nav-prev"
+                title={`Voir ${previousProduct.name}`}
+            >
+                <Image 
+                    src="/icones/next.png" 
+                    alt="Précédent" 
+                    width={20} 
+                    height={20} 
+                    className="nav-arrow"
+                />
+                <span className="nav-label">Produit précédent</span>
+            </Link>
+        )}
+
+        {categoryProducts.length > 0 && nextProduct && (
+            <Link 
+                href={`/produits/${nextProduct.slug}`}
+                className="product-nav-button product-nav-next"
+                title={`Voir ${nextProduct.name}`}
+            >
+                <span className="nav-label">Produit suivant</span>
+                <Image 
+                    src="/icones/next.png" 
+                    alt="Suivant" 
+                    width={20} 
+                    height={20} 
+                    className="nav-arrow"
+                />
+            </Link>
         )}
         
         <div className="container">

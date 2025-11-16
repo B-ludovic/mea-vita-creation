@@ -5,6 +5,15 @@ Site e-commerce de maroquinerie artisanale avec paiement Stripe.
 
 > ⚠️ **SÉCURITÉ** : Ne jamais commiter de fichiers `.env` ou `.env.local`. Toutes les clés ci-dessous sont des exemples génériques à remplacer par vos vraies clés.
 
+> 🚨 **TRÈS IMPORTANT - BASE DE DONNÉES** : 
+> Le dossier `server/prisma/migrations/` n'est PAS synchronisé avec le schéma actuel (`schema.prisma`).
+> Des tables et champs ont été ajoutés directement en production (Review, tracking, email verification, etc.).
+> **AVANT TOUT DÉPLOIEMENT :**
+> - Faire un backup complet de la BDD PostgreSQL
+> - Créer une migration propre avec `npx prisma migrate dev --name sync_production`
+> - OU utiliser `npx prisma db push` pour forcer le schéma (pas recommandé pour prod)
+> - Vérifier que toutes les données sont préservées après migration
+
 ## 📋 Description du projet
 
 Application full-stack pour la vente de créations en maroquinerie :
@@ -25,8 +34,8 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🛒 **Panier intelligent** : Gestion des articles avec validation de stock en temps réel
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
-- � **Suivi de livraison** : Tracking complet avec numéro de suivi, transporteur, timeline visuelle animée
-- �📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
+- 🚚 **Suivi de livraison** : Tracking complet avec numéro de suivi, transporteur, timeline visuelle animée
+- 📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
 - 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password, expédition)
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
 - ❤️ **Liste de souhaits** : Système de wishlist complet avec authentification JWT
@@ -46,6 +55,7 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🍪 **Gestion cookies** : Bannière de consentement RGPD avec icônes, localStorage
 - 📜 **Politique confidentialité** : Page RGPD complète avec droits utilisateurs
 - 🧾 **Historique factures admin** : Interface admin pour consulter et télécharger les factures
+- 🎠 **Navigation produits** : Carousel latéral avec boutons gauche/droite pour naviguer dans une catégorie
 
 ---
 

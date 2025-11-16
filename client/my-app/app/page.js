@@ -3,6 +3,7 @@ import '../styles/Home.css';
 import Link from 'next/link';
 import Image from 'next/image';
 import { defaultMetadata } from '../utils/metadata';
+import OptimizedImage from '../components/OptimizedImage';
 
 // Métadonnées pour la page d'accueil Next.js
 export const metadata = defaultMetadata;
@@ -48,12 +49,14 @@ export default function HomePage() {
             {/* Catégorie 1 : Pochettes Unisexe */}
             <div className="category-card">
               <div className="category-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/pochettes-unisexe/atlas-solaire-1.jpg" 
                   alt="Pochettes Unisexe" 
+                  size="medium"
+                  context="grid"
                   width={400} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  className="category-img"
                 />
               </div>
               <div className="category-info">
@@ -80,12 +83,14 @@ export default function HomePage() {
             {/* Catégorie 2 : Porte-Carte */}
             <div className="category-card">
               <div className="category-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/porte-carte/eclat-solaire-1.jpg" 
                   alt="Porte-Carte" 
+                  size="medium"
+                  context="grid"
                   width={400} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  className="category-img"
                 />
               </div>
               <div className="category-info">
@@ -112,12 +117,14 @@ export default function HomePage() {
             {/* Catégorie 3 : Sac Cylindre */}
             <div className="category-card">
               <div className="category-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/sac-cylindre/tambour-solaire-1.jpg" 
                   alt="Sac Cylindre" 
+                  size="medium"
+                  context="grid"
                   width={400} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  className="category-img"
                 />
               </div>
               <div className="category-info">
@@ -141,15 +148,17 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Catégorie 4 : Sac U */}
+            {/* Catégorie 4 : Sac en U */}
             <div className="category-card">
               <div className="category-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/sac-u/arche-besace-fogo-1.jpg" 
-                  alt="Sac U" 
+                  alt="Sac en U" 
+                  size="medium"
+                  context="grid"
                   width={400} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                  className="category-img"
                 />
               </div>
               <div className="category-info">

@@ -60,6 +60,11 @@
     flex-wrap: wrap; /* Permet l'enroulement des liens */
 }
 
+.nav-menu li:not(.mobile-auth) {
+    display: flex;
+    align-items: center;
+}
+
 .nav-menu a {
     color: var(--text-dark);
     font-weight: 500;

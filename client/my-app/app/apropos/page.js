@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import OptimizedImage from '../../components/OptimizedImage';
 import '../../styles/Apropos.css';
 
 export const metadata = {
@@ -201,24 +202,28 @@ export default function AProposPage() {
                 </p>
               </div>
               <div className="step-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/sac-u/arche-besace-fogo-2.jpg" 
                   alt="Design et conception" 
+                  size="medium"
+                  context="detail"
                   width={500} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '300px' }}
+                  className="process-img"
                 />
               </div>
             </div>
             
             <div className="process-step">
               <div className="step-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/sac-u/arche-besace-fogo-1.jpg" 
                   alt="Confection artisanale" 
+                  size="medium"
+                  context="detail"
                   width={500} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '300px' }}
+                  className="process-img"
                 />
               </div>
               <div className="step-content">
@@ -241,12 +246,14 @@ export default function AProposPage() {
                 </p>
               </div>
               <div className="step-image">
-                <Image 
+                <OptimizedImage 
                   src="/images/sac-cylindre/tambour-amethyste-2.jpg" 
                   alt="Finitions d'exception" 
+                  size="medium"
+                  context="detail"
                   width={500} 
                   height={300}
-                  style={{ objectFit: 'cover', width: '100%', height: '300px' }}
+                  className="process-img"
                 />
               </div>
             </div>

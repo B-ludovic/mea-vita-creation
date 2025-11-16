@@ -10,11 +10,19 @@ const getAllProducts = async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const skip = (page - 1) * limit;
 
+    // Construire les conditions de filtrage
+    const whereConditions = {
+      isActive: true
+    };
+
+    // Filtrer par categoryId si fourni
+    if (req.query.categoryId) {
+      whereConditions.categoryId = req.query.categoryId;
+    }
+
     // Récupérer tous les produits actifs avec leurs catégories ET leurs images
     const products = await prisma.product.findMany({
-      where: {
-        isActive: true
-      },
+      where: whereConditions,
       include: {
         Category: true,      // Inclure les infos de la catégorie
         ProductImage: true   // Inclure les images du produit pour l'affichage
@@ -28,9 +36,7 @@ const getAllProducts = async (req, res) => {
 
     // Compter le nombre total de produits pour la pagination
     const totalProducts = await prisma.product.count({
-      where: {
-        isActive: true
-      }
+      where: whereConditions
     });
 
     res.json({

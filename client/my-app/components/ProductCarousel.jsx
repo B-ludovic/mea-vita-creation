@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import OptimizedImage from './OptimizedImage';
 import '../styles/ProductCarousel.css';
 
 export default function ProductCarousel({ images, productName, categorySlug }) {
@@ -39,9 +40,11 @@ export default function ProductCarousel({ images, productName, categorySlug }) {
     <div className="product-carousel">
       {/* Image principale */}
       <div className="carousel-main">
-        <Image
+        <OptimizedImage
           src={images[currentIndex]}
           alt={`${productName} - Photo ${currentIndex + 1}`}
+          size="large"
+          context="detail"
           width={600}
           height={600}
           className="carousel-image"
@@ -95,9 +98,11 @@ export default function ProductCarousel({ images, productName, categorySlug }) {
               className={`carousel-thumbnail ${index === currentIndex ? 'active' : ''}`}
               onClick={() => goToImage(index)}
             >
-              <Image
+              <OptimizedImage
                 src={image}
                 alt={`${productName} - Miniature ${index + 1}`}
+                size="thumbnail"
+                context="thumbnail"
                 width={80}
                 height={80}
                 className="thumbnail-image"

@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Modal from '../../../components/Modal';
 import '../../../styles/Admin.css';
 
 export default function AdminInvoicesPage() {
@@ -13,6 +14,7 @@ export default function AdminInvoicesPage() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('ALL');
+    const [modalConfig, setModalConfig] = useState({ isOpen: false, message: '', type: 'info', icon: '' });
 
   useEffect(() => {
     fetchOrders();
@@ -91,7 +93,12 @@ export default function AdminInvoicesPage() {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                alert('Vous devez être connecté pour télécharger une facture');
+                setModalConfig({
+                    isOpen: true,
+                    message: 'Vous devez être connecté pour télécharger une facture',
+                    type: 'error',
+                    icon: '/icones/error.png'
+                });
                 return;
             }
 
@@ -111,7 +118,12 @@ export default function AdminInvoicesPage() {
             if (!response.ok) {
                 const errorData = await response.json();
                 console.error('Erreur serveur:', errorData);
-                alert(errorData.message || 'Erreur lors du téléchargement');
+                setModalConfig({
+                    isOpen: true,
+                    message: errorData.message || 'Erreur lors du téléchargement',
+                    type: 'error',
+                    icon: '/icones/error.png'
+                });
                 return;
             }
 
@@ -131,7 +143,12 @@ export default function AdminInvoicesPage() {
             document.body.removeChild(a);
         } catch (error) {
             console.error('Erreur téléchargement:', error);
-            alert('Erreur lors du téléchargement de la facture');
+            setModalConfig({
+                isOpen: true,
+                message: 'Erreur lors du téléchargement de la facture',
+                type: 'error',
+                icon: '/icones/error.png'
+            });
         }
     };
 
@@ -322,6 +339,15 @@ export default function AdminInvoicesPage() {
                     </div>
                 )}
             </div>
+
+            {/* Modal */}
+            <Modal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig({ ...modalConfig, isOpen: false })}
+                message={modalConfig.message}
+                type={modalConfig.type}
+                icon={modalConfig.icon}
+            />
         </>
     );
 }

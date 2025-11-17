@@ -8,6 +8,9 @@ const { notifyNewOrder, notifyLowStock } = require('../services/pusherService');
 // Importer le service d'email
 const { sendOrderConfirmationEmail, sendRefundEmail } = require('../services/emailService');
 
+// Importer le service de génération de factures
+const { generateInvoice } = require('../services/invoiceService');
+
 // Importer la fonction pour incrémenter l'usage du code promo
 const { incrementPromoCodeUsage } = require('./promoCodeController');
 
@@ -456,6 +459,14 @@ const handleStripeWebhook = async (req, res) => {
 
                 console.log('✅ Statut mis à jour → PARTIALLY_REFUNDED');
                 console.log('⚠️ Action manuelle requise pour gestion du stock');
+
+                // Créer une facture de remboursement partiel
+                try {
+                    await generateInvoice(order, order.User, 'REFUND_PARTIAL');
+                    console.log('✅ Facture de remboursement partiel générée');
+                } catch (invoiceError) {
+                    console.error('❌ Erreur génération facture remboursement partiel:', invoiceError.message);
+                }
             } else {
                 // Remboursement total : traitement automatique
 
@@ -471,7 +482,7 @@ const handleStripeWebhook = async (req, res) => {
                 console.log('✅ Statut mis à jour → REFUNDED');
                 console.log(`   Montant total remboursé: ${refundedAmount}€`);
 
-                // Réaugmenter le stock des produitsuits
+                // Réaugmenter le stock des produits
                 for (const item of order.OrderItem) {
                     await prisma.product.update({
                         where: { id: item.productId },
@@ -482,6 +493,14 @@ const handleStripeWebhook = async (req, res) => {
                         }
                     });
                     console.log(`✅ Stock réaugmenté pour ${item.Product.name}: +${item.quantity}`);
+                }
+
+                // Créer une facture de remboursement total
+                try {
+                    await generateInvoice(order, order.User, 'REFUND_FULL');
+                    console.log('✅ Facture de remboursement total générée');
+                } catch (invoiceError) {
+                    console.error('❌ Erreur génération facture remboursement total:', invoiceError.message);
                 }
 
                 // Envoyer un email au client

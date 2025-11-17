@@ -12,21 +12,23 @@ import '../../../styles/Admin.css';
 export default function AdminInvoicesPage() {
     const router = useRouter();
     const { modalState, openModal, closeModal, showAlert } = useModal();
-    const [orders, setOrders] = useState([]);
-    const [filteredOrders, setFilteredOrders] = useState([]);
+    const [invoices, setInvoices] = useState([]);
+    const [filteredInvoices, setFilteredInvoices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
-    const [filterStatus, setFilterStatus] = useState('ALL');
+    const [filterType, setFilterType] = useState('ALL'); // Changé de filterStatus à filterType
 
   useEffect(() => {
-    fetchOrders();
+    fetchInvoices(); // Changé de fetchOrders à fetchInvoices
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    filterOrders();
+    filterInvoices(); // Changé de filterOrders à filterInvoices
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orders, searchTerm, filterStatus]);    const fetchOrders = async () => {
+  }, [invoices, searchTerm, filterType]); // Changé orders et filterStatus
+  
+    const fetchInvoices = async () => {
         try {
             const token = getAccessToken();
             if (!token) {
@@ -34,7 +36,7 @@ export default function AdminInvoicesPage() {
                 return;
             }
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/all`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/invoices`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -42,15 +44,8 @@ export default function AdminInvoicesPage() {
             const data = await response.json();
 
             if (data.success) {
-                // Ne garder que les commandes payées (qui ont une facture)
-                const paidOrders = data.orders.filter(order =>
-                    order.status === 'PAID' ||
-                    order.status === 'PROCESSING' ||
-                    order.status === 'SHIPPED' ||
-                    order.status === 'DELIVERED'
-                );
-                setOrders(paidOrders);
-                setFilteredOrders(paidOrders);
+                setInvoices(data.invoices);
+                setFilteredInvoices(data.invoices);
             }
         } catch (error) {
             console.error('Erreur:', error);
@@ -59,27 +54,27 @@ export default function AdminInvoicesPage() {
         }
     };
 
-    const filterOrders = () => {
-        let filtered = [...orders];
+    const filterInvoices = () => {
+        let filtered = [...invoices];
 
-        // Filtrer par recherche (numéro de commande, client)
+        // Filtrer par recherche (numéro de facture, client)
         if (searchTerm) {
-            filtered = filtered.filter(order =>
-                order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                (order.User && (
-                    order.User.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    order.User.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    order.User.email.toLowerCase().includes(searchTerm.toLowerCase())
+            filtered = filtered.filter(invoice =>
+                invoice.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (invoice.Order?.User && (
+                    invoice.Order.User.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    invoice.Order.User.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    invoice.Order.User.email?.toLowerCase().includes(searchTerm.toLowerCase())
                 ))
             );
         }
 
-        // Filtrer par statut
-        if (filterStatus !== 'ALL') {
-            filtered = filtered.filter(order => order.status === filterStatus);
+        // Filtrer par type de facture
+        if (filterType !== 'ALL') {
+            filtered = filtered.filter(invoice => invoice.type === filterType);
         }
 
-        setFilteredOrders(filtered);
+        setFilteredInvoices(filtered);
     };
 
     const formatDate = (dateString) => {
@@ -103,9 +98,6 @@ export default function AdminInvoicesPage() {
                 return;
             }
 
-            console.log('Token:', token);
-            console.log('URL:', `${process.env.NEXT_PUBLIC_API_URL}/api/invoices/${orderId}`);
-
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/invoices/${orderId}`, {
                 method: 'GET',
                 headers: {
@@ -114,11 +106,8 @@ export default function AdminInvoicesPage() {
                 }
             });
 
-            console.log('Response status:', response.status);
-
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Erreur serveur:', errorData);
                 showAlert(
                     errorData.message || 'Erreur lors du téléchargement',
                     'Erreur',
@@ -151,6 +140,16 @@ export default function AdminInvoicesPage() {
         }
     };
 
+    // Fonction pour obtenir le label et la couleur du badge selon le type de facture
+    const getInvoiceTypeBadge = (type) => {
+        const badges = {
+            'INVOICE': { label: 'Facture', color: '#2196F3' }, // Bleu
+            'REFUND_FULL': { label: 'Remboursement total', color: '#F44336' }, // Rouge
+            'REFUND_PARTIAL': { label: 'Remboursement partiel', color: '#FF9800' } // Orange
+        };
+        return badges[type] || { label: type, color: '#999' };
+    };
+
     const getStatusLabel = (status) => {
         const labels = {
             PAID: 'Payé',
@@ -172,8 +171,13 @@ export default function AdminInvoicesPage() {
     };
 
     // Calculer les statistiques
-    const totalRevenue = filteredOrders.reduce((sum, order) => sum + order.totalAmount, 0);
-    const totalInvoices = filteredOrders.length;
+    const totalRevenue = filteredInvoices
+        .filter(inv => inv.type === 'INVOICE')
+        .reduce((sum, inv) => sum + inv.amount, 0);
+    const totalRefunds = filteredInvoices
+        .filter(inv => inv.type === 'REFUND_FULL' || inv.type === 'REFUND_PARTIAL')
+        .reduce((sum, inv) => sum + inv.amount, 0);
+    const totalInvoices = filteredInvoices.length;
 
     if (loading) {
         return (
@@ -203,11 +207,20 @@ export default function AdminInvoicesPage() {
 
                 <div className="stat-card">
                     <div className="stat-card-header">
-                        <span className="stat-card-title">Montant total</span>
+                        <span className="stat-card-title">Montant facturé</span>
                         <Image src="/icones/payment.png" alt="Paiement" width={40} height={40} className="stat-card-icon" />
                     </div>
                     <div className="stat-card-value">{totalRevenue.toFixed(2)}€</div>
-                    <div className="stat-card-change">Chiffre d&apos;affaires facturé</div>
+                    <div className="stat-card-change">Chiffre d&apos;affaires</div>
+                </div>
+
+                <div className="stat-card">
+                    <div className="stat-card-header">
+                        <span className="stat-card-title">Remboursements</span>
+                        <Image src="/icones/error.png" alt="Remboursements" width={40} height={40} className="stat-card-icon" />
+                    </div>
+                    <div className="stat-card-value" style={{color: '#F44336'}}>-{totalRefunds.toFixed(2)}€</div>
+                    <div className="stat-card-change">Total remboursé</div>
                 </div>
             </div>
 
@@ -229,18 +242,17 @@ export default function AdminInvoicesPage() {
 
                     <div>
                         <label className="invoices-filter-label">
-                            Filtrer par statut
+                            Filtrer par type
                         </label>
                         <select
-                            value={filterStatus}
-                            onChange={(e) => setFilterStatus(e.target.value)}
+                            value={filterType}
+                            onChange={(e) => setFilterType(e.target.value)}
                             className="invoices-filter-input"
                         >
-                            <option value="ALL">Tous les statuts</option>
-                            <option value="PAID">Payé</option>
-                            <option value="PROCESSING">En préparation</option>
-                            <option value="SHIPPED">Expédié</option>
-                            <option value="DELIVERED">Livré</option>
+                            <option value="ALL">Tous les types</option>
+                            <option value="INVOICE">Factures de vente</option>
+                            <option value="REFUND_FULL">Remboursements totaux</option>
+                            <option value="REFUND_PARTIAL">Remboursements partiels</option>
                         </select>
                     </div>
                 </div>
@@ -254,44 +266,46 @@ export default function AdminInvoicesPage() {
                             <th>N° Facture</th>
                             <th>Client</th>
                             <th>Date</th>
+                            <th>Type</th>
                             <th>Montant</th>
-                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredOrders.map((order) => (
-                            <tr key={order.id}>
+                        {filteredInvoices.map((invoice) => {
+                            const typeBadge = getInvoiceTypeBadge(invoice.type);
+                            return (
+                            <tr key={invoice.id}>
                                 <td data-label="N° Facture">
-                                    <strong>{order.orderNumber}</strong>
+                                    <strong>{invoice.invoiceNumber}</strong>
                                 </td>
                                 <td data-label="Client">
-                                    {order.User ? (
+                                    {invoice.Order?.User ? (
                                         <div>
-                                            <div><strong>{order.User.firstName} {order.User.lastName}</strong></div>
+                                            <div><strong>{invoice.Order.User.firstName} {invoice.Order.User.lastName}</strong></div>
                                             <div className="invoice-client-email">
-                                                {order.User.email}
+                                                {invoice.Order.User.email}
                                             </div>
                                         </div>
                                     ) : (
                                         <span className="invoice-client-guest">Invité</span>
                                     )}
                                 </td>
-                                <td data-label="Date">{formatDate(order.createdAt)}</td>
-                                <td data-label="Montant">
-                                    <strong className="invoice-amount">
-                                        {order.totalAmount.toFixed(2)}€
-                                    </strong>
-                                </td>
-                                <td data-label="Statut">
-                                    <span className={`badge ${getStatusBadge(order.status)}`}>
-                                        {getStatusLabel(order.status)}
+                                <td data-label="Date">{formatDate(invoice.createdAt)}</td>
+                                <td data-label="Type">
+                                    <span className="badge" style={{ backgroundColor: typeBadge.color, color: '#fff' }}>
+                                        {typeBadge.label}
                                     </span>
+                                </td>
+                                <td data-label="Montant">
+                                    <strong className="invoice-amount" style={{ color: invoice.type === 'INVOICE' ? '#000' : '#F44336' }}>
+                                        {invoice.type === 'INVOICE' ? '' : '-'}{invoice.amount.toFixed(2)}€
+                                    </strong>
                                 </td>
                                 <td data-label="Actions">
                                     <div className="invoice-actions">
                                         <button
-                                            onClick={() => handleDownloadInvoice(order.id)}
+                                            onClick={() => handleDownloadInvoice(invoice.orderId)}
                                             className="admin-btn admin-btn-primary admin-action-btn"
                                         >
                                             <Image src="/icones/invoice.png" alt="Télécharger" width={16} height={16} />
@@ -300,14 +314,14 @@ export default function AdminInvoicesPage() {
                                     </div>
                                 </td>
                             </tr>
-                        ))}
+                        )})}
                     </tbody>
                 </table>
 
-                {filteredOrders.length === 0 && (
+                {filteredInvoices.length === 0 && (
                     <div className="invoice-empty-state">
                         <p>
-                            {searchTerm || filterStatus !== 'ALL'
+                            {searchTerm || filterType !== 'ALL'
                                 ? 'Aucune facture ne correspond aux critères de recherche'
                                 : 'Aucune facture pour le moment'}
                         </p>

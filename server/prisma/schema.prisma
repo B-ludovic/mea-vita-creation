@@ -76,6 +76,7 @@ model Order {
   Address               Address?    @relation(fields: [addressId], references: [id])
   User                  User?       @relation(fields: [userId], references: [id])
   OrderItem             OrderItem[]
+  Invoice               Invoice[]   // Une commande peut avoir plusieurs factures (vente + remboursements)
 }
 
 model OrderItem {
@@ -217,9 +218,29 @@ model RefreshToken {
   @@index([userId])
 }
 
+model Invoice {
+  id            String      @id @default(cuid())
+  invoiceNumber String      @unique
+  orderId       String
+  type          InvoiceType @default(INVOICE)
+  amount        Float
+  pdfPath       String?     // Chemin vers le PDF généré
+  createdAt     DateTime    @default(now())
+  
+  Order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  @@index([orderId])
+}
+
 enum DiscountType {
   PERCENTAGE
   FIXED_AMOUNT
+}
+
+enum InvoiceType {
+  INVOICE           // Facture de vente
+  REFUND_FULL       // Facture de remboursement total
+  REFUND_PARTIAL    // Facture de remboursement partiel
 }
 
 enum OrderStatus {

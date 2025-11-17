@@ -2,9 +2,11 @@
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 // Fonction pour générer une facture PDF
-const generateInvoice = async (order, user) => {
+const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
   return new Promise((resolve, reject) => {
     try {
       // Validation des données
@@ -121,9 +123,23 @@ const generateInvoice = async (order, user) => {
       let y = tableTop + 35;
       
       order.OrderItem.forEach((item) => {
-        // Chemin de l'image du produit
-        const productImagePath = item.Product.ProductImage && item.Product.ProductImage.length > 0
-          ? path.join(__dirname, '../../../client/my-app/public', item.Product.ProductImage[0].url)
+        // Trouver l'image du produit (prioriser /images/products/)
+        let productImageUrl = null;
+        
+        if (item.Product.ProductImage && item.Product.ProductImage.length > 0) {
+          // Chercher d'abord une image dans /images/products/
+          const uploadedImage = item.Product.ProductImage.find(img => img.url.includes('/images/products/'));
+          
+          if (uploadedImage) {
+            productImageUrl = uploadedImage.url;
+          } else {
+            // Sinon prendre la première image disponible
+            productImageUrl = item.Product.ProductImage[0].url;
+          }
+        }
+        
+        const productImagePath = productImageUrl
+          ? path.join(__dirname, '../../../client/my-app/public', productImageUrl)
           : path.join(__dirname, '../../../client/my-app/public/icones/default.png');
 
         // Ajouter l'image du produit si elle existe
@@ -199,8 +215,28 @@ const generateInvoice = async (order, user) => {
       doc.end();
 
       // Attendre que le fichier soit écrit
-      writeStream.on('finish', () => {
-        resolve(filepath);
+      writeStream.on('finish', async () => {
+        try {
+          // Créer l'enregistrement Invoice en base de données
+          const invoiceNumber = orderNumber; // Utiliser le même numéro
+          
+          await prisma.invoice.create({
+            data: {
+              invoiceNumber,
+              orderId: order.id,
+              type: invoiceType,
+              amount: order.totalAmount,
+              pdfPath: filepath
+            }
+          });
+          
+          console.log(`✅ Facture ${invoiceType} créée en BDD: ${invoiceNumber}`);
+          resolve(filepath);
+        } catch (dbError) {
+          console.error('❌ Erreur lors de la création de la facture en BDD:', dbError);
+          // On résout quand même le filepath car le PDF existe
+          resolve(filepath);
+        }
       });
 
       writeStream.on('error', (error) => {

@@ -4,7 +4,12 @@ const router = express.Router();
 const path = require('path');
 const prisma = require('../config/prisma');
 const { generateInvoice } = require('../services/invoiceService');
-const { authenticateToken } = require('../middleware/authMiddleware');
+const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
+const { getAllInvoices } = require('../controllers/invoiceController');
+
+// ROUTE POUR RÉCUPÉRER TOUTES LES FACTURES (Admin uniquement)
+// GET /api/invoices
+router.get('/', authenticateToken, isAdmin, getAllInvoices);
 
 // ROUTE POUR GÉNÉRER ET TÉLÉCHARGER UNE FACTURE
 // GET /api/invoices/:orderId

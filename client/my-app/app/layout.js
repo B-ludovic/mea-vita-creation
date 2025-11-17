@@ -1,6 +1,9 @@
 // Import Analytics Wrapper
 import AnalyticsWrapper from '../components/AnalyticsWrapper';
 
+// Import du modal mode test
+import TestModeModal from '../components/TestModeModal';
+
 // Import du CSS global
 import '../styles/globals.css';
 
@@ -28,6 +31,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <body>
+        {/* Modal mode test - S'affiche au chargement */}
+        <TestModeModal />
+        
         {/* Analytics avec gestion du consentement cookies */}
         {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
           <AnalyticsWrapper GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />

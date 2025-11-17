@@ -76,6 +76,10 @@ const { sanitizeInputs } = require('./middleware/sanitizer');
 // Créer l'application Express
 const app = express();
 
+// CONFIGURATION POUR RENDER : Activer trust proxy pour express-rate-limit
+// Nécessaire derrière un reverse proxy (Render, Heroku, etc.)
+app.set('trust proxy', 1);
+
 // Définir le port (5000 par défaut, ou celui défini dans .env)
 const PORT = process.env.PORT || 5000;
 

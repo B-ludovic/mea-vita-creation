@@ -6,6 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAccessToken } from '../../utils/auth';
+import { useNotifications } from '../../contexts/NotificationContext';
 import '../../styles/variables.css'; // 1. Variables d'abord
 import '../../styles/globals.css';   // 2. Styles globaux
 import '../../styles/Admin.css';     // 3. Styles admin EN DERNIER pour surcharger
@@ -17,6 +18,9 @@ export default function AdminLayout({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // Utiliser le contexte des notifications
+  const { unreadMessages, unreadReviews, lowStockCount } = useNotifications();
 
   useEffect(() => {
     // Fonction pour vérifier l'authentification et les droits admin
@@ -167,8 +171,11 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/produits' ? 'active' : ''}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span className="admin-nav-icon">
+                <span className={`admin-nav-icon ${lowStockCount > 0 ? 'has-notification' : ''}`}>
                   <Image src="/icones/shopping.png" alt="Produits" width={20} height={20} />
+                  {lowStockCount > 0 && (
+                    <span className="sidebar-notification-dot"></span>
+                  )}
                 </span>
                 <span>Produits</span>
               </Link>
@@ -191,8 +198,11 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/avis' ? 'active' : ''}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span className="admin-nav-icon">
+                <span className={`admin-nav-icon ${unreadReviews > 0 ? 'has-notification' : ''}`}>
                   <Image src="/icones/review.png" alt="Avis clients" width={20} height={20} />
+                  {unreadReviews > 0 && (
+                    <span className="sidebar-notification-dot"></span>
+                  )}
                 </span>
                 <span>Avis clients</span>
               </Link>
@@ -227,8 +237,11 @@ export default function AdminLayout({ children }) {
                 className={pathname === '/admin/messages' ? 'active' : ''}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span className="admin-nav-icon">
+                <span className={`admin-nav-icon ${unreadMessages > 0 ? 'has-notification' : ''}`}>
                   <Image src="/icones/mail.png" alt="Messages" width={20} height={20} />
+                  {unreadMessages > 0 && (
+                    <span className="sidebar-notification-dot"></span>
+                  )}
                 </span>
                 <span>Messages</span>
               </Link>

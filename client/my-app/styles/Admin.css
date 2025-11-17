@@ -113,6 +113,46 @@
 
 .admin-nav-icon {
     font-size: 1.2rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animation de battement de cœur pour les notifications */
+.admin-nav-icon.has-notification {
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.2);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.2);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+/* Point rouge pulsant */
+.sidebar-notification-dot {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background: #ff4444;
+    border-radius: 50%;
+    border: 2px solid var(--admin-bg);
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.6);
 }
 
 .admin-content {

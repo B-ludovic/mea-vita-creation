@@ -7,12 +7,14 @@ import Image from 'next/image';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
 import { getAccessToken } from '../../../utils/auth';
+import { useNotifications } from '../../../contexts/NotificationContext';
 import '../../../styles/Admin.css';
 import '../../../styles/AdminMessages.css';
 
 export default function AdminMessagesPage() {
   const router = useRouter();
   const { modalState, showAlert, showConfirm, closeModal } = useModal();
+  const { markMessageAsRead } = useNotifications(); // Utiliser le contexte
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL'); // ALL, UNREAD, READ
@@ -76,6 +78,7 @@ export default function AdminMessagesPage() {
 
       if (response.ok) {
         showAlert('Message marqué comme lu', 'Succès', '/icones/validation.png');
+        markMessageAsRead(); // Décrémenter le compteur dans le contexte
         fetchMessages();
       }
     } catch (error) {

@@ -1,6 +1,9 @@
 // Importer Prisma
 const prisma = require('../config/prisma');
 
+// Importer service Pusher
+const { notifyOrderUpdate } = require('../services/pusherService');
+
 // Importer le service d'email
 const { sendShippingEmail } = require('../services/emailService');
 
@@ -263,6 +266,16 @@ const updateTracking = async (req, res) => {
         }
       }
     });
+
+    // Notification PUSHER si changement de statut
+
+    if (status && order.userId) {
+  if (status === 'SHIPPED') {
+    await notifyOrderUpdate(order.userId, order, 'SHIPPED');
+  } else if (status === 'DELIVERED') {
+    await notifyOrderUpdate(order.userId, order, 'DELIVERED');
+  }
+}
 
     // Envoyer un email au client si expédié (avec validation)
     if (status === 'SHIPPED' && order.User) {

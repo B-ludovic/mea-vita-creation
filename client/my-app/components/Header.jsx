@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation';
 import '../styles/Header.css';
 // Import du contexte panier
 import { useCart } from '../contexts/CartContext';
+// Import du contexte notifications
+import { useNotifications } from '../contexts/NotificationContext';
 
 // Composant Header (Navigation)
 export default function Header() {
@@ -26,6 +28,8 @@ export default function Header() {
     const [isMounted, setIsMounted] = useState(false);
     // Utiliser le contexte du panier
     const { getCartCount } = useCart();
+    // Utiliser le contexte des notifications (seulement si admin)
+    const { getTotalNotifications } = useNotifications();
 
     // useEffect s'exécute quand le composant s'affiche
     // On vérifie si un utilisateur est connecté
@@ -275,9 +279,14 @@ export default function Header() {
                                                 <Image src="/icones/review.png" alt="" width={18} height={18} />
                                                 Avis clients
                                             </Link>
-                                            <Link href="/admin/dashboard" onClick={() => setIsUserDropdownOpen(false)}>
-                                                <Image src="/icones/satistic.png" alt="" width={18} height={18} />
-                                                Admin
+                                            <Link href="/admin/dashboard" onClick={() => setIsUserDropdownOpen(false)} className="admin-link-with-badge">
+                                                <div className="link-content">
+                                                    <Image src="/icones/satistic.png" alt="" width={18} height={18} />
+                                                    Admin
+                                                </div>
+                                                {isMounted && getTotalNotifications() > 0 && (
+                                                    <span className="admin-badge">{getTotalNotifications()}</span>
+                                                )}
                                             </Link>
                                         </>
                                     )}

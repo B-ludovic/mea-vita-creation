@@ -2,6 +2,9 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const prisma = require('../config/prisma');
 
+// importer Pusher pour les notifications en temps réel
+const { notifyNewOrder, notifyLowStock } = require('../services/pusherService');
+
 // Importer le service d'email
 const { sendOrderConfirmationEmail, sendRefundEmail } = require('../services/emailService');
 
@@ -14,6 +17,37 @@ const createCheckoutSession = async (req, res) => {
     try {
         // Récupérer les données envoyées par le front-end (y compris addressId)
         const { items, userId, addressId, promoCodeId, discountAmount } = req.body;
+
+        // SÉCURITÉ 1 : VÉRIFIER QUE L'UTILISATEUR EST CONNECTÉ
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'Vous devez être connecté pour passer commande'
+            });
+        }
+
+        // SÉCURITÉ 2 : VÉRIFIER QU'UNE ADRESSE DE LIVRAISON EST FOURNIE
+        if (!addressId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Une adresse de livraison est requise'
+            });
+        }
+
+        // SÉCURITÉ 3 : VÉRIFIER QUE L'ADRESSE APPARTIENT BIEN À L'UTILISATEUR
+        const address = await prisma.address.findFirst({
+            where: {
+                id: addressId,
+                userId: userId
+            }
+        });
+
+        if (!address) {
+            return res.status(403).json({
+                success: false,
+                message: 'Adresse de livraison invalide ou non autorisée'
+            });
+        }
 
         // Vérifier que les données sont présentes
         if (!items || items.length === 0) {
@@ -119,7 +153,7 @@ const createCheckoutSession = async (req, res) => {
         }));
 
         // Calculer le total des items
-        const totalAmount = lineItems.reduce((sum, item) => 
+        const totalAmount = lineItems.reduce((sum, item) =>
             sum + (item.price_data.unit_amount * item.quantity), 0
         ) / 100; // Convertir de centimes en euros
 
@@ -254,9 +288,9 @@ const handleStripeWebhook = async (req, res) => {
 
     console.log('✅ Webhook vérifié:', event.type);
 
-    
+
     // GÉRER LES DIFFÉRENTS TYPES D'ÉVÉNEMENTS
-    
+
     // ÉVÉNEMENT 1 : PAIEMENT RÉUSSI
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
@@ -273,7 +307,7 @@ const handleStripeWebhook = async (req, res) => {
             // Incrémenter l'usage du code promo si utilisé
             if (promoCodeId) {
                 await incrementPromoCodeUsage(promoCodeId);
-                console.log('✅ Code promo incrémenté');
+                console.log('Code promo incrémenté');
             }
 
             // Créer la commande
@@ -298,14 +332,21 @@ const handleStripeWebhook = async (req, res) => {
                             totalPrice: item.price * item.quantity
                         }))
                     }
+                },
+                include: {
+                    OrderItem: { include: { Product: true } },
+                    User: true
                 }
             });
 
+            // Notifier l'admin via Pusher
+            await notifyNewOrder(order);
+
             console.log('✅ Commande créée:', order.orderNumber, '(Stripe PI:', session.payment_intent, ')');
 
-            // Décrémenter le stock des produits
+            // Décrémenter le stock des produits ET vérifier le stock faible
             for (const item of items) {
-                await prisma.product.update({
+                const updatedProduct = await prisma.product.update({
                     where: { id: item.id },
                     data: {
                         stock: {
@@ -313,6 +354,12 @@ const handleStripeWebhook = async (req, res) => {
                         }
                     }
                 });
+
+                // 🔔 Notification si stock faible (≤ 3 unités)
+                if (updatedProduct.stock <= 3 && updatedProduct.stock > 0) {
+                    await notifyLowStock(updatedProduct);
+                    console.log(`⚠️ Stock faible pour "${updatedProduct.name}": ${updatedProduct.stock} unité(s)`);
+                }
             }
 
             console.log('✅ Stock mis à jour');
@@ -322,7 +369,7 @@ const handleStripeWebhook = async (req, res) => {
                 const user = await prisma.user.findUnique({
                     where: { id: userId }
                 });
-                
+
                 if (user) {
                     // Recharger la commande avec les relations pour l'email
                     const orderWithDetails = await prisma.order.findUnique({
@@ -353,10 +400,10 @@ const handleStripeWebhook = async (req, res) => {
             console.error('❌ Erreur lors de la création de la commande:', error.message);
         }
     }
-    
-    
+
+
     // ÉVÉNEMENT 2 : REMBOURSEMENT
-    
+
     else if (event.type === 'charge.refunded') {
         const charge = event.data.object;
 
@@ -364,7 +411,7 @@ const handleStripeWebhook = async (req, res) => {
             const refundedAmount = charge.amount_refunded / 100;
             const totalAmount = charge.amount / 100;
             const isPartialRefund = refundedAmount < totalAmount;
-            
+
             console.log(`🔄 Remboursement détecté: ${refundedAmount}€ / ${totalAmount}€ (${isPartialRefund ? 'PARTIEL' : 'TOTAL'})`);
             console.log('   Charge ID:', charge.id);
 
@@ -397,7 +444,7 @@ const handleStripeWebhook = async (req, res) => {
             if (isPartialRefund) {
                 console.log('⚠️ Remboursement partiel détecté - Stock non modifié');
                 console.log(`   Montant remboursé: ${refundedAmount}€ sur ${totalAmount}€`);
-                
+
                 // Mettre à jour le statut → PARTIALLY_REFUNDED
                 await prisma.order.update({
                     where: { id: order.id },
@@ -406,12 +453,12 @@ const handleStripeWebhook = async (req, res) => {
                         refundedAmount: refundedAmount
                     }
                 });
-                
+
                 console.log('✅ Statut mis à jour → PARTIALLY_REFUNDED');
                 console.log('⚠️ Action manuelle requise pour gestion du stock');
             } else {
                 // Remboursement total : traitement automatique
-                
+
                 // Mettre à jour le statut de la commande
                 await prisma.order.update({
                     where: { id: order.id },
@@ -454,17 +501,17 @@ const handleStripeWebhook = async (req, res) => {
             return res.status(500).json({ error: 'Erreur traitement remboursement' });
         }
     }
-    
-   
+
+
     // ÉVÉNEMENT 3 : ÉCHEC DE PAIEMENT
-    
+
     else if (event.type === 'payment_intent.payment_failed') {
         console.log('❌ Échec du paiement');
     }
-    
-    
+
+
     // ÉVÉNEMENTS NON GÉRÉS
-    
+
     else {
         console.log(`ℹ️ Événement non géré: ${event.type}`);
     }

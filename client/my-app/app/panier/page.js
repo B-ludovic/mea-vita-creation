@@ -35,8 +35,14 @@ export default function CartPage() {
   const [productImages, setProductImages] = useState({});
 
   // NOUVEAUX ÉTATS POUR LA GESTION DES ADRESSES
-  // État pour stocker l'utilisateur connecté
-  const [user, setUser] = useState(null);
+  // État pour stocker l'utilisateur connecté (initialisé depuis localStorage)
+  const [user, setUser] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    }
+    return null;
+  });
   
   // État pour stocker toutes les adresses de l'utilisateur
   const [addresses, setAddresses] = useState([]);
@@ -116,25 +122,20 @@ export default function CartPage() {
     }
   };
 
-  // CHARGER L'UTILISATEUR ET SES ADRESSES
+  // CHARGER LES ADRESSES DE L'UTILISATEUR AU MONTAGE
   useEffect(() => {
-    // Récupérer l'utilisateur depuis localStorage
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      setUser(userData);
-      
+    if (user) {
       // Pré-remplir le formulaire avec les infos de l'utilisateur
       setNewAddress(prev => ({
         ...prev,
-        firstName: userData.firstName || '',
-        lastName: userData.lastName || ''
+        firstName: user.firstName || '',
+        lastName: user.lastName || ''
       }));
       
       // Charger les adresses de cet utilisateur
-      loadUserAddresses(userData.id);
+      loadUserAddresses(user.id);
     }
-  }, []);
+  }, [user?.id]); // Dépendance sur l'ID de l'utilisateur
 
   // FONCTION POUR CRÉER UNE NOUVELLE ADRESSE
   const handleCreateAddress = async (e) => {
@@ -184,10 +185,20 @@ export default function CartPage() {
 
   // Fonction pour rediriger vers Stripe
   const handleCheckout = async () => {
-    // VÉRIFIER QU'UNE ADRESSE EST SÉLECTIONNÉE (si l'utilisateur est connecté)
-    if (user && !selectedAddressId) {
+    // PROTECTION 1 : VÉRIFIER QUE L'UTILISATEUR EST CONNECTÉ
+    if (!user) {
+      showAlert('Vous devez être connecté pour passer commande', 'Connexion requise', '/icones/annuler.png');
+      // Rediriger vers la page de connexion après 2 secondes
+      setTimeout(() => {
+        window.location.href = '/login?redirect=/panier';
+      }, 2000);
+      return;
+    }
+
+    // PROTECTION 2 : VÉRIFIER QU'UNE ADRESSE EST SÉLECTIONNÉE
+    if (!selectedAddressId) {
       showAlert('Veuillez sélectionner une adresse de livraison', 'Adresse requise', '/icones/location.png');
-      return; // Arrêter la fonction ici
+      return;
     }
 
     setLoading(true);
@@ -458,6 +469,25 @@ export default function CartPage() {
           <div className="cart-summary">
             <h2>Récapitulatif</h2>
 
+            {/* Avertissement si non connecté */}
+            {!user && (
+              <div className="login-warning">
+                <Image 
+                  src="/icones/annuler.png" 
+                  alt="Attention" 
+                  width={24} 
+                  height={24}
+                />
+                <div>
+                  <strong>Connexion requise</strong>
+                  <p>Vous devez être connecté pour passer commande</p>
+                  <Link href="/login?redirect=/panier" className="login-link">
+                    Se connecter
+                  </Link>
+                </div>
+              </div>
+            )}
+
             {/* Code promo */}
             <PromoCodeInput 
               cartTotal={getCartTotal()}
@@ -494,9 +524,12 @@ export default function CartPage() {
             <button
               className="checkout-btn"
               onClick={handleCheckout}
-              disabled={loading}
+              disabled={loading || !user || !selectedAddressId}
+              title={!user ? 'Vous devez être connecté' : (!selectedAddressId ? 'Sélectionnez une adresse de livraison' : '')}
             >
-              {loading ? 'Redirection vers Stripe...' : 'Procéder au paiement'}
+              {loading ? 'Redirection vers Stripe...' : (
+                !user ? 'Connexion requise' : 'Procéder au paiement'
+              )}
             </button>
 
             <button

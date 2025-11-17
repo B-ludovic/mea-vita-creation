@@ -1,5 +1,7 @@
 // Importer Prisma
 const prisma = require('../config/prisma');
+// Importer Pusher pour les notifications en temps réel
+const { notifyNewReview } = require('../services/pusherService');
 
 // FONCTION POUR CRÉER UN AVIS
 const createReview = async (req, res) => {
@@ -42,22 +44,26 @@ const createReview = async (req, res) => {
 
     // Créer l'avis
     const review = await prisma.review.create({
-      data: {
-        productId,
-        userId,
-        rating: parseInt(rating),
-        comment,
-        isApproved: false // En attente de modération
-      },
-      include: {
-        User: {
-          select: {
-            firstName: true,
-            lastName: true
-          }
-        }
+  data: {
+    productId,
+    userId,
+    rating: parseInt(rating),
+    comment,
+    isApproved: false // En attente de modération
+  },
+  include: {
+    Product: true,  // Ajoute Product
+    User: {
+      select: {
+        firstName: true,
+        lastName: true
       }
-    });
+    }
+  }
+});
+
+    // Notifier l'admin via Pusher
+    await notifyNewReview(review);
 
     res.status(201).json({
       success: true,

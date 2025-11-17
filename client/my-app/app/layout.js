@@ -13,6 +13,9 @@ import Header from '../components/Header';
 // Import du CartProvider
 import { CartProvider } from '../contexts/CartContext';
 
+// Import du NotificationProvider pour les notifications admin
+import { NotificationProvider } from '../contexts/NotificationContext';
+
 // Import du wrapper pour le timer d'inactivité
 import InactivityWrapper from '../components/InactivityWrapper';
 
@@ -41,13 +44,16 @@ export default function RootLayout({ children }) {
         
         {/* CartProvider entoure toute l'application */}
         <CartProvider>
-          {/* InactivityWrapper gère la déconnexion automatique après 20 minutes */}
-          <InactivityWrapper>
-            {/* ConditionalLayout gère l'affichage du Header selon la route */}
-            <ConditionalLayout>
-              {children}
-            </ConditionalLayout>
-          </InactivityWrapper>
+          {/* NotificationProvider pour les notifications admin en temps réel */}
+          <NotificationProvider>
+            {/* InactivityWrapper gère la déconnexion automatique après 20 minutes */}
+            <InactivityWrapper>
+              {/* ConditionalLayout gère l'affichage du Header selon la route */}
+              <ConditionalLayout>
+                {children}
+              </ConditionalLayout>
+            </InactivityWrapper>
+          </NotificationProvider>
         </CartProvider>
       </body>
     </html>

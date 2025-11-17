@@ -7,11 +7,13 @@ import StarRating from '../../../components/StarRating';
 import Modal from '../../../components/Modal';
 import { useModal } from '../../../hooks/useModal';
 import { getAccessToken } from '../../../utils/auth';
+import { useNotifications } from '../../../contexts/NotificationContext';
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const { modalState, showAlert, showConfirm, closeModal } = useModal();
+  const { markReviewAsApproved } = useNotifications(); // Utiliser le contexte
 
   useEffect(() => {
     fetchReviews();
@@ -69,6 +71,7 @@ export default function AdminReviewsPage() {
 
       if (response.ok) {
         showAlert('L\'avis a été approuvé avec succès !', 'Avis approuvé', '/icones/validation.png');
+        markReviewAsApproved(); // Décrémenter le compteur dans le contexte
         fetchReviews();
       } else {
         showAlert('Une erreur est survenue lors de l\'approbation', 'Erreur', '/icones/annuler.png');

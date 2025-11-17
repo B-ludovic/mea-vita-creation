@@ -58,6 +58,7 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 🧾 **Historique factures admin** : Interface admin pour consulter et télécharger les factures
 - 🎠 **Navigation produits** : Carousel latéral avec boutons gauche/droite pour naviguer dans une catégorie
 - 🎟️ **Codes promo** : Système complet de codes promotionnels avec validation dates, limites, admin CRUD, intégration Stripe
+- 🔔 **Notifications temps réel admin** : Système Pusher pour notifications instantanées (nouvelles commandes, messages, avis, stock faible)
 
 ---
 
@@ -245,21 +246,22 @@ francois-maroquinerie/
 │   │       ├── codes-promo/# Gestion codes promotionnels (CRUD)
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
-│   │   ├── components/         # Composants React
-│   │   │   ├── Header.jsx      # En-tête navigation
-│   │   │   ├── Modal.jsx       # Composant modal réutilisable
-│   │   │   ├── ModalRefund.jsx # Modal remboursement 2-step (Instructions → Confirmation)
-│   │   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
-│   │   │   ├── StarRating.jsx  # Composant notation étoiles
-│   │   │   ├── CookieConsent.jsx # Bannière consentement RGPD
-│   │   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
-│   │   │   ├── ConditionalLayout.jsx
-│   │   │   ├── InactivityWrapper.jsx
-│   │   │   ├── ProductCarousel.jsx
-│   │   │   └── analytics/
-│   │   │       └── GoogleAnalytics.jsx # Composant Google Analytics
-│   ├── contexts/           # Context API
-│   │   └── CartContext.js  # Gestion du panier
+   │   ├── components/         # Composants React
+   │   │   ├── Header.jsx      # En-tête navigation
+   │   │   ├── Modal.jsx       # Composant modal réutilisable
+   │   │   ├── ModalRefund.jsx # Modal remboursement 2-step (Instructions → Confirmation)
+   │   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
+   │   │   ├── StarRating.jsx  # Composant notation étoiles
+   │   │   ├── CookieConsent.jsx # Bannière consentement RGPD
+   │   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
+   │   │   ├── ConditionalLayout.jsx
+   │   │   ├── InactivityWrapper.jsx
+   │   │   ├── ProductCarousel.jsx
+   │   │   └── analytics/
+   │   │       └── GoogleAnalytics.jsx # Composant Google Analytics
+   ├── contexts/           # Context API
+   │   ├── CartContext.js  # Gestion du panier
+   │   └── NotificationContext.js # Notifications temps réel admin (Pusher)
 │   ├── hooks/              # Custom hooks
 │   │   ├── useModal.js     # Hook pour gérer les modals
 │   │   └── useInactivityTimer.js
@@ -331,9 +333,10 @@ francois-maroquinerie/
 │   │   │   ├── rateLimiter.js
 │   │   │   ├── sanitizer.js
 │   │   │   └── upload.js   # Multer config (upload images)
-│   │   ├── services/       # Services
-│   │   │   ├── emailService.js # Service emails (Resend)
-│   │   │   └── invoiceService.js # Génération factures PDF
+   │   ├── services/       # Services
+   │   │   ├── emailService.js # Service emails (Resend)
+   │   │   ├── invoiceService.js # Génération factures PDF
+   │   │   └── pusherService.js # Service notifications temps réel (Pusher)
 │   │   ├── utils/          # Utilitaires
 │   │   │   └── carriers.js # Validation et URLs tracking transporteurs
 │   │   ├── templates/      # Templates
@@ -368,6 +371,8 @@ francois-maroquinerie/
 | `NEXT_PUBLIC_API_URL` | URL de l'API backend |
 | `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` | Clé publique Stripe |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ID Google Analytics (G-XXXXXXXXXX) |
+| `NEXT_PUBLIC_PUSHER_KEY` | Clé publique Pusher (notifications temps réel) |
+| `NEXT_PUBLIC_PUSHER_CLUSTER` | Cluster Pusher (eu, us2, us3, etc.) |
 
 ### Backend (`.env`)
 | Variable | Description |
@@ -378,7 +383,12 @@ francois-maroquinerie/
 | `STRIPE_WEBHOOK_SECRET` | Secret webhook Stripe |
 | `CLIENT_URL` | URL du frontend |
 | `JWT_SECRET` | Clé secrète JWT (min. 32 car.) |
+| `JWT_REFRESH_SECRET` | Clé secrète refresh tokens (différente de JWT_SECRET) |
 | `RESEND_API_KEY` | Clé API Resend (envoi emails) |
+| `PUSHER_APP_ID` | App ID Pusher (notifications temps réel) |
+| `PUSHER_KEY` | Clé Pusher (publique) |
+| `PUSHER_SECRET` | Secret Pusher (privé) |
+| `PUSHER_CLUSTER` | Cluster Pusher (eu, us2, us3, etc.) |
 
 ---
 
@@ -481,6 +491,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ **100% suppression inline styles** : Migration complète vers CSS classes sémantiques (150+ classes créées)
 - ✅ **Standardisation UI admin** : Hauteur uniforme 34px pour tous inputs/selects/boutons, padding 6px 10px cohérent
 - ✅ **Design responsive professionnel** : Menu burger avec animation PUSH, header fixe, mode cartes empilées pour tableaux mobiles
+- ✅ **Notifications temps réel avec Pusher** : Context API, WebSocket, badges animés (heartbeat CSS), intégration admin complète
 
 ### Backend
 - ✅ Architecture RESTful avec Express.js
@@ -522,6 +533,9 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ **Refactoring systématique** : Migration 31 fichiers (20 pages + 11 CSS), suppression code dupliqué, factorisation styles
 - ✅ **Optimisation performance** : -150 lignes CSS dupliqué, classes utilitaires, variables CSS, parsing plus rapide
 - ✅ **Maintenabilité renforcée** : Code DRY (Don't Repeat Yourself), architecture modulaire, separation of concerns
+- ✅ **Notifications temps réel** : Pusher WebSocket pour notifications admin instantanées (commandes, messages, avis, stock faible)
+- ✅ **Architecture événementielle** : pusherService.js centralisé, déclenchement automatique depuis controllers
+- ✅ **UX notifications** : Badges animés avec heartbeat CSS, dots rouges, compteurs temps réel, décompte automatique
 
 ### Sécurité
 
@@ -633,7 +647,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] CI/CD avec GitHub Actions
 - [x] ~~Compression et optimisation d'images (Sharp)~~ ✅ Fait (utils/imageOptimizer.js avec redimensionnement)
 - [x] ~~Recherche avancée et filtres~~ ✅ Fait (admin uniquement - catalogue visible en 1 coup d'œil)
-- [ ] Notifications en temps réel (WebSocket)
+- [x] ~~Notifications en temps réel~~ ✅ Fait (WebSocket)
 - [x] ~~Analytics et monitoring~~ ✅ Fait (Google Analytics avec RGPD)
 - [ ] Mode sombre / thème personnalisable
 - [ ] Internationalisation

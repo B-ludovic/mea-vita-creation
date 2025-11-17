@@ -1,6 +1,7 @@
 // Contrôleur pour les messages de contact avec protection Honeypot
 const { PrismaClient } = require('@prisma/client');
 const { sendContactEmail } = require('../services/emailService');
+const { notifyNewContactMessage } = require('../services/pusherService');
 const prisma = new PrismaClient();
 
 // FONCTION POUR ENVOYER UN MESSAGE DE CONTACT (AVEC HONEYPOT)
@@ -57,6 +58,10 @@ const sendContactMessage = async (req, res) => {
     });
 
     console.log('✅ Message de contact sauvegardé:', contactMessage.id);
+
+    // Notification via Pusher
+    await notifyNewContactMessage(contactMessage);
+
 
     
     // Envoyer un email à l'admin

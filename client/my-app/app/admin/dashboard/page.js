@@ -121,7 +121,7 @@ export default function AdminDashboard() {
   }
 
   // Couleurs pour les graphiques
-  const COLORS = ['#FF6B35', '#008B8B', '#FFD700', '#4B0082', '#FF8C42', '#e30e20ff'];
+  const COLORS = ['#FF6B35', '#008B8B', '#FFD700', '#4B0082', '#FF8C42', '#e716c1dd', '#6beadbff', '#A52A2A'];
 
   // Traduction des statuts de commande
   const statusTranslation = {
@@ -131,7 +131,8 @@ export default function AdminDashboard() {
     'CANCELLED': 'Annulé',
     'REFUNDED': 'Remboursé',
     'SHIPPED': 'Expédié',
-    'PARTIALLY_REFUNDED': 'Partiellement remboursé'
+    'PARTIALLY_REFUNDED': 'Partiellement remboursé',
+    'PROCESSING': 'En traitement'
   };
 
   // Données pour le graphique camembert des statuts

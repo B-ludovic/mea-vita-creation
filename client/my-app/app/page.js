@@ -88,10 +88,10 @@ export default function HomePage() {
             </Link>
 
             {/* Catégorie 2 : Porte-Carte */}
-            <Link href="/categories/porte-carte" className="category-card">
+            <Link href="/categories/porte-cartes" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
-                  src="/images/porte-carte/eclat-solaire-1.jpg" 
+                  src="/images/porte-cartes/eclat-solaire-1.jpg" 
                   alt="Porte-Carte" 
                   size="medium"
                   context="grid"
@@ -129,10 +129,10 @@ export default function HomePage() {
             </Link>
 
             {/* Catégorie 3 : Sac Cylindre */}
-            <Link href="/categories/sac-cylindre" className="category-card">
+            <Link href="/categories/sacs-cylindre" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
-                  src="/images/sac-cylindre/tambour-solaire-1.jpg" 
+                  src="/images/sacs-cylindre/tambour-solaire-1.jpg" 
                   alt="Sac Cylindre" 
                   size="medium"
                   context="grid"
@@ -170,10 +170,10 @@ export default function HomePage() {
             </Link>
 
             {/* Catégorie 4 : Sac en U */}
-            <Link href="/categories/sac-u" className="category-card">
+            <Link href="/categories/sacs-u" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
-                  src="/images/sac-u/arche-besace-fogo-1.jpg" 
+                  src="/images/sacs-u/arche-besace-fogo-1.jpg" 
                   alt="Sac en U" 
                   size="medium"
                   context="grid"

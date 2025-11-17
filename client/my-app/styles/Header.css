@@ -226,6 +226,7 @@
     background: linear-gradient(135deg, var(--solar-gradient-start), var(--solar-gradient-end));
     color: var(--text-dark);
     box-shadow: 0 4px 15px rgba(255, 218, 68, 0.35);
+    border: 1px solid rgba(255, 218, 68, 0.5);
 }
 
 .btn-signup:hover {

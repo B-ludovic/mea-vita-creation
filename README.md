@@ -625,8 +625,8 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 ### Fonctionnalités
 - [ ] Tests automatisés (Jest, Cypress)
 - [ ] CI/CD avec GitHub Actions
-- [ ] Compression et optimisation d'images (Sharp)
-- [ ] Recherche avancée et filtres
+- [x] ~~Compression et optimisation d'images (Sharp)~~ ✅ Fait (utils/imageOptimizer.js avec redimensionnement)
+- [x] ~~Recherche avancée et filtres~~ ✅ Fait (admin uniquement - catalogue visible en 1 coup d'œil)
 - [ ] Notifications en temps réel (WebSocket)
 - [x] ~~Analytics et monitoring~~ ✅ Fait (Google Analytics avec RGPD)
 - [ ] Mode sombre / thème personnalisable
@@ -640,7 +640,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [x] ~~SEO optimization~~ ✅ Fait (metadata.js, robots.txt, sitemap.xml)
 - [x] ~~Organisation icônes~~ ✅ Fait (48 icônes dans /icones/)
 - [x] ~~Templates emails externalisés~~ ✅ Fait (dossier templates/ avec 5 templates)
-- [ ] Envoi automatique des factures par email
+- [x] ~~Envoi automatique des factures par email~~ ✅ Fait (lien dans email confirmation commande)
 - [x] ~~Historique des factures dans l'admin~~ ✅ Fait (page factures avec recherche/filtres)
 - [ ] Système de relances clients (emails automatiques)
 - [x] ~~Bon de réduction / codes promo~~ ✅ Fait (système complet avec admin, validation, Stripe)

@@ -41,18 +41,18 @@ export default function CategoriesPage() {
   // Fonction pour déterminer la classe CSS selon le slug
   const getCategoryClass = (slug) => {
     if (slug === 'pochettes-unisexe') return 'pochettes';
-    if (slug === 'porte-cartes') return 'portes-carte';
-    if (slug === 'sacs-cylindre') return 'sac-cylindre';
-    if (slug === 'sacs-u') return 'sac-u';
+    if (slug === 'porte-cartes') return 'porte-cartes';
+    if (slug === 'sacs-cylindre') return 'sacs-cylindre';
+    if (slug === 'sacs-u') return 'sacs-u';
     return 'pochettes'; // Par défaut
   };
 
   // Fonction pour déterminer l'image selon le slug
   const getCategoryImage = (slug) => {
     if (slug === 'pochettes-unisexe') return '/images/pochettes-unisexe/atlas-fogo-1.jpg';
-    if (slug === 'porte-cartes') return '/images/porte-carte/eclat-amethyste-1.jpg';
-    if (slug === 'sacs-cylindre') return '/images/sac-cylindre/tambour-amethyste-1.jpg';
-    if (slug === 'sacs-u') return '/images/sac-u/arche-besace-fogo-1.jpg';
+    if (slug === 'porte-cartes') return '/images/porte-cartes/eclat-amethyste-1.jpg';
+    if (slug === 'sacs-cylindre') return '/images/sacs-cylindre/tambour-amethyste-1.jpg';
+    if (slug === 'sacs-u') return '/images/sacs-u/arche-besace-fogo-1.jpg';
     return '/images/pochettes-unisexe/atlas-fogo-1.jpg'; // Par défaut
   };
 

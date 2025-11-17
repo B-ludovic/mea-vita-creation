@@ -389,7 +389,7 @@
     .nav-menu {
         position: fixed;
         top: 0;
-        right: -100%; 
+        left: -100%; 
         width: 280px;
         height: 100vh;
         background: linear-gradient(135deg, var(--warm-beige) 0%, var(--light-beige) 100%);
@@ -398,9 +398,9 @@
         align-items: stretch;
         gap: 0;
         padding: 80px 2rem 2rem;
-        box-shadow: -5px 0 25px rgba(0,0,0,0.2);
+        box-shadow: 5px 0 25px rgba(0,0,0,0.2);
         /* 💥 Transition déjà uniformisée (mais l'effet 'ease' initial est retiré) */
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
         z-index: 999; 
         display: flex; /* Rendre visible pour l'animation */
@@ -408,7 +408,7 @@
 
     /* Menu ouvert */
     .nav-menu.mobile-open {
-        right: 0;
+        left: 0;
     }
     
     /* Afficher mobile-auth */
@@ -436,7 +436,7 @@
     .nav-menu li {
         width: 100%;
         opacity: 0;
-        transform: translateX(20px); 
+        transform: translateX(-20px); 
         /* 💥 Transition uniformisée */
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }

@@ -134,7 +134,7 @@ export default function CategoryPage() {
             // Afficher les produits
             <div className="products-grid">
               {products.map((product, index) => (
-                <div key={product.id} className="product-card">
+                <Link href={`/produits/${product.slug}`} key={product.id} className="product-card">
                   {/* Image du produit */}
                   <div className="product-image">
                     {product.ProductImage && product.ProductImage.length > 0 ? (
@@ -173,13 +173,18 @@ export default function CategoryPage() {
                     </h3>
                     <p>{product.description}</p>
                     <p className="product-price">{product.price.toFixed(2)}€</p>
-                    <Link href={`/produits/${product.slug}`}>
-                      <button className="product-btn">
-                        Voir les détails
-                      </button>
-                    </Link>
+                    <span className="product-link-text">
+                      Découvrir
+                      <Image
+                        src="/icones/arrow.png"
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="product-arrow-icon"
+                      />
+                    </span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}

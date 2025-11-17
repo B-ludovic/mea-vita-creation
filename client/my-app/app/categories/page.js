@@ -90,7 +90,7 @@ export default function CategoriesPage() {
         <div className="container">
           <div className="categories-grid">
             {categories.map((category) => (
-              <div key={category.id} className="category-card">
+              <Link href={`/categories/${category.slug}`} key={category.id} className="category-card">
                 <div className="category-image">
                   <Image
                     src={getCategoryImage(category.slug)}
@@ -113,11 +113,18 @@ export default function CategoriesPage() {
                     {category.name}
                   </h3>
                   <p>{category.description}</p>
-                  <Link href={`/categories/${category.slug}`} className="category-link">
-                    Découvrir →
-                  </Link>
+                  <span className="category-link-text">
+                    Découvrir
+                    <Image
+                      src="/icones/arrow.png"
+                      alt=""
+                      width={16}
+                      height={16}
+                      className="category-arrow-icon"
+                    />
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

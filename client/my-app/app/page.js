@@ -1,14 +1,32 @@
+'use client';
+
 // Import du CSS pour la page d'accueil
 import '../styles/Home.css';
 import Link from 'next/link';
 import Image from 'next/image';
-import { defaultMetadata } from '../utils/metadata';
-import OptimizedImage from '../components/OptimizedImage';
-
-// Métadonnées pour la page d'accueil Next.js
-export const metadata = defaultMetadata;
+import { useState, useEffect } from 'react';
 
 export default function HomePage() {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+        const data = await response.json();
+        if (data.success) {
+          setCategories(data.categories);
+        }
+      } catch (err) {
+        console.error('Erreur chargement catégories:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   return (
     <>
       {/* Section Hero */}
@@ -44,172 +62,49 @@ export default function HomePage() {
       {/* Grille des Catégories */}
       <section className="categories-section">
         <div className="container">
-
-          <div className="categories-grid">
-            {/* Catégorie 1 : Pochettes Unisexe */}
-            <Link href="/categories/pochettes-unisexe" className="category-card">
-              <div className="category-image">
-                <OptimizedImage 
-                  src="/images/pochettes-unisexe/atlas-solaire-1.jpg" 
-                  alt="Pochettes Unisexe" 
-                  size="medium"
-                  context="grid"
-                  width={400} 
-                  height={300}
-                  className="category-img"
-                />
-              </div>
-              <div className="category-info">
-                <h3>
-                  <Image 
-                    src="/Logo_Francois_sansfond.PNG" 
-                    alt="Logo" 
-                    width={30} 
-                    height={30} 
-                    className="category-icon"
-                  />
-                  Pochettes Unisexe
-                </h3>
-                <p>
-                  Élégantes et pratiques, nos pochettes s'adaptent à tous les styles. 
-                  Parfaites pour vos essentiels du quotidien.
-                </p>
-                <span className="category-link-text">
-                  Découvrir
-                  <Image
-                    src="/icones/arrow.png"
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="category-arrow-icon"
-                  />
-                </span>
-              </div>
-            </Link>
-
-            {/* Catégorie 2 : Porte-Carte */}
-            <Link href="/categories/porte-cartes" className="category-card">
-              <div className="category-image">
-                <OptimizedImage 
-                  src="/images/porte-cartes/eclat-solaire-1.jpg" 
-                  alt="Porte-Carte" 
-                  size="medium"
-                  context="grid"
-                  width={400} 
-                  height={300}
-                  className="category-img"
-                />
-              </div>
-              <div className="category-info">
-                <h3>
-                  <Image 
-                    src="/Logo_Francois_sansfond.PNG" 
-                    alt="Logo" 
-                    width={30} 
-                    height={30} 
-                    className="category-icon"
-                  />
-                  Porte-Carte
-                </h3>
-                <p>
-                  Compacts et raffinés, nos porte-cartes allient minimalisme et élégance. 
-                  L'accessoire essentiel pour vos cartes.
-                </p>
-                <span className="category-link-text">
-                  Découvrir
-                  <Image
-                    src="/icones/arrow.png"
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="category-arrow-icon"
-                  />
-                </span>
-              </div>
-            </Link>
-
-            {/* Catégorie 3 : Sac Cylindre */}
-            <Link href="/categories/sacs-cylindre" className="category-card">
-              <div className="category-image">
-                <OptimizedImage 
-                  src="/images/sacs-cylindre/tambour-solaire-1.jpg" 
-                  alt="Sac Cylindre" 
-                  size="medium"
-                  context="grid"
-                  width={400} 
-                  height={300}
-                  className="category-img"
-                />
-              </div>
-              <div className="category-info">
-                <h3>
-                  <Image 
-                    src="/Logo_Francois_sansfond.PNG" 
-                    alt="Logo" 
-                    width={30} 
-                    height={30} 
-                    className="category-icon"
-                  />
-                  Sacs & Accessoires
-                </h3>
-                <p>
-                  Design unique et original, nos sacs cylindres se démarquent par leur forme distinctive. 
-                  L'audace faite accessoire.
-                </p>
-                <span className="category-link-text">
-                  Découvrir
-                  <Image
-                    src="/icones/arrow.png"
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="category-arrow-icon"
-                  />
-                </span>
-              </div>
-            </Link>
-
-            {/* Catégorie 4 : Sac en U */}
-            <Link href="/categories/sacs-u" className="category-card">
-              <div className="category-image">
-                <OptimizedImage 
-                  src="/images/sacs-u/arche-besace-fogo-1.jpg" 
-                  alt="Sac en U" 
-                  size="medium"
-                  context="grid"
-                  width={400} 
-                  height={300}
-                  className="category-img"
-                />
-              </div>
-              <div className="category-info">
-                <h3>
-                  <Image 
-                    src="/Logo_Francois_sansfond.PNG" 
-                    alt="Logo" 
-                    width={30} 
-                    height={30} 
-                    className="category-icon"
-                  />
-                  Trousses
-                </h3>
-                <p>
-                  Spacieux et élégant, le sac U est parfait pour toutes les occasions. 
-                  Votre compagnon idéal au quotidien.
-                </p>
-                <span className="category-link-text">
-                  Découvrir
-                  <Image
-                    src="/icones/arrow.png"
-                    alt=""
-                    width={16}
-                    height={16}
-                    className="category-arrow-icon"
-                  />
-                </span>
-              </div>
-            </Link>
-          </div>
+          {loading ? (
+            <p>Chargement des catégories...</p>
+          ) : (
+            <div className="categories-grid">
+              {categories.map((category) => (
+                <Link href={`/categories/${category.slug}`} key={category.id} className="category-card">
+                  <div className="category-image">
+                    <Image 
+                      src={category.image || '/images/pochettes-unisexe/atlas-solaire-1.jpg'}
+                      alt={category.name}
+                      width={400} 
+                      height={300}
+                      className="category-img"
+                      style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                    />
+                  </div>
+                  <div className="category-info">
+                    <h3>
+                      <Image 
+                        src="/Logo_Francois_sansfond.PNG" 
+                        alt="Logo" 
+                        width={30} 
+                        height={30} 
+                        className="category-icon"
+                      />
+                      {category.name}
+                    </h3>
+                    <p>{category.description}</p>
+                    <span className="category-link-text">
+                      Découvrir
+                      <Image
+                        src="/icones/arrow.png"
+                        alt=""
+                        width={16}
+                        height={16}
+                        className="category-arrow-icon"
+                      />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

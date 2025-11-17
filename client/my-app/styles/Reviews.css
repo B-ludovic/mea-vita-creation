@@ -2,7 +2,8 @@
 
 .reviews-section {
     margin-top: 6rem; 
-    padding-top: 4rem;
+    padding: 4rem 0;
+    background: var(--white);
     border-top: 2px solid var(--light-beige);
 }
 
@@ -128,6 +129,11 @@
 .review-form .admin-btn-primary {
     /* Styles primaires hérités du bloc précédent */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px;
+    padding: 14px 18px;
+    color: var(--text-dark);
+    background-color: rgba(255, 193, 7, 0.6);
+    border: 1px solid rgba(255, 193, 7, 0.8);
 }
 
 .review-form .admin-btn-primary:hover:not(:disabled) {
@@ -172,6 +178,25 @@
     margin-top: 2rem;
 }
 
+.no-reviews {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--cream);
+    border-radius: 20px;
+    margin-top: 2rem;
+}
+
+.no-reviews h3 {
+    color: var(--text-dark);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.no-reviews p {
+    color: var(--text-light);
+    font-size: 1.1rem;
+}
+
 .review-card {
     background: var(--white);
     padding: 2rem;
@@ -187,7 +212,70 @@
     transform: translateY(-2px);
 }
 
-/* ... (Le reste des styles de cartes et badges restent inchangés) ... */
+.review-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.review-author-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: var(--cream);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-orange);
+}
+
+.verified-icon {
+    display: inline-block;
+}
+
+.review-date {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+
+.review-comment {
+    color: var(--text-dark);
+    line-height: 1.7;
+    margin-top: 1rem;
+    font-size: 1rem;
+}
+
+.review-icon {
+    display: inline-block;
+}
+
+.error-message {
+    color: var(--error-red, #dc3545);
+    background: rgba(220, 53, 69, 0.1);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.review-form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
 
 
 /* --- RESPONSIVE BREAKPOINTS --- */
@@ -197,7 +285,7 @@
     .reviews-section {
         /* 💥 Cohérence: Réduction de la marge sur mobile */
         margin-top: 3rem;
-        padding-top: 2rem;
+        padding: 2rem 0;
     }
     
     .reviews-summary {
@@ -228,11 +316,7 @@
 /* Très petits mobiles (< 480px) */
 @media (max-width: 480px) {
     .reviews-section {
-        padding: 1.5rem 1rem;
-    }
-    
-    .reviews-header {
-        padding: 0 1rem;
+        padding: 1.5rem 0;
     }
     
     .review-form {

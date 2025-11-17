@@ -527,35 +527,36 @@ return (
 
         {/* SECTION AVIS */}
         <div className="reviews-section">
-            <div className="reviews-header">
-                <h2>Avis clients</h2>
+            <div className="container">
+                <div className="reviews-header">
+                    <h2>Avis clients</h2>
 
-                <button
-                    className="admin-btn admin-btn-primary"
-                    onClick={() => setShowReviewForm(!showReviewForm)}
-                >
-                    <Image
-                        src="/icones/user-rating.png"
-                        alt="Laisser un avis"
-                        width={20}
-                        height={20}
-                        className="review-icon"
-                    />
-                    Laisser un avis
-                </button>
+                    <button
+                        className="admin-btn admin-btn-primary"
+                        onClick={() => setShowReviewForm(!showReviewForm)}
+                    >
+                        <Image
+                            src="/icones/user-rating.png"
+                            alt="Laisser un avis"
+                            width={20}
+                            height={20}
+                            className="review-icon"
+                        />
+                        Laisser un avis
+                    </button>
 
-                {totalReviews > 0 && (
-                    <div className="reviews-summary">
-                        <div className="average-rating">{averageRating}</div>
-                        <div className="rating-details">
-                            <StarRating rating={Math.round(averageRating)} readonly size="medium" />
-                            <div className="total-reviews">
-                                Basé sur {totalReviews} avis
+                    {totalReviews > 0 && (
+                        <div className="reviews-summary">
+                            <div className="average-rating">{averageRating}</div>
+                            <div className="rating-details">
+                                <StarRating rating={Math.round(averageRating)} readonly size="medium" />
+                                <div className="total-reviews">
+                                    Basé sur {totalReviews} avis
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
 
             {/* Formulaire d'avis */}
             {showReviewForm && (
@@ -654,6 +655,7 @@ return (
                         <p>Soyez le premier à donner votre avis sur ce produit !</p>
                     </div>
                 )}
+            </div>
             </div>
         </div>
 

@@ -47,7 +47,7 @@ export default function HomePage() {
 
           <div className="categories-grid">
             {/* Catégorie 1 : Pochettes Unisexe */}
-            <div className="category-card">
+            <Link href="/categories/pochettes-unisexe" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
                   src="/images/pochettes-unisexe/atlas-solaire-1.jpg" 
@@ -74,14 +74,21 @@ export default function HomePage() {
                   Élégantes et pratiques, nos pochettes s'adaptent à tous les styles. 
                   Parfaites pour vos essentiels du quotidien.
                 </p>
-                <Link href="/categories/pochettes-unisexe" className="category-link">
-                  Découvrir →
-                </Link>
+                <span className="category-link-text">
+                  Découvrir
+                  <Image
+                    src="/icones/arrow.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="category-arrow-icon"
+                  />
+                </span>
               </div>
-            </div>
+            </Link>
 
             {/* Catégorie 2 : Porte-Carte */}
-            <div className="category-card">
+            <Link href="/categories/porte-carte" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
                   src="/images/porte-carte/eclat-solaire-1.jpg" 
@@ -108,14 +115,21 @@ export default function HomePage() {
                   Compacts et raffinés, nos porte-cartes allient minimalisme et élégance. 
                   L'accessoire essentiel pour vos cartes.
                 </p>
-                <Link href="/categories/porte-carte" className="category-link">
-                  Découvrir →
-                </Link>
+                <span className="category-link-text">
+                  Découvrir
+                  <Image
+                    src="/icones/arrow.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="category-arrow-icon"
+                  />
+                </span>
               </div>
-            </div>
+            </Link>
 
             {/* Catégorie 3 : Sac Cylindre */}
-            <div className="category-card">
+            <Link href="/categories/sac-cylindre" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
                   src="/images/sac-cylindre/tambour-solaire-1.jpg" 
@@ -142,14 +156,21 @@ export default function HomePage() {
                   Design unique et original, nos sacs cylindres se démarquent par leur forme distinctive. 
                   L'audace faite accessoire.
                 </p>
-                <Link href="/categories/sac-cylindre" className="category-link">
-                  Découvrir →
-                </Link>
+                <span className="category-link-text">
+                  Découvrir
+                  <Image
+                    src="/icones/arrow.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="category-arrow-icon"
+                  />
+                </span>
               </div>
-            </div>
+            </Link>
 
             {/* Catégorie 4 : Sac en U */}
-            <div className="category-card">
+            <Link href="/categories/sac-u" className="category-card">
               <div className="category-image">
                 <OptimizedImage 
                   src="/images/sac-u/arche-besace-fogo-1.jpg" 
@@ -176,11 +197,18 @@ export default function HomePage() {
                   Spacieux et élégant, le sac U est parfait pour toutes les occasions. 
                   Votre compagnon idéal au quotidien.
                 </p>
-                <Link href="/categories/sac-u" className="category-link">
-                  Découvrir →
-                </Link>
+                <span className="category-link-text">
+                  Découvrir
+                  <Image
+                    src="/icones/arrow.png"
+                    alt=""
+                    width={16}
+                    height={16}
+                    className="category-arrow-icon"
+                  />
+                </span>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

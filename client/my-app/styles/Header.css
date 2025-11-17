@@ -16,7 +16,7 @@
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* ALIGNEMENT VERTICAL DANS LE HEADER */
     padding: 0 1.5rem;
     gap: 0.75rem;
     flex-wrap: wrap; 
@@ -34,7 +34,8 @@
     width: 40px;
     height: 40px;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .logo:hover .logo-img {
@@ -53,9 +54,9 @@
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 2.5rem;
+    gap: 1.5rem;
     align-items: center;
-    flex: 1;
+    /* Retrait de flex: 1; pour éviter de trop pousser la section droite */
     justify-content: center;
     flex-wrap: wrap; 
 }
@@ -64,7 +65,8 @@
     color: var(--text-dark);
     font-weight: 500;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     padding: 0.3rem 0;
     white-space: nowrap;
@@ -82,7 +84,8 @@
     width: 0;
     height: 2px;
     background: var(--primary-orange);
-    transition: width 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-menu a:hover::after {
@@ -98,6 +101,19 @@
     gap: 0.3rem;
 }
 
+/* Masquer le lien panier en desktop (uniquement visible en mobile burger) */
+.cart-link.mobile-only-link,
+.mobile-only-link {
+    display: flex;
+}
+
+@media (min-width: 769px) {
+    .cart-link.mobile-only-link,
+    .mobile-only-link {
+        display: none;
+    }
+}
+
 .cart-icon,
 .orders-icon,
 .addresses-icon,
@@ -105,7 +121,8 @@
     width: 20px;
     height: 20px;
     object-fit: contain;
-    transition: transform 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: inline-block;
     flex-shrink: 0;
 }
@@ -125,13 +142,71 @@
     flex-wrap: nowrap;
 }
 
+/* Section desktop droite (panier + auth) */
+.desktop-right-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .desktop-right-section {
+        display: none;
+    }
+}
+
+/* Icône panier desktop */
+.desktop-cart-icon {
+    position: relative;
+    display: none; /* Masqué sur mobile */
+    align-items: center;
+    justify-content: center;
+    
+    /* 💥 ALIGNEMENT VERTICAL: Assurer que le padding est cohérent avec les boutons (10px) */
+    padding: 10px; 
+    
+    border-radius: 50%;
+    background: rgba(255, 171, 0, 0.1);
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.desktop-cart-icon:hover {
+    background: rgba(255, 171, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.desktop-cart-icon img {
+    filter: brightness(0) saturate(100%) invert(51%) sepia(77%) saturate(2045%) hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--primary-orange);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    box-shadow: 0 2px 8px rgba(255, 171, 0, 0.4);
+}
+
 .auth-buttons button {
-    padding: 10px 20px;
+    /* 💥 ALIGNEMENT VERTICAL: Padding utilisé par l'icône panier (10px/0.625rem) */
+    padding: 10px 20px; 
     border-radius: 50px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     white-space: nowrap;
 }
@@ -169,6 +244,7 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
 
@@ -178,7 +254,8 @@
     font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: transparent;
     color: #c62828;
     border: 2px solid #c62828;
@@ -202,8 +279,8 @@
     border: none;
     cursor: pointer;
     padding: 0;
-    z-index: 1001;
-    transition: transform 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
 }
 
@@ -216,7 +293,8 @@
     height: 3px;
     background: var(--text-dark);
     border-radius: 10px;
-    transition: all 0.3s ease;
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     transform-origin: center;
 }
 
@@ -301,7 +379,8 @@
 
     /* Cacher navigation et auth buttons desktop */
     .nav-menu, 
-    .auth-buttons {
+    .auth-buttons,
+    .desktop-right-section { /* Masquer toute la section desktop de droite */
         display: none;
     }
 
@@ -319,7 +398,8 @@
         gap: 0;
         padding: 80px 2rem 2rem;
         box-shadow: -5px 0 25px rgba(0,0,0,0.2);
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Animation plus courte et plus réactive */
+        /* 💥 Transition déjà uniformisée (mais l'effet 'ease' initial est retiré) */
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         overflow-y: auto;
         z-index: 999; 
         display: flex; /* Rendre visible pour l'animation */
@@ -344,50 +424,14 @@
         gap: 0.75rem;
         align-items: stretch;
     }
-
-    .mobile-auth-content .user-greeting {
-        text-align: center;
-        justify-content: center;
-    }
-
-    .mobile-auth-content .btn-login,
-    .mobile-auth-content .btn-signup {
-        width: 100%;
-        padding: 12px 20px;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        text-align: center;
-    }
-
-    .mobile-auth-content .btn-login {
-        background: transparent;
-        color: var(--primary-orange);
-        border: 2px solid var(--primary-orange);
-    }
-
-    .mobile-auth-content .btn-login:hover {
-        background: var(--primary-orange);
-        color: var(--white);
-    }
-
-    .mobile-auth-content .btn-signup {
-        background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
-        color: var(--white);
-        border: none;
-        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-    }
-
-    .mobile-auth-content .btn-signup:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
-    }
-
+    
     /* Styles des liens et animations staggered */
     .nav-menu li {
         width: 100%;
         opacity: 0;
         transform: translateX(20px); 
-        transition: all 0.3s ease;
+        /* 💥 Transition uniformisée */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .nav-menu.mobile-open li {
@@ -422,13 +466,6 @@
         position: relative; 
     }
 
-    .nav-menu .cart-icon,
-    .nav-menu .orders-icon,
-    .nav-menu .addresses-icon,
-    .nav-menu .admin-icon {
-        display: none;
-    }
-
     .nav-menu a::after {
         bottom: 8px;
         left: 1rem;
@@ -448,7 +485,8 @@
         height: 100vh;
         background: rgba(0,0,0,0.5);
         z-index: 998; 
-        animation: fadeInSmooth 0.4s ease;
+        /* 💥 Transition uniformisée */
+        animation: fadeInSmooth 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         cursor: pointer;
     }
 
@@ -481,4 +519,111 @@
     .nav-menu {
         width: 260px; 
     }
+}
+
+/* Afficher l'icône panier en desktop uniquement */
+@media (min-width: 769px) {
+    .desktop-cart-icon {
+        display: flex;
+    }
+}
+
+/* Dropdown menu utilisateur (desktop) */
+.user-dropdown-container {
+    position: relative;
+}
+
+.user-greeting-button {
+    background: transparent;
+    border: none;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    /* 💥 Transition uniformisée */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dropdown-arrow {
+    /* 💥 Transition uniformisée */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dropdown-arrow.open {
+    transform: rotate(180deg);
+}
+
+.user-greeting-button:hover {
+    background: rgba(255, 171, 0, 0.1);
+    color: var(--primary-orange);
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 220px;
+    padding: 0.5rem 0;
+    z-index: 1001;
+    /* 💥 Transition uniformisée */
+    animation: dropdownFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-dropdown a,
+.user-dropdown .dropdown-logout {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    font-weight: 500;
+    /* 💥 Transition uniformisée */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-dropdown a:hover,
+.user-dropdown .dropdown-logout:hover {
+    background: rgba(255, 171, 0, 0.08);
+    color: var(--primary-orange);
+}
+
+.user-dropdown hr {
+    margin: 0.5rem 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+.user-dropdown .dropdown-logout {
+    color: #d32f2f;
+}
+
+.user-dropdown .dropdown-logout:hover {
+    background: rgba(211, 47, 47, 0.08);
+    color: #b71c1c;
 }

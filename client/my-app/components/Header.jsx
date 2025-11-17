@@ -20,6 +20,8 @@ export default function Header() {
     const [user, setUser] = useState(null);
     // État pour le menu burger mobile (ouvert/fermé)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // État pour le dropdown user desktop
+    const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     // État pour savoir si le composant est monté (évite l'erreur d'hydratation)
     const [isMounted, setIsMounted] = useState(false);
     // Utiliser le contexte du panier
@@ -62,16 +64,21 @@ export default function Header() {
     // useEffect pour fermer le menu quand on clique en dehors
     useEffect(() => {
         const handleClickOutside = (event) => {
-            // Si le menu est ouvert et qu'on clique en dehors du menu et du bouton burger
+            // Fermer le menu burger
             if (isMenuOpen && 
                 !event.target.closest('.nav-menu') && 
                 !event.target.closest('.burger-button')) {
                 setIsMenuOpen(false);
             }
+            // Fermer le dropdown user
+            if (isUserDropdownOpen && 
+                !event.target.closest('.user-dropdown-container')) {
+                setIsUserDropdownOpen(false);
+            }
         };
 
         // Ajouter l'écouteur d'événement
-        if (isMenuOpen) {
+        if (isMenuOpen || isUserDropdownOpen) {
             document.addEventListener('mousedown', handleClickOutside);
         }
 
@@ -79,7 +86,7 @@ export default function Header() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isMenuOpen]);
+    }, [isMenuOpen, isUserDropdownOpen]);
 
     // Fonction pour se déconnecter
     const handleLogout = () => {
@@ -152,35 +159,35 @@ export default function Header() {
                         <Link href="/contact" onClick={closeMenu}>Contact</Link>
                     </li>
                     <li>
-                        <Link href="/panier" className="cart-link" onClick={closeMenu}>
+                        <Link href="/panier" className="cart-link mobile-only-link" onClick={closeMenu}>
                             Panier ({isMounted ? getCartCount() : 0})
                         </Link>
                     </li>
                     {user && (
                         <>
-                            <li>
+                            <li className="mobile-only-link">
                                 <Link href="/mes-commandes" className="orders-link" onClick={closeMenu}>
                                     Mes commandes
                                 </Link>
                             </li>
-                            <li>
+                            <li className="mobile-only-link">
                                 <Link href="/ma-wishlist" className="wishlist-link" onClick={closeMenu}>
                                     Mes Favoris
                                 </Link>
                             </li>
-                            <li>
+                            <li className="mobile-only-link">
                                 <Link href="/mes-adresses" className="addresses-link" onClick={closeMenu}>
                                     Mes adresses
                                 </Link>
                             </li>
                             {user.role === 'ADMIN' && (
                                 <>
-                                    <li>
+                                    <li className="mobile-only-link">
                                         <Link href="/admin/avis" className="admin-link" onClick={closeMenu}>
                                             Avis clients
                                         </Link>
                                     </li>
-                                    <li>
+                                    <li className="mobile-only-link">
                                         <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
                                             Admin
                                         </Link>
@@ -217,27 +224,85 @@ export default function Header() {
                 </ul>
 
                 {/* Affichage conditionnel selon si l'utilisateur est connecté - VERSION DESKTOP */}
-                {user ? (
-                    // Si connecté : afficher le nom + bouton déconnexion
-                    <div className="auth-buttons desktop-only">
-                        <span className="user-greeting">
-                            Bonjour {user.firstName} !
-                        </span>
-                        <button className="btn-logout" onClick={handleLogout}>
-                            Déconnexion
-                        </button>
-                    </div>
-                ) : (
-                    // Si non connecté : afficher les boutons connexion/inscription
-                    <div className="auth-buttons desktop-only">
-                        <Link href="/login">
-                            <button className="btn-login">Connexion</button>
-                        </Link>
-                        <Link href="/register">
-                            <button className="btn-signup">Inscription</button>
-                        </Link>
-                    </div>
-                )}
+                <div className="desktop-right-section">
+                    {/* Icône panier desktop */}
+                    <Link href="/panier" className="desktop-cart-icon">
+                        <Image 
+                            src="/icones/shopping.png" 
+                            alt="Panier" 
+                            width={28}
+                            height={28}
+                        />
+                        {isMounted && getCartCount() > 0 && (
+                            <span className="cart-badge">{getCartCount()}</span>
+                        )}
+                    </Link>
+
+                    {user ? (
+                        // Si connecté : afficher le dropdown user
+                        <div className="user-dropdown-container">
+                            <button 
+                                className="user-greeting-button"
+                                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                            >
+                                Bonjour {user.firstName} !
+                                <Image 
+                                    src="/icones/down.png" 
+                                    alt="" 
+                                    width={12} 
+                                    height={12}
+                                    className={`dropdown-arrow ${isUserDropdownOpen ? 'open' : ''}`}
+                                />
+                            </button>
+                            
+                            {isUserDropdownOpen && (
+                                <div className="user-dropdown">
+                                    <Link href="/mes-commandes" onClick={() => setIsUserDropdownOpen(false)}>
+                                        <Image src="/icones/shopping.png" alt="" width={18} height={18} />
+                                        Mes commandes
+                                    </Link>
+                                    <Link href="/ma-wishlist" onClick={() => setIsUserDropdownOpen(false)}>
+                                        <Image src="/icones/favori.png" alt="" width={18} height={18} />
+                                        Mes Favoris
+                                    </Link>
+                                    <Link href="/mes-adresses" onClick={() => setIsUserDropdownOpen(false)}>
+                                        <Image src="/icones/home.png" alt="" width={18} height={18} />
+                                        Mes adresses
+                                    </Link>
+                                    {user.role === 'ADMIN' && (
+                                        <>
+                                            <Link href="/admin/avis" onClick={() => setIsUserDropdownOpen(false)}>
+                                                <Image src="/icones/review.png" alt="" width={18} height={18} />
+                                                Avis clients
+                                            </Link>
+                                            <Link href="/admin/dashboard" onClick={() => setIsUserDropdownOpen(false)}>
+                                                <Image src="/icones/satistic.png" alt="" width={18} height={18} />
+                                                Admin
+                                            </Link>
+                                        </>
+                                    )}
+                                    <hr />
+                                    <button className="dropdown-logout" onClick={() => {
+                                        setIsUserDropdownOpen(false);
+                                        handleLogout();
+                                    }}>
+                                        Déconnexion
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        // Si non connecté : afficher les boutons connexion/inscription
+                        <div className="auth-buttons desktop-only">
+                            <Link href="/login">
+                                <button className="btn-login">Connexion</button>
+                            </Link>
+                            <Link href="/register">
+                                <button className="btn-signup">Inscription</button>
+                            </Link>
+                        </div>
+                    )}
+                </div>
             </nav>
         </header>
     );

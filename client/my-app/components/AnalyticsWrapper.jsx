@@ -10,15 +10,15 @@ export default function AnalyticsWrapper({ GA_MEASUREMENT_ID }) {
 
   useEffect(() => {
     // Vérifier si le consentement a déjà été donné
-    const consent = localStorage.getItem('cookieConsent');
-    if (consent === 'accepted') {
+    const consent = localStorage.getItem('cookie-consent');
+    if (consent === 'true') {
       setHasConsent(true);
     }
   }, []);
 
   const handleConsentChange = (consent) => {
     setHasConsent(consent);
-    localStorage.setItem('cookieConsent', consent ? 'accepted' : 'rejected');
+    // La clé est déjà sauvegardée dans CookieConsent
   };
 
   return (

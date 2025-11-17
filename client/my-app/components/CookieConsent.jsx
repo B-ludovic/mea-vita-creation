@@ -6,25 +6,21 @@ import Image from 'next/image';
 import '../styles/CookieConsent.css';
 
 export default function CookieConsent({ onConsentChange }) {
-  const [showBanner, setShowBanner] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('cookie-consent') === null;
-    }
-    return false;
-  });
-  
-  const [hasConsent, setHasConsent] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const consent = localStorage.getItem('cookie-consent');
-      return consent === 'true' ? true : consent === 'false' ? false : null;
-    }
-    return null;
-  });
+  const [showBanner, setShowBanner] = useState(false);
+  const [hasConsent, setHasConsent] = useState(null);
 
   useEffect(() => {
-    // Notifier le parent du consentement existant
-    if (hasConsent !== null) {
-      onConsentChange(hasConsent);
+    // Vérifier le consentement uniquement côté client
+    const consent = localStorage.getItem('cookie-consent');
+    
+    if (consent === null) {
+      // Aucun consentement enregistré, afficher la bannière
+      setShowBanner(true);
+    } else {
+      // Consentement déjà enregistré
+      const consentValue = consent === 'true';
+      setHasConsent(consentValue);
+      onConsentChange(consentValue);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,14 +1,14 @@
 // Page de confirmation après paiement réussi
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../../contexts/CartContext';
 import '../../styles/Success.css';
 
-export default function SuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const sessionId = searchParams.get('session_id');
@@ -61,5 +61,29 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="success-container">
+        <div className="container">
+          <div className="success-card">
+            <div className="success-icon">
+              <Image 
+                src="/icones/payment.png" 
+                alt="Chargement" 
+                width={120} 
+                height={120}
+              />
+            </div>
+            <h1 className="success-title">Chargement...</h1>
+          </div>
+        </div>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }

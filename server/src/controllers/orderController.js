@@ -161,11 +161,19 @@ const getOrderById = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body;
+    const { status, refundedAmount } = req.body;
+
+    // Préparer les données à mettre à jour
+    const updateData = { status };
+    
+    // Ajouter refundedAmount s'il est fourni
+    if (refundedAmount !== undefined) {
+      updateData.refundedAmount = parseFloat(refundedAmount);
+    }
 
     const order = await prisma.order.update({
       where: { id: orderId },
-      data: { status }
+      data: updateData
     });
 
     res.json({

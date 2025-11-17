@@ -61,6 +61,7 @@ model Order {
   taxAmount             Float       @default(0)
   discountAmount        Float       @default(0)
   totalAmount           Float
+  refundedAmount        Float       @default(0)
   stripePaymentIntentId String?     @unique
   promoCode             String?
   notes                 String?
@@ -229,6 +230,7 @@ enum OrderStatus {
   DELIVERED
   CANCELLED
   REFUNDED
+  PARTIALLY_REFUNDED
 }
 
 enum UserRole {

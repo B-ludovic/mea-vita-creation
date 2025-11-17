@@ -345,6 +345,43 @@
         align-items: stretch;
     }
 
+    .mobile-auth-content .user-greeting {
+        text-align: center;
+        justify-content: center;
+    }
+
+    .mobile-auth-content .btn-login,
+    .mobile-auth-content .btn-signup {
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    .mobile-auth-content .btn-login {
+        background: transparent;
+        color: var(--primary-orange);
+        border: 2px solid var(--primary-orange);
+    }
+
+    .mobile-auth-content .btn-login:hover {
+        background: var(--primary-orange);
+        color: var(--white);
+    }
+
+    .mobile-auth-content .btn-signup {
+        background: linear-gradient(135deg, var(--primary-orange), var(--secondary-orange));
+        color: var(--white);
+        border: none;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    .mobile-auth-content .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+    }
+
     /* Styles des liens et animations staggered */
     .nav-menu li {
         width: 100%;
@@ -364,6 +401,10 @@
     .nav-menu.mobile-open li:nth-child(5) { animation-delay: 0.2s; }
     .nav-menu.mobile-open li:nth-child(6) { animation-delay: 0.25s; }
     .nav-menu.mobile-open li:nth-child(7) { animation-delay: 0.3s; }
+    .nav-menu.mobile-open li:nth-child(8) { animation-delay: 0.35s; }
+    .nav-menu.mobile-open li:nth-child(9) { animation-delay: 0.4s; }
+    .nav-menu.mobile-open li:nth-child(10) { animation-delay: 0.45s; }
+    .nav-menu.mobile-open li:nth-child(11) { animation-delay: 0.5s; } /* mobile-auth */
 
     @keyframes slideInStaggered {
         to {

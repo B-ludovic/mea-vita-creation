@@ -5,8 +5,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Modal from '../../../components/Modal';
+import ModalRefund from '../../../components/ModalRefund';
 import { useModal } from '../../../hooks/useModal';
-import { getAccessToken } from '../../../utils/auth';
+import { fetchWithAuth } from '../../../utils/auth';
 import '../../../styles/Admin.css';
 
 export default function AdminOrdersPage() {
@@ -14,6 +15,8 @@ export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const [showRefundModal, setShowRefundModal] = useState(false);
+  const [refundType, setRefundType] = useState('REFUNDED');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [carriers, setCarriers] = useState([]);
   const [trackingData, setTrackingData] = useState({
@@ -46,20 +49,7 @@ export default function AdminOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      // Récupérer le token depuis localStorage
-      const token = getAccessToken();
-      if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
-        router.push('/login');
-        return;
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/all`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/all`);
 
       // Vérifier si l'utilisateur est autorisé
       if (response.status === 403) {
@@ -82,20 +72,21 @@ export default function AdminOrdersPage() {
   };
 
   const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      // Récupérer le token depuis localStorage
-      const token = getAccessToken();
-      if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
-        router.push('/login');
-        return;
-      }
+    // Si c'est un remboursement, ouvrir le modal au lieu de changer direct
+    if (newStatus === 'REFUNDED' || newStatus === 'PARTIALLY_REFUNDED') {
+      const order = orders.find(o => o.id === orderId);
+      setSelectedOrder(order);
+      setRefundType(newStatus);
+      setShowRefundModal(true);
+      return; // On ne change pas le statut tout de suite
+    }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status`, {
+    // Pour les autres statuts, on change normalement
+    try {
+      const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ status: newStatus })
       });
@@ -117,6 +108,43 @@ export default function AdminOrdersPage() {
     } catch (error) {
       console.error('Erreur:', error);
       showAlert('Erreur lors de la mise à jour du statut', 'Erreur', '/icones/annuler.png');
+    }
+  };
+
+  const handleRefundConfirm = async (refundAmount) => {
+    try {
+      // Mettre à jour le statut ET le montant remboursé
+      const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${selectedOrder.id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ 
+          status: refundType,
+          refundedAmount: refundAmount
+        })
+      });
+
+      if (response.status === 403) {
+        showAlert('Accès refusé. Réservé aux administrateurs.', 'Accès refusé', '/icones/annuler.png');
+        router.push('/');
+        return;
+      }
+
+      if (response.ok) {
+        setShowRefundModal(false);
+        fetchOrders();
+        showAlert(
+          `Remboursement de ${refundAmount.toFixed(2)}€ enregistré avec succès !`,
+          'Succès',
+          '/icones/validation.png'
+        );
+      } else {
+        showAlert('Erreur lors de l\'enregistrement du remboursement', 'Erreur', '/icones/annuler.png');
+      }
+    } catch (error) {
+      console.error('Erreur:', error);
+      showAlert('Erreur lors de l\'enregistrement du remboursement', 'Erreur', '/icones/annuler.png');
     }
   };
 
@@ -143,18 +171,10 @@ export default function AdminOrdersPage() {
     }
 
     try {
-      const token = getAccessToken();
-      if (!token) {
-        showAlert('Vous devez être connecté', 'Authentification requise', '/icones/annuler.png');
-        router.push('/login');
-        return;
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${selectedOrder.id}/tracking`, {
+      const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${selectedOrder.id}/tracking`, {
         method: 'PUT',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(trackingData)
       });
@@ -199,7 +219,8 @@ export default function AdminOrdersPage() {
       SHIPPED: 'info',
       DELIVERED: 'success',
       CANCELLED: 'danger',
-      REFUNDED: 'danger'
+      REFUNDED: 'danger',
+      PARTIALLY_REFUNDED: 'warning' // Orange au lieu de rouge
     };
     return badges[status] || 'info';
   };
@@ -212,7 +233,8 @@ export default function AdminOrdersPage() {
       SHIPPED: 'Expédié',
       DELIVERED: 'Livré',
       CANCELLED: 'Annulé',
-      REFUNDED: 'Remboursé'
+      REFUNDED: 'Remboursé',
+      PARTIALLY_REFUNDED: 'Part. remb.' // Encore plus court
     };
     return labels[status] || status;
   };
@@ -271,6 +293,11 @@ export default function AdminOrdersPage() {
                   <strong className="order-amount">
                     {order.totalAmount.toFixed(2)}€
                   </strong>
+                  {order.refundedAmount > 0 && (
+                    <div className="order-refunded">
+                      Remboursé: -{order.refundedAmount.toFixed(2)}€
+                    </div>
+                  )}
                 </td>
                 <td data-label="Statut">
                   <span className={`badge ${getStatusBadge(order.status)}`}>
@@ -291,6 +318,7 @@ export default function AdminOrdersPage() {
                       <option value="DELIVERED">Livré</option>
                       <option value="CANCELLED">Annulé</option>
                       <option value="REFUNDED">Remboursé</option>
+                      <option value="PARTIALLY_REFUNDED">Partiellement remboursé</option>  
                     </select>
 
                     <button
@@ -422,6 +450,16 @@ export default function AdminOrdersPage() {
           </div>
         </div>
       )}
+
+      {/* Modal de remboursement */}
+      <ModalRefund
+        isOpen={showRefundModal}
+        onClose={() => setShowRefundModal(false)}
+        onConfirm={handleRefundConfirm}
+        orderNumber={selectedOrder?.orderNumber}
+        totalAmount={selectedOrder?.totalAmount || 0}
+        type={refundType}
+      />
     </>
   );
 }

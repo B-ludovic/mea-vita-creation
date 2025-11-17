@@ -6,6 +6,7 @@ const orderConfirmationTemplate = require('../templates/orderConfirmationTemplat
 const passwordResetTemplate = require('../templates/passwordResetTemplate');
 const shippingEmailTemplate = require('../templates/shippingEmailTemplate');
 const contactEmailTemplate = require('../templates/contactEmailTemplate');
+const refundEmailTemplate = require('../templates/refundEmailTemplate');
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -15,6 +16,7 @@ const getSecureUrl = (path) => {
   return `${baseUrl}${path}`;
 };
 
+// FONCTION POUR ENVOYER UN EMAIL DE VÉRIFICATION
 const sendVerificationEmail = async (userEmail, userName, verificationToken) => {
   try {
     const verificationUrl = getSecureUrl(`/verify-email?token=${verificationToken}`);
@@ -38,6 +40,7 @@ const sendVerificationEmail = async (userEmail, userName, verificationToken) => 
   }
 };
 
+// FONCTION POUR ENVOYER UN EMAIL DE BIENVENUE
 const sendWelcomeEmail = async (userEmail, userName) => {
   try {
     const { data, error } = await resend.emails.send({
@@ -52,7 +55,6 @@ const sendWelcomeEmail = async (userEmail, userName) => {
       return { success: false, error };
     }
 
-    // Email de bienvenue envoyé (log retiré pour sécurité - pas d'exposition d'email)
     return { success: true, data };
 
   } catch (error) {
@@ -99,7 +101,6 @@ const sendShippingEmail = async (userEmail, userName, order) => {
       return { success: false, error };
     }
 
-    // Email d'expédition envoyé (log retiré pour sécurité - pas d'exposition d'email)
     return { success: true, data };
 
   } catch (error) {
@@ -136,10 +137,10 @@ const sendPasswordResetEmail = async (userEmail, userName, resetToken) => {
 const sendContactEmail = async (name, email, subject, message) => {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'François Maroquinerie <onboarding@resend.dev>',
-      to: ['ton-email@exemple.com'], // REMPLACE par vrai email plus tard 
+      from: 'Mea Vita Création <onboarding@resend.dev>',
+      to: ['ton-email@exemple.com'], // ← REMPLACE par ton vrai email
       replyTo: email, // Le client peut répondre directement
-      subject: `📧 Nouveau message : ${subject}`,
+      subject: `Nouveau message de contact : ${subject}`,
       html: contactEmailTemplate(name, email, subject, message)
     });
 
@@ -148,11 +149,34 @@ const sendContactEmail = async (name, email, subject, message) => {
       return { success: false, error };
     }
 
-    // Email de contact envoyé (log retiré pour sécurité)
     return { success: true, data };
 
   } catch (error) {
     console.error('Erreur lors de l\'envoi de l\'email de contact:', error.message);
+    return { success: false, error };
+  }
+};
+
+// FONCTION POUR ENVOYER UN EMAIL DE REMBOURSEMENT
+const sendRefundEmail = async (email, firstName, order) => {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Mea Vita Création <onboarding@resend.dev>',
+      to: [email],
+      subject: `Remboursement confirmé - Commande ${order.orderNumber}`,
+      html: refundEmailTemplate(firstName, order)
+    });
+
+    if (error) {
+      console.error('Erreur envoi email de remboursement:', error.message);
+      return { success: false, error };
+    }
+
+    console.log('✅ Email de remboursement envoyé');
+    return { success: true, data };
+
+  } catch (error) {
+    console.error('Erreur lors de l\'envoi de l\'email de remboursement:', error.message);
     return { success: false, error };
   }
 };
@@ -164,5 +188,6 @@ module.exports = {
   sendOrderConfirmationEmail,
   sendPasswordResetEmail,
   sendShippingEmail,
-  sendContactEmail
+  sendContactEmail,
+  sendRefundEmail  // ← Ajouté
 };

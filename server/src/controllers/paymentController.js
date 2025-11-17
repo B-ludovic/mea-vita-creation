@@ -1,8 +1,10 @@
 // Importer Stripe avec la clé secrète
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const prisma = require('../config/prisma');
+
 // Importer le service d'email
-const { sendOrderConfirmationEmail } = require('../services/emailService');
+const { sendOrderConfirmationEmail, sendRefundEmail } = require('../services/emailService');
+
 // Importer la fonction pour incrémenter l'usage du code promo
 const { incrementPromoCodeUsage } = require('./promoCodeController');
 
@@ -109,7 +111,7 @@ const createCheckoutSession = async (req, res) => {
                 currency: 'eur',
                 product_data: {
                     name: item.name,
-                    description: item.description || 'Création artisanale François Maroquinerie',
+                    description: item.description || 'Création Mea Vita Création',
                 },
                 unit_amount: Math.round(item.price * 100), // Stripe utilise les centimes
             },
@@ -153,6 +155,15 @@ const createCheckoutSession = async (req, res) => {
             price: item.price
         }));
 
+        // Vérifier la taille des métadonnées (limite Stripe : 500 caractères par champ)
+        const itemsMetadata = JSON.stringify(itemsForMetadata);
+        if (itemsMetadata.length > 450) {
+            console.warn('Métadonnées items trop volumineuses:', itemsMetadata.length, 'caractères');
+            // Fallback : stocker uniquement les IDs et quantités
+            const minimalItems = items.map(item => ({ i: item.id, q: item.quantity }));
+            itemsMetadata = JSON.stringify(minimalItems);
+        }
+
         // Créer la session de paiement Stripe
         const sessionConfig = {
             payment_method_types: ['card'],
@@ -164,7 +175,7 @@ const createCheckoutSession = async (req, res) => {
                 userId: userId || 'guest',
                 addressId: addressId || null,
                 promoCodeId: promoCodeId || null,
-                items: JSON.stringify(itemsForMetadata)
+                items: itemsMetadata
             }
         };
 
@@ -225,7 +236,7 @@ const verifyPayment = async (req, res) => {
     }
 };
 
-// FONCTION WEBHOOK STRIPE
+// FONCTION WEBHOOK STRIPE (AVEC GESTION DES REMBOURSEMENTS)
 // Cette fonction est appelée automatiquement par Stripe quand un événement se produit
 const handleStripeWebhook = async (req, res) => {
     const sig = req.headers['stripe-signature'];
@@ -237,106 +248,225 @@ const handleStripeWebhook = async (req, res) => {
         // Vérifier que la requête vient bien de Stripe
         event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
     } catch (err) {
-        console.error('Erreur webhook Stripe:', err.message);
+        console.error('❌ Erreur de vérification de signature webhook:', err.message);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // Gérer l'événement
-    switch (event.type) {
-        case 'checkout.session.completed':
-            const session = event.data.object;
+    console.log('✅ Webhook vérifié:', event.type);
 
-            console.log('✅ Paiement réussi pour la session:', session.id);
+    
+    // GÉRER LES DIFFÉRENTS TYPES D'ÉVÉNEMENTS
+    
+    // ÉVÉNEMENT 1 : PAIEMENT RÉUSSI
+    if (event.type === 'checkout.session.completed') {
+        const session = event.data.object;
 
-            try {
-                // Récupérer les items ET l'addressId depuis les metadata
-                const items = JSON.parse(session.metadata.items);
-                const userId = session.metadata.userId !== 'guest' ? session.metadata.userId : null;
-                const addressId = session.metadata.addressId || null;
-                const promoCodeId = session.metadata.promoCodeId || null;
+        console.log('💳 Paiement réussi pour la session:', session.id);
 
-                // Incrémenter l'usage du code promo si utilisé
-                if (promoCodeId) {
-                    await incrementPromoCodeUsage(promoCodeId);
+        try {
+            // Récupérer les items ET l'addressId depuis les metadata
+            const items = JSON.parse(session.metadata.items);
+            const userId = session.metadata.userId !== 'guest' ? session.metadata.userId : null;
+            const addressId = session.metadata.addressId || null;
+            const promoCodeId = session.metadata.promoCodeId || null;
+
+            // Incrémenter l'usage du code promo si utilisé
+            if (promoCodeId) {
+                await incrementPromoCodeUsage(promoCodeId);
+                console.log('✅ Code promo incrémenté');
+            }
+
+            // Créer la commande
+            const order = await prisma.order.create({
+                data: {
+                    orderNumber: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
+                    userId,
+                    addressId, // Enregistrer l'adresse de livraison
+                    status: 'PAID', // Le paiement est déjà confirmé
+                    subtotal: session.amount_total / 100, // Stripe envoie en centimes
+                    shippingCost: 0,
+                    taxAmount: 0,
+                    discountAmount: 0,
+                    totalAmount: session.amount_total / 100,
+                    stripePaymentIntentId: session.payment_intent,
+                    // Créer les items de la commande
+                    OrderItem: {
+                        create: items.map(item => ({
+                            productId: item.id,
+                            quantity: item.quantity,
+                            unitPrice: item.price,
+                            totalPrice: item.price * item.quantity
+                        }))
+                    }
                 }
+            });
 
-                // Créer la commande
-                const order = await prisma.order.create({
+            console.log('✅ Commande créée:', order.orderNumber, '(Stripe PI:', session.payment_intent, ')');
+
+            // Décrémenter le stock des produits
+            for (const item of items) {
+                await prisma.product.update({
+                    where: { id: item.id },
                     data: {
-                        orderNumber: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-                        userId,
-                        addressId, // Enregistrer l'adresse de livraison
-                        status: 'PAID', // Le paiement est déjà confirmé
-                        subtotal: session.amount_total / 100, // Stripe envoie en centimes
-                        shippingCost: 0,
-                        taxAmount: 0,
-                        discountAmount: 0,
-                        totalAmount: session.amount_total / 100,
-                        stripePaymentIntentId: session.payment_intent,
-                        // Créer les items de la commande
-                        OrderItem: {
-                            create: items.map(item => ({
-                                productId: item.id,
-                                quantity: item.quantity,
-                                unitPrice: item.price,
-                                totalPrice: item.price * item.quantity
-                            }))
+                        stock: {
+                            decrement: item.quantity
                         }
                     }
                 });
+            }
 
-                console.log('✅ Commande créée:', order.orderNumber);
+            console.log('✅ Stock mis à jour');
 
-                // Envoyer l'email de confirmation (si l'utilisateur est connecté)
-                if (userId) {
-                    const user = await prisma.user.findUnique({
-                        where: { id: userId }
+            // Envoyer l'email de confirmation (si l'utilisateur est connecté)
+            if (userId) {
+                const user = await prisma.user.findUnique({
+                    where: { id: userId }
+                });
+                
+                if (user) {
+                    // Recharger la commande avec les relations pour l'email
+                    const orderWithDetails = await prisma.order.findUnique({
+                        where: { id: order.id },
+                        include: {
+                            OrderItem: {
+                                include: {
+                                    Product: true
+                                }
+                            },
+                            Address: true
+                        }
                     });
-                    
-                    if (user) {
-                        // Recharger la commande avec les relations pour l'email
-                        const orderWithDetails = await prisma.order.findUnique({
-                            where: { id: order.id },
-                            include: {
-                                OrderItem: {
-                                    include: {
-                                        Product: true
-                                    }
-                                },
-                                Address: true
-                            }
-                        });
 
-                        sendOrderConfirmationEmail(user.email, user.firstName, orderWithDetails).catch(err => {
-                            console.error('Erreur envoi email:', err);
+                    sendOrderConfirmationEmail(user.email, user.firstName, orderWithDetails)
+                        .then(() => {
+                            console.log('✅ Email de confirmation envoyé à:', user.email.substring(0, 3) + '***');
+                        })
+                        .catch(err => {
+                            console.error('❌ Erreur envoi email confirmation:', err.message);
+                            console.error('   Commande:', order.orderNumber, '- Email non envoyé mais commande créée');
+                            // TODO: Implémenter système de retry ou notification admin
                         });
+                }
+            }
+
+        } catch (error) {
+            console.error('❌ Erreur lors de la création de la commande:', error.message);
+        }
+    }
+    
+    
+    // ÉVÉNEMENT 2 : REMBOURSEMENT
+    
+    else if (event.type === 'charge.refunded') {
+        const charge = event.data.object;
+
+        try {
+            const refundedAmount = charge.amount_refunded / 100;
+            const totalAmount = charge.amount / 100;
+            const isPartialRefund = refundedAmount < totalAmount;
+            
+            console.log(`🔄 Remboursement détecté: ${refundedAmount}€ / ${totalAmount}€ (${isPartialRefund ? 'PARTIEL' : 'TOTAL'})`);
+            console.log('   Charge ID:', charge.id);
+
+            // Trouver la commande correspondante via le payment_intent
+            const paymentIntent = charge.payment_intent;
+
+            // Chercher la commande avec ce payment_intent
+            const order = await prisma.order.findFirst({
+                where: {
+                    stripePaymentIntentId: paymentIntent
+                },
+                include: {
+                    OrderItem: {
+                        include: {
+                            Product: true
+                        }
+                    },
+                    User: true
+                }
+            });
+
+            if (!order) {
+                console.log('⚠️ Commande non trouvée pour ce remboursement');
+                return res.json({ received: true });
+            }
+
+            console.log('📦 Commande trouvée:', order.orderNumber);
+
+            // Gérer différemment selon type de remboursement
+            if (isPartialRefund) {
+                console.log('⚠️ Remboursement partiel détecté - Stock non modifié');
+                console.log(`   Montant remboursé: ${refundedAmount}€ sur ${totalAmount}€`);
+                
+                // Mettre à jour le statut → PARTIALLY_REFUNDED
+                await prisma.order.update({
+                    where: { id: order.id },
+                    data: {
+                        status: 'PARTIALLY_REFUNDED',
+                        refundedAmount: refundedAmount
                     }
-                }                // Décrémenter le stock des produits
-                for (const item of items) {
+                });
+                
+                console.log('✅ Statut mis à jour → PARTIALLY_REFUNDED');
+                console.log('⚠️ Action manuelle requise pour gestion du stock');
+            } else {
+                // Remboursement total : traitement automatique
+                
+                // Mettre à jour le statut de la commande
+                await prisma.order.update({
+                    where: { id: order.id },
+                    data: {
+                        status: 'REFUNDED',
+                        refundedAmount: refundedAmount
+                    }
+                });
+
+                console.log('✅ Statut mis à jour → REFUNDED');
+                console.log(`   Montant total remboursé: ${refundedAmount}€`);
+
+                // Réaugmenter le stock des produitsuits
+                for (const item of order.OrderItem) {
                     await prisma.product.update({
-                        where: { id: item.id },
+                        where: { id: item.productId },
                         data: {
                             stock: {
-                                decrement: item.quantity
+                                increment: item.quantity
                             }
                         }
                     });
+                    console.log(`✅ Stock réaugmenté pour ${item.Product.name}: +${item.quantity}`);
                 }
 
-                console.log('✅ Stock mis à jour');
-
-            } catch (error) {
-                console.error('Erreur lors de la création de la commande:', error.message);
+                // Envoyer un email au client
+                if (order.User) {
+                    await sendRefundEmail(order.User.email, order.User.firstName, order)
+                        .then(() => {
+                            console.log('✅ Email de remboursement envoyé');
+                        })
+                        .catch(err => {
+                            console.error('❌ Erreur envoi email remboursement:', err.message);
+                        });
+                }
             }
 
-            break;
-
-        case 'payment_intent.payment_failed':
-            console.log('❌ Échec du paiement');
-            break;
-
-        default:
-            console.log(`Event non géré: ${event.type}`);
+        } catch (error) {
+            console.error('❌ Erreur lors du traitement du remboursement:', error.message);
+            return res.status(500).json({ error: 'Erreur traitement remboursement' });
+        }
+    }
+    
+   
+    // ÉVÉNEMENT 3 : ÉCHEC DE PAIEMENT
+    
+    else if (event.type === 'payment_intent.payment_failed') {
+        console.log('❌ Échec du paiement');
+    }
+    
+    
+    // ÉVÉNEMENTS NON GÉRÉS
+    
+    else {
+        console.log(`ℹ️ Événement non géré: ${event.type}`);
     }
 
     // Répondre à Stripe pour confirmer la réception

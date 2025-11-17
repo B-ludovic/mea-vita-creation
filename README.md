@@ -35,6 +35,7 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 💳 **Paiement Stripe** : Intégration complète avec webhooks et validation de stock
 - 📦 **Gestion commandes** : Historique et suivi des commandes avec déduction automatique du stock
 - 🚚 **Suivi de livraison** : Tracking complet avec numéro de suivi, transporteur, timeline visuelle animée
+- 💰 **Système de remboursements** : Remboursement partiel/total avec détection automatique via webhook Stripe, gestion intelligente du stock
 - 📄 **Factures PDF** : Génération automatique de factures avec logo, images produits et TVA
 - 📧 **Emails automatiques** : Système d'emailing avec templates externalisés (vérification, bienvenue, confirmation, reset password, expédition)
 - 📍 **Adresses multiples** : Gestion des adresses de livraison
@@ -244,18 +245,19 @@ francois-maroquinerie/
 │   │       ├── codes-promo/# Gestion codes promotionnels (CRUD)
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
-│   ├── components/         # Composants React
-│   │   ├── Header.jsx      # En-tête navigation
-│   │   ├── Modal.jsx       # Composant modal réutilisable
-│   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
-│   │   ├── StarRating.jsx  # Composant notation étoiles
-│   │   ├── CookieConsent.jsx # Bannière consentement RGPD
-│   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
-│   │   ├── ConditionalLayout.jsx
-│   │   ├── InactivityWrapper.jsx
-│   │   ├── ProductCarousel.jsx
-│   │   └── analytics/
-│   │       └── GoogleAnalytics.jsx # Composant Google Analytics
+│   │   ├── components/         # Composants React
+│   │   │   ├── Header.jsx      # En-tête navigation
+│   │   │   ├── Modal.jsx       # Composant modal réutilisable
+│   │   │   ├── ModalRefund.jsx # Modal remboursement 2-step (Instructions → Confirmation)
+│   │   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
+│   │   │   ├── StarRating.jsx  # Composant notation étoiles
+│   │   │   ├── CookieConsent.jsx # Bannière consentement RGPD
+│   │   │   ├── AnalyticsWrapper.jsx # Wrapper Google Analytics avec consentement
+│   │   │   ├── ConditionalLayout.jsx
+│   │   │   ├── InactivityWrapper.jsx
+│   │   │   ├── ProductCarousel.jsx
+│   │   │   └── analytics/
+│   │   │       └── GoogleAnalytics.jsx # Composant Google Analytics
 │   ├── contexts/           # Context API
 │   │   └── CartContext.js  # Gestion du panier
 │   ├── hooks/              # Custom hooks
@@ -269,6 +271,7 @@ francois-maroquinerie/
 │   │   ├── globals.css
 │   │   ├── variables.css   # Variables couleurs du projet
 │   │   ├── Modal.css       # Styles modal avec animations
+│   │   ├── ModalRefund.css # Styles modal remboursement (variables CSS, icônes)
 │   │   ├── PromoCode.css   # Styles composant code promo
 │   │   ├── Header.css
 │   │   ├── Home.css
@@ -305,8 +308,8 @@ francois-maroquinerie/
 │   │   │   ├── authController.js
 │   │   │   ├── productController.js
 │   │   │   ├── categoryController.js
-│   │   │   ├── orderController.js
-│   │   │   ├── paymentController.js
+│   │   │   ├── orderController.js # Gestion commandes + update status + refundedAmount
+│   │   │   ├── paymentController.js # Webhooks Stripe + détection refund partiel/total
 │   │   │   ├── addressController.js
 │   │   │   ├── wishlistController.js # Gestion wishlist
 │   │   │   ├── reviewController.js # Gestion avis produits
@@ -484,12 +487,14 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Prisma ORM pour PostgreSQL (migrations, relations)
 - ✅ **Système d'authentification dual-token** : accessToken (15 min) + refreshToken (7 jours) avec rotation automatique
 - ✅ **Protection anti-loop** : Mécanisme `isRefreshing` + `refreshPromise` partagée pour éviter multiples requêtes simultanées
+- ✅ **Auto-refresh automatique** : `fetchWithAuth()` handle 401 errors et refresh token sans déconnexion
 - ✅ Middlewares (auth, rate limiting, sanitization)
 - ✅ Webhooks Stripe pour les paiements asynchrones
+- ✅ **Système de remboursements Stripe** : Détection automatique partiel/total via webhook, gestion du stock, emails
 - ✅ Envoi d'emails transactionnels avec Resend (templates HTML avec styles externalisés)
 - ✅ Génération de factures PDF avec PDFKit (logo, images produits, TVA)
 - ✅ Gestion des erreurs et validation des données
-- ✅ Gestion automatique du stock (décrémentation après paiement)
+- ✅ Gestion automatique du stock (décrémentation après paiement, restauration après remboursement)
 - ✅ Validation du stock avant création de commande
 - ✅ Upload de fichiers avec Multer (images produits, 5MB max, validation MIME)
 - ✅ Système de factures avec authentification et vérification de propriété
@@ -503,6 +508,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - ✅ Route factures avec authentification JWT et vérification propriétaire
 - ✅ Téléchargement factures PDF avec headers Authorization
 - ✅ **Migration complète authentication** : Suppression système legacy token, 100% dual-token (19 fichiers migrés)
+- ✅ **Refactoring admin pages** : Migration complète vers `fetchWithAuth()` pour éviter déconnexions 15 min
 
 ### DevOps & Bonnes pratiques
 - ✅ Git & GitHub (commits sémantiques, branches)

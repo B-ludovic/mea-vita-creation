@@ -372,7 +372,7 @@ francois-maroquinerie/
 | `NEXT_PUBLIC_STRIPE_PUBLIC_KEY` | Clé publique Stripe |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | ID Google Analytics (G-XXXXXXXXXX) |
 | `NEXT_PUBLIC_PUSHER_KEY` | Clé publique Pusher (notifications temps réel) |
-| `NEXT_PUBLIC_PUSHER_CLUSTER` | Cluster Pusher (eu, us2, us3, etc.) |
+| `NEXT_PUBLIC_PUSHER_CLUSTER` | Cluster Pusher (eu) |
 
 ### Backend (`.env`)
 | Variable | Description |
@@ -652,7 +652,7 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 - [ ] Mode sombre / thème personnalisable
 - [ ] Internationalisation
 - [ ] PWA (Progressive Web App)
-- [ ] Gestion des stocks avec alertes admin
+- [x] ~~Gestion des stocks avec alertes admin~~ ✅ Fait
 - [x] ~~Export PDF des commandes~~ ✅ Fait (factures PDF)
 - [x] ~~Statistiques avancées (dashboard admin)~~ ✅ Fait (graphiques recharts)
 - [x] ~~Wishlist / Favoris~~ ✅ Fait (ma-wishlist avec JWT)

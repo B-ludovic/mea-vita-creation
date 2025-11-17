@@ -315,9 +315,6 @@ export default function CartPage() {
                 </div>
 
                 <div className="cart-item-actions">
-                  <div className="cart-item-total">
-                    {(item.price * item.quantity).toFixed(2)}€
-                  </div>
                   <button
                     className="remove-btn"
                     onClick={() => removeFromCart(item.id)}
@@ -495,24 +492,23 @@ export default function CartPage() {
             />
 
             <div className="summary-line">
-              <span>Sous-total</span>
+              <span>Sous-total </span>
               <span>{getCartTotal().toFixed(2)}€</span>
             </div>
 
             <div className="summary-line">
-              <span>Livraison</span>
-              <span>Gratuite</span>
+              <span>Livraison Gratuite</span>
             </div>
 
             {appliedPromo && (
               <div className="summary-line discount">
-                <span>Réduction ({appliedPromo.code})</span>
+                <span>Réduction ({appliedPromo.code}) </span>
                 <span className="discount-amount">-{appliedPromo.discountAmount.toFixed(2)}€</span>
               </div>
             )}
 
             <div className="summary-line total">
-              <span>Total</span>
+              <span>Total </span>
               <span>
                 {appliedPromo 
                   ? (getCartTotal() - appliedPromo.discountAmount).toFixed(2)

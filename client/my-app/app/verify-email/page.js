@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { setTokens } from '../../utils/auth';
 import '../../styles/Auth.css';
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState('loading');
@@ -100,5 +100,22 @@ export default function VerifyEmailPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="auth-container">
+        <div className="auth-card verify-card">
+          <div className="verify-icon-wrapper">
+            <Image src="/icones/sand-timer.png" alt="Chargement" width={80} height={80} />
+          </div>
+          <h2>Chargement...</h2>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

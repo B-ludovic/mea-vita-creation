@@ -218,7 +218,11 @@ const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
       writeStream.on('finish', async () => {
         try {
           // Créer l'enregistrement Invoice en base de données
-          const invoiceNumber = orderNumber; // Utiliser le même numéro
+          // Générer un numéro unique basé sur le type de facture
+          const timestamp = Date.now();
+          const typePrefix = invoiceType === 'INVOICE' ? 'FAC' : 
+                            invoiceType === 'REFUND_FULL' ? 'REM-T' : 'REM-P';
+          const invoiceNumber = `${typePrefix}-${orderNumber}-${timestamp}`;
           
           await prisma.invoice.create({
             data: {

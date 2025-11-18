@@ -156,6 +156,24 @@ const notifyNewPromoCode = async (promoCode) => {
   }
 };
 
+// Notification nouvelle facture générée (admin)
+const notifyNewInvoice = async (orderNumber) => {
+  try {
+    await pusher.trigger('admin-channel', 'new-invoice', {
+      type: 'new-invoice',
+      title: 'Nouvelle facture générée !',
+      message: `Facture pour commande ${orderNumber}`,
+      data: {
+        orderNumber
+      },
+      timestamp: new Date().toISOString()
+    });
+    console.log('✅ Notification Pusher envoyée : Nouvelle facture');
+  } catch (error) {
+    console.error('❌ Erreur Pusher:', error.message);
+  }
+};
+
 // Exporter les fonctions
 module.exports = {
   pusher,
@@ -164,5 +182,6 @@ module.exports = {
   notifyNewReview,
   notifyLowStock,
   notifyOrderUpdate,
-  notifyNewPromoCode
+  notifyNewPromoCode,
+  notifyNewInvoice
 };

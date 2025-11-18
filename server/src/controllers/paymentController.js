@@ -3,7 +3,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const prisma = require('../config/prisma');
 
 // importer Pusher pour les notifications en temps réel
-const { notifyNewOrder, notifyLowStock } = require('../services/pusherService');
+const { notifyNewOrder, notifyLowStock, notifyNewInvoice } = require('../services/pusherService');
 
 // Importer le service d'email
 const { sendOrderConfirmationEmail, sendRefundEmail } = require('../services/emailService');
@@ -396,6 +396,18 @@ const handleStripeWebhook = async (req, res) => {
                             console.error('   Commande:', order.orderNumber, '- Email non envoyé mais commande créée');
                             // TODO: Implémenter système de retry ou notification admin
                         });
+                    
+                    // Générer la facture PDF automatiquement
+                    try {
+                        await generateInvoice(orderWithDetails, user, 'INVOICE');
+                        console.log('✅ Facture générée automatiquement pour:', order.orderNumber);
+                        
+                        // 🔔 Notifier l'admin qu'une nouvelle facture a été générée
+                        await notifyNewInvoice(order.orderNumber);
+                    } catch (invoiceError) {
+                        console.error('❌ Erreur génération facture:', invoiceError.message);
+                        // La commande est créée même si la facture échoue
+                    }
                 }
             }
 
@@ -464,6 +476,9 @@ const handleStripeWebhook = async (req, res) => {
                 try {
                     await generateInvoice(order, order.User, 'REFUND_PARTIAL');
                     console.log('✅ Facture de remboursement partiel générée');
+                    
+                    // Notifier l'admin via Pusher
+                    await notifyNewInvoice(order.orderNumber);
                 } catch (invoiceError) {
                     console.error('❌ Erreur génération facture remboursement partiel:', invoiceError.message);
                 }
@@ -499,6 +514,9 @@ const handleStripeWebhook = async (req, res) => {
                 try {
                     await generateInvoice(order, order.User, 'REFUND_FULL');
                     console.log('✅ Facture de remboursement total générée');
+                    
+                    // Notifier l'admin via Pusher
+                    await notifyNewInvoice(order.orderNumber);
                 } catch (invoiceError) {
                     console.error('❌ Erreur génération facture remboursement total:', invoiceError.message);
                 }

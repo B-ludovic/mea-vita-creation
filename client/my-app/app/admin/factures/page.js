@@ -144,8 +144,8 @@ export default function AdminInvoicesPage() {
     const getInvoiceTypeBadge = (type) => {
         const badges = {
             'INVOICE': { label: 'Facture', color: '#2196F3' }, // Bleu
-            'REFUND_FULL': { label: 'Remboursement total', color: '#F44336' }, // Rouge
-            'REFUND_PARTIAL': { label: 'Remboursement partiel', color: '#FF9800' } // Orange
+            'REFUND_FULL': { label: 'Remb.total', color: '#F44336' }, // Rouge
+            'REFUND_PARTIAL': { label: 'Remb.partiel', color: '#FF9800' } // Orange
         };
         return badges[type] || { label: type, color: '#999' };
     };

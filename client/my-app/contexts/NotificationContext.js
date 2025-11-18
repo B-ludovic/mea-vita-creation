@@ -13,6 +13,7 @@ export function NotificationProvider({ children }) {
   const [unreadMessages, setUnreadMessages] = useState(0);
   const [unreadReviews, setUnreadReviews] = useState(0);
   const [lowStockCount, setLowStockCount] = useState(0);
+  const [newInvoicesCount, setNewInvoicesCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -115,6 +116,16 @@ export function NotificationProvider({ children }) {
       }, ...prev]);
     });
 
+    // Écouter les nouvelles factures
+    adminChannel.bind('new-invoice', (data) => {
+      setNewInvoicesCount(prev => prev + 1);
+      setNotifications(prev => [{
+        id: Date.now(),
+        type: 'invoice',
+        ...data
+      }, ...prev]);
+    });
+
     // Nettoyer à la destruction du composant
     return () => {
       adminChannel.unbind_all();
@@ -133,9 +144,14 @@ export function NotificationProvider({ children }) {
     setUnreadReviews(prev => Math.max(0, prev - 1));
   };
 
+  // Fonction pour réinitialiser le compteur de factures
+  const markInvoicesAsViewed = () => {
+    setNewInvoicesCount(0);
+  };
+
   // Calculer le total de notifications admin
   const getTotalNotifications = () => {
-    return unreadMessages + unreadReviews + lowStockCount;
+    return unreadMessages + unreadReviews + lowStockCount + newInvoicesCount;
   };
 
   return (
@@ -143,10 +159,12 @@ export function NotificationProvider({ children }) {
       unreadMessages,
       unreadReviews,
       lowStockCount,
+      newInvoicesCount,
       notifications,
       getTotalNotifications,
       markMessageAsRead,
-      markReviewAsApproved
+      markReviewAsApproved,
+      markInvoicesAsViewed
     }}>
       {children}
     </NotificationContext.Provider>

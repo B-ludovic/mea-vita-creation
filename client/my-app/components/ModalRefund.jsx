@@ -1,7 +1,7 @@
 // Modal pour gérer les remboursements avec Stripe
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/ModalRefund.css';
 
 export default function ModalRefund({ 
@@ -12,8 +12,17 @@ export default function ModalRefund({
   totalAmount,
   type // 'REFUNDED' ou 'PARTIALLY_REFUNDED'
 }) {
-  const [refundAmount, setRefundAmount] = useState(type === 'REFUNDED' ? totalAmount : '');
+  const [refundAmount, setRefundAmount] = useState('');
   const [stripeCompleted, setStripeCompleted] = useState(false);
+  
+  // Initialiser le montant quand la modale s'ouvre
+  useEffect(() => {
+    if (isOpen && type === 'REFUNDED') {
+      setRefundAmount(totalAmount.toString());
+    } else if (isOpen && type === 'PARTIALLY_REFUNDED') {
+      setRefundAmount('');
+    }
+  }, [isOpen, type, totalAmount]);
 
   if (!isOpen) return null;
 
@@ -49,7 +58,11 @@ export default function ModalRefund({
   };
 
   const resetModal = () => {
-    setRefundAmount(type === 'REFUNDED' ? totalAmount : '');
+    if (type === 'REFUNDED') {
+      setRefundAmount(totalAmount.toString());
+    } else {
+      setRefundAmount('');
+    }
     setStripeCompleted(false);
   };
 

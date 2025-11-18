@@ -55,7 +55,8 @@ const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
         .text('contact@meavitacreation.fr', 145, 125)
         .text('SIRET: 123 456 789 00012', 145, 140);
 
-      // Titre FACTURE
+      // Titre FACTURE ou AVOIR (selon le type)
+      const isRefund = invoiceType === 'REFUND_FULL' || invoiceType === 'REFUND_PARTIAL';
       doc
         .fontSize(28)
         .fillColor('#FFAB00')
@@ -82,10 +83,11 @@ const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
         .stroke('#E0E0E0');
 
       // Informations client
+      const clientLabel = isRefund ? 'REMBOURSEMENT À :' : 'FACTURÉ À :';
       doc
         .fontSize(12)
         .fillColor('#FFAB00')
-        .text('FACTURÉ À :', 50, 190);
+        .text(clientLabel, 50, 190);
 
       doc
         .fontSize(10)
@@ -152,13 +154,16 @@ const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
         }
 
         // Informations du produit (décalées pour laisser la place à l'image)
+        const displayUnitPrice = isRefund ? -item.unitPrice : item.unitPrice;
+        const displayTotalPrice = isRefund ? -item.totalPrice : item.totalPrice;
+        
         doc
           .fontSize(9)
           .fillColor('#333333')
           .text(item.Product.name, 110, y + 5, { width: 220 })
           .text(item.quantity.toString(), 340, y + 15)
-          .text(`${item.unitPrice.toFixed(2)}€`, 400, y + 15)
-          .text(`${item.totalPrice.toFixed(2)}€`, 490, y + 15);
+          .text(`${displayUnitPrice.toFixed(2)}€`, 400, y + 15)
+          .text(`${displayTotalPrice.toFixed(2)}€`, 490, y + 15);
 
         y += 50; // Plus d'espace pour les images
 
@@ -175,7 +180,7 @@ const generateInvoice = async (order, user, invoiceType = 'INVOICE') => {
       // CORRECTION : Les prix sont déjà TTC, on extrait le HT et la TVA
       // Formule : HT = TTC / 1.20
       // Formule : TVA = TTC - HT
-      const totalTTC = order.totalAmount; // Le montant payé est déjà TTC
+      const totalTTC = isRefund ? -order.totalAmount : order.totalAmount; // Négatif pour remboursement
       const totalHT = totalTTC / 1.20; // Calculer le HT à partir du TTC
       const tva = totalTTC - totalHT; // Extraire la TVA
       

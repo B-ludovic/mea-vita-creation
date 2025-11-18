@@ -20,7 +20,7 @@ export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Utiliser le contexte des notifications
-  const { unreadMessages, unreadReviews, lowStockCount } = useNotifications();
+  const { unreadMessages, unreadReviews, lowStockCount, newInvoicesCount, markInvoicesAsViewed } = useNotifications();
 
   useEffect(() => {
     // Fonction pour vérifier l'authentification et les droits admin
@@ -211,10 +211,18 @@ export default function AdminLayout({ children }) {
               <Link
                 href="/admin/factures"
                 className={pathname.startsWith('/admin/factures') ? 'active' : ''}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  setSidebarOpen(false);
+                  if (newInvoicesCount > 0) {
+                    markInvoicesAsViewed();
+                  }
+                }}
               >
-                <span className="admin-nav-icon">
+                <span className={`admin-nav-icon ${newInvoicesCount > 0 ? 'has-notification' : ''}`}>
                   <Image src="/icones/invoice.png" alt="Factures" width={20} height={20} />
+                  {newInvoicesCount > 0 && (
+                    <span className="sidebar-notification-dot"></span>
+                  )}
                 </span>
                 <span>Factures</span>
               </Link>

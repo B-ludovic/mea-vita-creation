@@ -26,6 +26,11 @@
   font-size: clamp(1.8rem, 3vw, 2.2rem); 
 }
 
+/* Bouton ajouter une adresse (Styles du bouton générique non inclus ici mais cohérents) */
+.btn-add-address {
+  /* Styles spécifiques non inclus ici mais conservés */
+}
+
 /* Liste des adresses */
 .addresses-list {
   display: grid;
@@ -117,25 +122,34 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex: 1;
-  min-width: fit-content;
+  /* Uniformisation de la largeur avec flex: 1 */
+  flex: 1; 
   justify-content: center;
+  
+  /* Ajout de la transition de survol pour l'uniformité */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-action:hover {
+    transform: translateY(-2px); /* Uniformiser la translation au survol */
 }
 
 .btn-icon {
   flex-shrink: 0;
 }
 
-/* Style spécifique pour le bouton supprimer */
+/* Style spécifique pour le bouton supprimer (cohérence du hover) */
 .btn-delete:hover {
   background: #d32f2f !important;
   border-color: #d32f2f !important;
   color: white !important;
+  /* Ajout d'une ombre portée cohérente avec les boutons danger */
+  box-shadow: 0 4px 15px rgba(211, 47, 47, 0.4); 
 }
+
 
 /* FORMULAIRE MODAL (popup) */
     
-
 .address-form-modal {
   position: fixed;
   top: 0;
@@ -247,6 +261,18 @@
 
   .btn-action {
     width: 100%;
+    /* Désactiver la transformation sur les boutons pleine largeur */
+    transform: none; 
+  }
+  
+  .btn-action:hover {
+      transform: none;
+      box-shadow: none;
+  }
+  
+  .btn-delete:hover {
+      transform: none;
+      box-shadow: none;
   }
 
   /* Formulaire modale */

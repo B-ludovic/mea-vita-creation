@@ -12,7 +12,7 @@
   padding: 2rem;
   position: relative;
   margin-top: 1rem; /* Espace pour le badge "Nouveau" */
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Cohérence: Transition uniformisée */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -23,7 +23,7 @@
 
 .message-card:hover {
   transform: translateY(-2px);
-  /* 💥 Cohérence: Ombre portée uniformisée */
+  /* Cohérence: Ombre portée uniformisée */
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -84,7 +84,7 @@
 .message-meta a {
   color: var(--primary-orange);
   text-decoration: none;
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Cohérence: Transition uniformisée */
   transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -152,14 +152,14 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 0.9rem;
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Cohérence: Transition uniformisée */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .message-reply-btn:hover {
   background: var(--primary-orange);
   color: var(--white);
-  /* 💥 Cohérence: Translation et ombre uniformisée */
+  /* Cohérence: Translation et ombre uniformisée */
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(255, 107, 53, 0.3);
 }
@@ -187,7 +187,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Cohérence: Transition uniformisée */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

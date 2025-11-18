@@ -8,7 +8,7 @@ const siteDescription = 'Découvrez nos créations artisanales uniques en maroqu
 export const defaultMetadata = {
   title: `${siteName} - Maroquinerie Artisanale Africaine`,
   description: siteDescription,
-  keywords: ['maroquinerie', 'artisanal', 'cuir', 'africain', 'pochette', 'porte-carte', 'sac', 'accessoires', 'fait main', 'luxe'],
+  keywords: ['maroquinerie', 'artisanal', 'cuir', 'africain', 'pochette', 'porte-cartes', 'sac', 'accessoires', 'fait main', 'luxe'],
   authors: [{ name: 'Mea Vita Création' }],
   creator: 'Mea Vita Création',
   publisher: 'Mea Vita Création',

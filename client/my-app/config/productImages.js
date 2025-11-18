@@ -4,26 +4,26 @@
 export const PRODUCT_IMAGES = {
   // SAC CYLINDRE - Collection "Le Tambour"
   'le-tambour-amethyste': [
-    '/images/sac-cylindre/tambour-amethyste-1.jpg',
-    '/images/sac-cylindre/tambour-amethyste-2.jpg',
-    '/images/sac-cylindre/tambour-amethyste-3.jpg',
+    '/images/sacs-cylindre/tambour-amethyste-1.jpg',
+    '/images/sacs-cylindre/tambour-amethyste-2.jpg',
+    '/images/sacs-cylindre/tambour-amethyste-3.jpg',
   ],
   'le-tambour-dune': [
-    '/images/sac-cylindre/tambour-dune-1.jpg',
-    '/images/sac-cylindre/tambour-dune-2.jpg',
+    '/images/sacs-cylindre/tambour-dune-1.jpg',
+    '/images/sacs-cylindre/tambour-dune-2.jpg',
   ],
   'le-tambour-ocean': [
-    '/images/sac-cylindre/tambour-ocean-1.jpg',
-    '/images/sac-cylindre/tambour-ocean-2.jpg',
+    '/images/sacs-cylindre/tambour-ocean-1.jpg',
+    '/images/sacs-cylindre/tambour-ocean-2.jpg',
   ],
   'le-tambour-solaire': [
-    '/images/sac-cylindre/tambour-solaire-1.jpg',
+    '/images/sacs-cylindre/tambour-solaire-1.jpg',
   ],
   'le-tambour-festival': [
-    '/images/sac-cylindre/tambour-festival-1.jpg',
+    '/images/sacs-cylindre/tambour-festival-1.jpg',
   ],
   'le-tambour-mosaique': [
-    '/images/sac-cylindre/tambour-mosaique-1.jpg',
+    '/images/sacs-cylindre/tambour-mosaique-1.jpg',
   ],
 
   // POCHETTES UNISEXE
@@ -60,65 +60,65 @@ export const PRODUCT_IMAGES = {
 
   // PORTE-CARTE - Collection "L'Éclat"
   'leclat-amethyste': [
-    '/images/porte-carte/eclat-amethyste-1.jpg',
-    '/images/porte-carte/eclat-amethyste-2.jpg',
+    '/images/porte-cartes/eclat-amethyste-1.jpg',
+    '/images/porte-cartes/eclat-amethyste-2.jpg',
   ],
   'leclat-kente': [
-    '/images/porte-carte/eclat-kente-1.jpg',
-    '/images/porte-carte/eclat-kente-2.jpg',
+    '/images/porte-cartes/eclat-kente-1.jpg',
+    '/images/porte-cartes/eclat-kente-2.jpg',
   ],
   'leclat-olive': [
-    '/images/porte-carte/eclat-olive-1.jpg',
-    '/images/porte-carte/eclat-olive-2.jpg',
-    '/images/porte-carte/eclat-olive-3.jpg',
+    '/images/porte-cartes/eclat-olive-1.jpg',
+    '/images/porte-cartes/eclat-olive-2.jpg',
+    '/images/porte-cartes/eclat-olive-3.jpg',
   ],
   'leclat-fogo': [
-    '/images/porte-carte/eclat-fogo-1.jpg',
+    '/images/porte-cartes/eclat-fogo-1.jpg',
   ],
   'leclat-solaire': [
-    '/images/porte-carte/eclat-solaire-1.jpg',
+    '/images/porte-cartes/eclat-solaire-1.jpg',
   ],
   'leclat-mosaique': [
-    '/images/porte-carte/eclat-mosaique-1.jpg',
+    '/images/porte-cartes/eclat-mosaique-1.jpg',
   ],
 
   // SAC U - Collection "L'Arche"
   
   // Modèle "Besace"
   'larche-besace-fogo': [
-    '/images/sac-u/arche-besace-fogo-1.jpg',
-    '/images/sac-u/arche-besace-fogo-2.jpg',
-    '/images/sac-u/arche-besace-fogo-3.jpg',
+    '/images/sacs-u/arche-besace-fogo-1.jpg',
+    '/images/sacs-u/arche-besace-fogo-2.jpg',
+    '/images/sacs-u/arche-besace-fogo-3.jpg',
   ],
   'larche-besace-mosaique': [
-    '/images/sac-u/arche-besace-mosaique-1.jpg',
-    '/images/sac-u/arche-besace-mosaique-2.jpg',
+    '/images/sacs-u/arche-besace-mosaique-1.jpg',
+    '/images/sacs-u/arche-besace-mosaique-2.jpg',
   ],
   'larche-besace-cendre': [
-    '/images/sac-u/arche-besace-cendre-1.jpg',
+    '/images/sacs-u/arche-besace-cendre-1.jpg',
   ],
   'larche-besace-festival': [
-    '/images/sac-u/arche-besace-festival-1.jpg',
-    '/images/sac-u/arche-besace-festival-2.jpg',
+    '/images/sacs-u/arche-besace-festival-1.jpg',
+    '/images/sacs-u/arche-besace-festival-2.jpg',
   ],
   
   // Modèle "Pochette"
   'larche-pochette-royale': [
-    '/images/sac-u/arche-pochette-royale-1.jpg',
+    '/images/sacs-u/arche-pochette-royale-1.jpg',
   ],
   'larche-pochette-dashiki': [
-    '/images/sac-u/arche-pochette-dashiki-1.jpg',
+    '/images/sacs-u/arche-pochette-dashiki-1.jpg',
   ],
   'larche-pochette-mosaique': [
-    '/images/sac-u/arche-pochette-mosaique-1.jpg',
-    '/images/sac-u/arche-pochette-mosaique-2.jpg',
+    '/images/sacs-u/arche-pochette-mosaique-1.jpg',
+    '/images/sacs-u/arche-pochette-mosaique-2.jpg',
   ],
   'larche-pochette-festival': [
-    '/images/sac-u/arche-pochette-festival-1.jpg',
+    '/images/sacs-u/arche-pochette-festival-1.jpg',
   ],
   'larche-pochette-fogo': [
-    '/images/sac-u/arche-pochette-fogo-1.jpg',
-    '/images/sac-u/arche-pochette-fogo-2.jpg',
+    '/images/sacs-u/arche-pochette-fogo-1.jpg',
+    '/images/sacs-u/arche-pochette-fogo-2.jpg',
   ],
 };
 
@@ -148,46 +148,46 @@ export const getCategoryImages = (categorySlug) => {
       '/images/pochettes-unisexe/artisan-azur-1.jpg',
       '/images/pochettes-unisexe/cachet-ardoise-1.jpg',
     ],
-    'porte-carte': [
-      '/images/porte-carte/eclat-amethyste-1.jpg',
-      '/images/porte-carte/eclat-amethyste-2.jpg',
-      '/images/porte-carte/eclat-kente-1.jpg',
-      '/images/porte-carte/eclat-kente-2.jpg',
-      '/images/porte-carte/eclat-olive-1.jpg',
-      '/images/porte-carte/eclat-olive-2.jpg',
-      '/images/porte-carte/eclat-olive-3.jpg',
-      '/images/porte-carte/eclat-fogo-1.jpg',
-      '/images/porte-carte/eclat-solaire-1.jpg',
-      '/images/porte-carte/eclat-mosaique-1.jpg',
+    'porte-cartes': [
+      '/images/porte-cartes/eclat-amethyste-1.jpg',
+      '/images/porte-cartes/eclat-amethyste-2.jpg',
+      '/images/porte-cartes/eclat-kente-1.jpg',
+      '/images/porte-cartes/eclat-kente-2.jpg',
+      '/images/porte-cartes/eclat-olive-1.jpg',
+      '/images/porte-cartes/eclat-olive-2.jpg',
+      '/images/porte-cartes/eclat-olive-3.jpg',
+      '/images/porte-cartes/eclat-fogo-1.jpg',
+      '/images/porte-cartes/eclat-solaire-1.jpg',
+      '/images/porte-cartes/eclat-mosaique-1.jpg',
     ],
-    'sac-cylindre': [
-      '/images/sac-cylindre/tambour-amethyste-1.jpg',
-      '/images/sac-cylindre/tambour-amethyste-2.jpg',
-      '/images/sac-cylindre/tambour-amethyste-3.jpg',
-      '/images/sac-cylindre/tambour-dune-1.jpg',
-      '/images/sac-cylindre/tambour-dune-2.jpg',
-      '/images/sac-cylindre/tambour-ocean-1.jpg',
-      '/images/sac-cylindre/tambour-ocean-2.jpg',
-      '/images/sac-cylindre/tambour-solaire-1.jpg',
-      '/images/sac-cylindre/tambour-festival-1.jpg',
-      '/images/sac-cylindre/tambour-mosaique-1.jpg',
+    'sacs-cylindre': [
+      '/images/sacs-cylindre/tambour-amethyste-1.jpg',
+      '/images/sacs-cylindre/tambour-amethyste-2.jpg',
+      '/images/sacs-cylindre/tambour-amethyste-3.jpg',
+      '/images/sacs-cylindre/tambour-dune-1.jpg',
+      '/images/sacs-cylindre/tambour-dune-2.jpg',
+      '/images/sacs-cylindre/tambour-ocean-1.jpg',
+      '/images/sacs-cylindre/tambour-ocean-2.jpg',
+      '/images/sacs-cylindre/tambour-solaire-1.jpg',
+      '/images/sacs-cylindre/tambour-festival-1.jpg',
+      '/images/sacs-cylindre/tambour-mosaique-1.jpg',
     ],
-    'sac-u': [
-      '/images/sac-u/arche-besace-fogo-1.jpg',
-      '/images/sac-u/arche-besace-fogo-2.jpg',
-      '/images/sac-u/arche-besace-fogo-3.jpg',
-      '/images/sac-u/arche-besace-mosaique-1.jpg',
-      '/images/sac-u/arche-besace-mosaique-2.jpg',
-      '/images/sac-u/arche-besace-cendre-1.jpg',
-      '/images/sac-u/arche-besace-festival-1.jpg',
-      '/images/sac-u/arche-besace-festival-2.jpg',
-      '/images/sac-u/arche-pochette-royale-1.jpg',
-      '/images/sac-u/arche-pochette-dashiki-1.jpg',
-      '/images/sac-u/arche-pochette-mosaique-1.jpg',
-      '/images/sac-u/arche-pochette-mosaique-2.jpg',
-      '/images/sac-u/arche-pochette-festival-1.jpg',
-      '/images/sac-u/arche-pochette-fogo-1.jpg',
-      '/images/sac-u/arche-pochette-fogo-2.jpg',
+    'sacs-u': [
+      '/images/sacs-u/arche-besace-fogo-1.jpg',
+      '/images/sacs-u/arche-besace-fogo-2.jpg',
+      '/images/sacs-u/arche-besace-fogo-3.jpg',
+      '/images/sacs-u/arche-besace-mosaique-1.jpg',
+      '/images/sacs-u/arche-besace-mosaique-2.jpg',
+      '/images/sacs-u/arche-besace-cendre-1.jpg',
+      '/images/sacs-u/arche-besace-festival-1.jpg',
+      '/images/sacs-u/arche-besace-festival-2.jpg',
+      '/images/sacs-u/arche-pochette-royale-1.jpg',
+      '/images/sacs-u/arche-pochette-dashiki-1.jpg',
+      '/images/sacs-u/arche-pochette-mosaique-1.jpg',
+      '/images/sacs-u/arche-pochette-mosaique-2.jpg',
+      '/images/sacs-u/arche-pochette-festival-1.jpg',
+      '/images/sacs-u/arche-pochette-fogo-1.jpg',
+      '/images/sacs-u/arche-pochette-fogo-2.jpg',
     ],
   };
 

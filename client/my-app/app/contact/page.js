@@ -184,9 +184,9 @@ export default function ContactPage() {
                   >
                     <option value="">Sélectionnez...</option>
                     <option value="pochettes-unisexe">Pochettes Unisexe</option>
-                    <option value="porte-carte">Porte-Carte</option>
-                    <option value="sac-cylindre">Sac Cylindre</option>
-                    <option value="sac-u">Sac U</option>
+                    <option value="porte-cartes">Porte-Cartes</option>
+                    <option value="sacs-cylindre">Sacs Cylindre</option>
+                    <option value="sacs-u">Sacs U</option>
                     <option value="creation-personnalisee">Création personnalisée</option>
                     <option value="information-generale">Information générale</option>
                   </select>

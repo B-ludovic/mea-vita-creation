@@ -203,7 +203,7 @@ export default function AProposPage() {
               </div>
               <div className="step-image">
                 <OptimizedImage 
-                  src="/images/sac-u/arche-besace-fogo-2.jpg" 
+                  src="/images/sacs-u/arche-besace-fogo-2.jpg" 
                   alt="Design et conception" 
                   size="medium"
                   context="detail"
@@ -217,7 +217,7 @@ export default function AProposPage() {
             <div className="process-step">
               <div className="step-image">
                 <OptimizedImage 
-                  src="/images/sac-u/arche-besace-fogo-1.jpg" 
+                  src="/images/sacs-u/arche-besace-fogo-1.jpg" 
                   alt="Confection artisanale" 
                   size="medium"
                   context="detail"
@@ -247,7 +247,7 @@ export default function AProposPage() {
               </div>
               <div className="step-image">
                 <OptimizedImage 
-                  src="/images/sac-cylindre/tambour-amethyste-2.jpg" 
+                  src="/images/sacs-cylindre/tambour-amethyste-2.jpg" 
                   alt="Finitions d'exception" 
                   size="medium"
                   context="detail"

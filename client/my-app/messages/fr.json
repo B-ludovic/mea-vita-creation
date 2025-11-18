@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "collections": "Collections",
+    "about": "À propos",
+    "contact": "Contact",
+    "cart": "Panier",
+    "account": "Mon compte",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "admin": "Administration"
+  },
+  "footer": {
+    "about": "À propos",
+    "aboutText": "Mea Vita Création propose des articles de maroquinerie artisanale en cuir véritable, confectionnés à la main avec passion.",
+    "quickLinks": "Liens rapides",
+    "legal": "Informations légales",
+    "legalLinks": {
+      "mentions": "Mentions Légales",
+      "cgv": "CGV",
+      "cgu": "CGU",
+      "privacy": "Politique de Confidentialité",
+      "return": "Politique de Retour",
+      "shipping": "Politique de Livraison"
+    },
+    "contact": "Contact",
+    "followUs": "Suivez-nous",
+    "copyright": "© {year} Mea Vita Création - François Maroquinerie. Tous droits réservés."
+  },
+  "home": {
+    "hero": {
+      "title": "Maroquinerie Artisanale de Luxe",
+      "subtitle": "Créations en cuir véritable faites main",
+      "cta": "Découvrir nos produits"
+    },
+    "collections": {
+      "title": "Nos Collections",
+      "viewAll": "Voir la collection"
+    },
+    "features": {
+      "quality": {
+        "title": "Qualité Premium",
+        "description": "Cuir véritable sélectionné avec soin"
+      },
+      "handmade": {
+        "title": "Fait Main",
+        "description": "Chaque pièce est unique et artisanale"
+      },
+      "shipping": {
+        "title": "Livraison Rapide",
+        "description": "Expédition sous 2-3 jours ouvrés"
+      },
+      "guarantee": {
+        "title": "Garantie 2 ans",
+        "description": "Satisfait ou remboursé"
+      }
+    }
+  },
+  "products": {
+    "title": "Nos Produits",
+    "price": "Prix",
+    "addToCart": "Ajouter au panier",
+    "inStock": "En stock",
+    "outOfStock": "Rupture de stock",
+    "description": "Description",
+    "details": "Détails",
+    "reviews": "Avis clients",
+    "noReviews": "Aucun avis pour le moment",
+    "writeReview": "Laisser un avis",
+    "rating": "Note",
+    "specifications": "Caractéristiques",
+    "dimension": "Dimensions",
+    "material": "Matériau",
+    "color": "Couleur",
+    "relatedProducts": "Produits similaires"
+  },
+  "cart": {
+    "title": "Mon Panier",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer mes achats",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "total": "Total",
+    "checkout": "Commander",
+    "remove": "Retirer",
+    "quantity": "Quantité",
+    "updateCart": "Mettre à jour le panier"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "shippingAddress": "Adresse de livraison",
+    "billingAddress": "Adresse de facturation",
+    "sameAsShipping": "Identique à l'adresse de livraison",
+    "paymentMethod": "Moyen de paiement",
+    "placeOrder": "Passer commande",
+    "orderSummary": "Récapitulatif de commande"
+  },
+  "account": {
+    "title": "Mon Compte",
+    "orders": "Mes commandes",
+    "addresses": "Mes adresses",
+    "wishlist": "Ma liste de souhaits",
+    "reviews": "Mes avis",
+    "settings": "Paramètres",
+    "personalInfo": "Informations personnelles",
+    "changePassword": "Changer le mot de passe",
+    "orderHistory": "Historique des commandes",
+    "orderNumber": "Commande n°",
+    "orderDate": "Date",
+    "orderStatus": "Statut",
+    "orderTotal": "Montant",
+    "viewOrder": "Voir la commande",
+    "trackOrder": "Suivre ma commande"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "resetPassword": "Réinitialiser le mot de passe"
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer",
+    "info": {
+      "title": "Informations de contact",
+      "email": "Email",
+      "phone": "Téléphone",
+      "address": "Adresse"
+    },
+    "success": "Message envoyé avec succès !",
+    "error": "Erreur lors de l'envoi du message"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "showMore": "Voir plus",
+    "showLess": "Voir moins",
+    "viewAll": "Tout voir",
+    "learnMore": "En savoir plus",
+    "readMore": "Lire la suite",
+    "addToWishlist": "Ajouter à la liste de souhaits",
+    "share": "Partager",
+    "print": "Imprimer",
+    "download": "Télécharger"
+  },
+  "errors": {
+    "required": "Ce champ est requis",
+    "invalidEmail": "Email invalide",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "genericError": "Une erreur est survenue",
+    "notFound": "Page non trouvée",
+    "serverError": "Erreur serveur",
+    "unauthorized": "Non autorisé"
+  },
+  "status": {
+    "pending": "En attente",
+    "paid": "Payé",
+    "preparing": "En préparation",
+    "shipped": "Expédié",
+    "delivered": "Livré",
+    "cancelled": "Annulé",
+    "refunded": "Remboursé"
+  }
+}

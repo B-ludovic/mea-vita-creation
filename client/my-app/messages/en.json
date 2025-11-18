@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "home": "Home",
+    "collections": "Collections",
+    "about": "About",
+    "contact": "Contact",
+    "cart": "Cart",
+    "account": "My Account",
+    "login": "Login",
+    "logout": "Logout",
+    "admin": "Administration"
+  },
+  "footer": {
+    "about": "About",
+    "aboutText": "Mea Vita Création offers artisanal leather goods, handcrafted with passion using genuine leather.",
+    "quickLinks": "Quick Links",
+    "legal": "Legal Information",
+    "legalLinks": {
+      "mentions": "Legal Notice",
+      "cgv": "Terms of Sale",
+      "cgu": "Terms of Use",
+      "privacy": "Privacy Policy",
+      "return": "Return Policy",
+      "shipping": "Shipping Policy"
+    },
+    "contact": "Contact",
+    "followUs": "Follow Us",
+    "copyright": "© {year} Mea Vita Création - François Maroquinerie. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "title": "Luxury Artisanal Leather Goods",
+      "subtitle": "Handmade genuine leather creations",
+      "cta": "Discover our products"
+    },
+    "collections": {
+      "title": "Our Collections",
+      "viewAll": "View collection"
+    },
+    "features": {
+      "quality": {
+        "title": "Premium Quality",
+        "description": "Carefully selected genuine leather"
+      },
+      "handmade": {
+        "title": "Handmade",
+        "description": "Each piece is unique and artisanal"
+      },
+      "shipping": {
+        "title": "Fast Shipping",
+        "description": "Shipped within 2-3 business days"
+      },
+      "guarantee": {
+        "title": "2-Year Warranty",
+        "description": "Satisfaction guaranteed"
+      }
+    }
+  },
+  "products": {
+    "title": "Our Products",
+    "price": "Price",
+    "addToCart": "Add to cart",
+    "inStock": "In stock",
+    "outOfStock": "Out of stock",
+    "description": "Description",
+    "details": "Details",
+    "reviews": "Customer reviews",
+    "noReviews": "No reviews yet",
+    "writeReview": "Write a review",
+    "rating": "Rating",
+    "specifications": "Specifications",
+    "dimension": "Dimensions",
+    "material": "Material",
+    "color": "Color",
+    "relatedProducts": "Related products"
+  },
+  "cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue shopping",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove",
+    "quantity": "Quantity",
+    "updateCart": "Update cart"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "shippingAddress": "Shipping address",
+    "billingAddress": "Billing address",
+    "sameAsShipping": "Same as shipping address",
+    "paymentMethod": "Payment method",
+    "placeOrder": "Place order",
+    "orderSummary": "Order summary"
+  },
+  "account": {
+    "title": "My Account",
+    "orders": "My orders",
+    "addresses": "My addresses",
+    "wishlist": "My wishlist",
+    "reviews": "My reviews",
+    "settings": "Settings",
+    "personalInfo": "Personal information",
+    "changePassword": "Change password",
+    "orderHistory": "Order history",
+    "orderNumber": "Order #",
+    "orderDate": "Date",
+    "orderStatus": "Status",
+    "orderTotal": "Total",
+    "viewOrder": "View order",
+    "trackOrder": "Track order"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "resetPassword": "Reset password"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send",
+    "info": {
+      "title": "Contact information",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    },
+    "success": "Message sent successfully!",
+    "error": "Error sending message"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "readMore": "Read more",
+    "addToWishlist": "Add to wishlist",
+    "share": "Share",
+    "print": "Print",
+    "download": "Download"
+  },
+  "errors": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email",
+    "passwordMismatch": "Passwords do not match",
+    "genericError": "An error occurred",
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "unauthorized": "Unauthorized"
+  },
+  "status": {
+    "pending": "Pending",
+    "paid": "Paid",
+    "preparing": "Preparing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "refunded": "Refunded"
+  }
+}

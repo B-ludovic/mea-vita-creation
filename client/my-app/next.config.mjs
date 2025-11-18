@@ -1,8 +1,19 @@
+const createNextIntlPlugin = require('next-intl/plugin');
+
+const withNextIntl = createNextIntlPlugin('./i18n.js');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Tes configurations existantes
   images: {
-    unoptimized: true, // Désactive l'optimisation d'images pour éviter les erreurs 400
+    domains: ['localhost', 'francois-maroquinerie-api.onrender.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
 };
 
-export default nextConfig;
+module.exports = withNextIntl(nextConfig);

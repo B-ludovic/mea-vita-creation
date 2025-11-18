@@ -166,7 +166,7 @@
 }
 
 .admin-header {
-    background: var(--white);
+    background: linear-gradient(135deg, #fff9f0 0%, #ffe8d6 100%);
     padding: 2rem;
     border-radius: 15px;
     margin-bottom: 2rem;
@@ -401,14 +401,22 @@
     background: #fafafa;
 }
 
+/* =========================================
+   CORRECTION BADGES
+   ========================================= */
 .badge {
-    display: inline-block;
-    padding: 6px 12px;
+    display: inline-flex; /* Utiliser inline-flex pour un meilleur centrage */
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
     border-radius: 50px;
-    font-size: 0.60rem;
+    font-size: 0.7rem;
     font-weight: 700;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: nowrap !important; /* Important : Force le texte à ne pas revenir à la ligne */
+    letter-spacing: 0.5px;
+    line-height: 1; /* Fixe la hauteur de ligne pour éviter les décalages */
+    min-width: fit-content; /* Assure que le badge prend la place nécessaire */
 }
 
 .badge.success {
@@ -432,8 +440,9 @@
 }
 
 .badge.admin-badge {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: var(--white);
+    background: #d4af37;
+    color: #0a0a0a;
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
 }
 
 .badge.client-badge {

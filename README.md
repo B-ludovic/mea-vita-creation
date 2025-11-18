@@ -55,6 +55,8 @@ Application full-stack pour la vente de créations en maroquinerie :
 - 📊 **Google Analytics** : Tracking avec consentement RGPD, bannière cookies conforme
 - 🍪 **Gestion cookies** : Bannière de consentement RGPD avec icônes, localStorage
 - 📜 **Politique confidentialité** : Page RGPD complète avec droits utilisateurs
+- 📄 **Pages légales complètes** : Mentions légales, CGV, CGU, Politique de retour, Politique de livraison avec icônes projet
+- 🦶 **Footer responsive** : Composant Footer avec liens légaux, centré et adaptatif
 - 🧾 **Historique factures admin** : Interface admin pour consulter et télécharger les factures
 - 🎠 **Navigation produits** : Carousel latéral avec boutons gauche/droite pour naviguer dans une catégorie
 - 🎟️ **Codes promo** : Système complet de codes promotionnels avec validation dates, limites, admin CRUD, intégration Stripe
@@ -237,6 +239,11 @@ francois-maroquinerie/
 │   │   ├── apropos/        # Page à propos
 │   │   ├── contact/        # Page contact
 │   │   ├── politique-confidentialite/ # Page politique RGPD
+│   │   ├── mentions-legales/ # Page mentions légales
+│   │   ├── cgv/            # Page conditions générales de vente
+│   │   ├── cgu/            # Page conditions générales d'utilisation
+│   │   ├── politique-retour/ # Page politique de retour
+│   │   ├── politique-livraison/ # Page politique de livraison
 │   │   ├── success/        # Page succès paiement
 │   │   └── admin/          # Panel admin
 │   │       ├── dashboard/  # Tableau de bord avec statistiques et graphiques
@@ -246,8 +253,9 @@ francois-maroquinerie/
 │   │       ├── codes-promo/# Gestion codes promotionnels (CRUD)
 │   │       ├── categories/ # Gestion catégories
 │   │       └── utilisateurs/ # Gestion utilisateurs
-   │   ├── components/         # Composants React
+│   │   ├── components/         # Composants React
    │   │   ├── Header.jsx      # En-tête navigation
+   │   │   ├── Footer.jsx      # Pied de page avec liens légaux
    │   │   ├── Modal.jsx       # Composant modal réutilisable
    │   │   ├── ModalRefund.jsx # Modal remboursement 2-step (Instructions → Confirmation)
    │   │   ├── PromoCodeInput.jsx # Composant code promo (panier)
@@ -276,6 +284,7 @@ francois-maroquinerie/
 │   │   ├── ModalRefund.css # Styles modal remboursement (variables CSS, icônes)
 │   │   ├── PromoCode.css   # Styles composant code promo
 │   │   ├── Header.css
+│   │   ├── Footer.css      # Styles footer avec liens légaux
 │   │   ├── Home.css
 │   │   ├── Auth.css
 │   │   ├── Categories.css
@@ -290,6 +299,7 @@ francois-maroquinerie/
 │   │   ├── Success.css
 │   │   ├── ProductCarousel.css
 │   │   ├── CookieConsent.css # Styles bannière cookies
+│   │   ├── Legal.css       # Styles pages légales (mentions légales, CGV, CGU, etc.)
 │   │   ├── politique-confidentialite.css # Styles page RGPD
 │   │   └── ma-wishlist.css # Styles liste de souhaits
 │   ├── app/
@@ -580,31 +590,23 @@ Réalisé avec 💻 et ☕ pendant mon parcours de dev junior
 
 #### ⚠️ **Vulnérabilités connues & recommandations**
 
-**🟡 MOYEN - À planifier**
-
-1. **Token JWT en localStorage**
-   - **Contexte** : Acceptable pour site e-commerce artisanal (pas de données bancaires stockées)
-   - **Risque théorique** : Vulnérable XSS si faille dans librairie tierce
-   - **Amélioration future** : Migrer vers HttpOnly cookies pour renforcer davantage
-   - **Note** : Sanitization déjà en place pour limiter les risques XSS
-   - **✅ Avantage** : Protection native contre CSRF (token non envoyé automatiquement)
 
 **🟢 MINEUR - Améliorations futures**
 
-2. **Pas de 2FA** (authentification à deux facteurs)
+1. **Pas de 2FA** (authentification à deux facteurs)
    - Recommandé pour comptes admin
    - Implémentation : TOTP (Google Authenticator) ou SMS
 
-3. ~~**Session JWT longue sans refresh**~~ ✅ **RÉSOLU**
+2. ~~**Session JWT longue sans refresh**~~ ✅ **RÉSOLU**
    - ✅ Implémenté : Dual-token avec accessToken 15 min + refreshToken 7 jours
    - ✅ Anti-loop protection pour refresh sécurisé
 
-4. ~~**Contact form sans CAPTCHA**~~ ✅ **RÉSOLU**
+3. ~~**Contact form sans CAPTCHA**~~ ✅ **RÉSOLU**
    - ✅ Implémenté : Honeypot invisible (champ caché anti-bot)
    - ✅ Protection sans friction utilisateur (meilleure UX que CAPTCHA)
    - ✅ Logs détaillés des tentatives de spam (IP, User-Agent)
 
-5. **Validation email côté client uniquement**
+4. **Validation email côté client uniquement**
    - Besoin validation regex côté serveur pour sécurité complète
 
 #### 📊 **Score sécurité global : 9.9/10**

@@ -83,13 +83,13 @@
 .bio-icon {
   display: inline-block;
   margin-right: 10px;
-  vertical-align: middle;
+  vertical-align: middle; /* Cohérence de l'alignement */
 }
 
 .material-icon {
   display: inline-block;
   margin-right: 8px;
-  vertical-align: middle;
+  vertical-align: middle; /* Cohérence de l'alignement */
 }
 
 /* Values Section */
@@ -116,7 +116,7 @@
   border-radius: 20px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Transition uniformisée */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
 }
 
@@ -224,7 +224,7 @@
   padding: 1.5rem;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  /* 💥 Cohérence: Transition uniformisée */
+  /* Transition uniformisée */
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 

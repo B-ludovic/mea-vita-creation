@@ -16,8 +16,9 @@ export default function OptimizedImage({
   priority = false // Priorité de chargement
 }) {
   
-  // Obtenir le chemin optimisé
-  const optimizedSrc = getOptimizedImagePath(src, size);
+  // TEMPORAIRE : Utiliser directement l'image originale au lieu de la version optimisée
+  // TODO : Générer les images optimisées avec le script
+  const optimizedSrc = src; // getOptimizedImagePath(src, size);
   
   return (
     <Image

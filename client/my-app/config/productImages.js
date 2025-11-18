@@ -1,6 +1,17 @@
 // Configuration des images pour chaque produit
 // Chaque produit a son propre ensemble de photos cohérentes
 
+// Fonction pour normaliser les slugs (pluriel → singulier)
+const normalizeSlug = (slug) => {
+  const mappings = {
+    'pochettes-unisexes': 'pochettes-unisexe',
+    'sacs-cylindres': 'sacs-cylindre',
+    'sacs-us': 'sacs-u',
+    // porte-cartes reste identique (déjà au pluriel)
+  };
+  return mappings[slug] || slug;
+};
+
 export const PRODUCT_IMAGES = {
   // SAC CYLINDRE - Collection "Le Tambour"
   'le-tambour-amethyste': [
@@ -124,17 +135,20 @@ export const PRODUCT_IMAGES = {
 
 // Fonction pour obtenir les images d'un produit par son slug
 export const getProductImages = (productSlug) => {
-  return PRODUCT_IMAGES[productSlug] || [];
+  const normalizedSlug = normalizeSlug(productSlug);
+  return PRODUCT_IMAGES[normalizedSlug] || [];
 };
 
 // Fonction pour obtenir l'image principale (première image)
 export const getProductMainImage = (productSlug) => {
-  const images = PRODUCT_IMAGES[productSlug];
+  const normalizedSlug = normalizeSlug(productSlug);
+  const images = PRODUCT_IMAGES[normalizedSlug];
   return images && images.length > 0 ? images[0] : null;
 };
 
 // Fonction pour obtenir toutes les images d'une catégorie (pour fallback)
 export const getCategoryImages = (categorySlug) => {
+  const normalizedSlug = normalizeSlug(categorySlug);
   const categoryImagesMap = {
     'pochettes-unisexe': [
       '/images/pochettes-unisexe/atlas-fogo-1.jpg',
@@ -191,5 +205,5 @@ export const getCategoryImages = (categorySlug) => {
     ],
   };
 
-  return categoryImagesMap[categorySlug] || [];
+  return categoryImagesMap[normalizedSlug] || [];
 };

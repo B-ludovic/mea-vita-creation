@@ -76,6 +76,16 @@
     color: var(--primary-orange);
 }
 
+/* Lien actif (page courante) */
+.nav-menu a.active {
+    color: var(--primary-orange);
+    font-weight: 600;
+}
+
+.nav-menu a.active::after {
+    width: 100%;
+}
+
 .nav-menu a::after {
     content: '';
     position: absolute;
@@ -465,21 +475,41 @@
     }
 
     .nav-menu a {
-        display: block;
+        display: inline-block; /* Pour que le ::after suive la taille du texte */
         padding: 1rem;
-        width: 100%;
+        width: auto; /* Largeur automatique */
         font-size: 1rem;
         border-radius: 12px;
-        position: relative; 
+        position: relative;
+    }
+
+    /* Forcer inline-block pour les liens spéciaux aussi */
+    .nav-menu .cart-link,
+    .nav-menu .orders-link,
+    .nav-menu .addresses-link,
+    .nav-menu .wishlist-link,
+    .nav-menu .admin-link {
+        display: inline-block;
+        width: auto;
+    }
+
+    .nav-menu li {
+        width: 100%;
+        opacity: 0;
+        transform: translateX(-20px); 
+        /* 💥 Transition uniformisée */
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: left; /* Aligner le lien à gauche */
     }
 
     .nav-menu a::after {
         bottom: 8px;
         left: 1rem;
-        right: 1rem;
+        width: 0;
     }
 
-    .nav-menu a:hover::after {
+    .nav-menu a:hover::after,
+    .nav-menu a.active::after {
         width: calc(100% - 2rem); 
     }
 

@@ -401,9 +401,8 @@
     background: #fafafa;
 }
 
-/* =========================================
-   CORRECTION BADGES
-   ========================================= */
+/* CORRECTION BADGES */
+
 .badge {
     display: inline-flex; /* Utiliser inline-flex pour un meilleur centrage */
     align-items: center;

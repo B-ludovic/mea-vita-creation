@@ -11,7 +11,8 @@
 /* Note : Les styles de gradients spécifiques restent tels quels, car ils utilisent des couleurs spécifiques */
 
 .category-hero.pochettes-unisexe {
-    background: linear-gradient(135deg, #E67E22 0%, #C44601 100%);
+    background: linear-gradient(135deg, var(--terracotta-light) 0%, var(--terracotta-dark) 100%);
+    box-shadow: inset 0 0 100px rgba(230, 126, 34, 0.3);
 }
 
 .category-hero.pochettes-unisexe h1,
@@ -20,32 +21,35 @@
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-.category-hero.porte-carte {
-    background: linear-gradient(135deg, #F39C12 0%, #E67E22 100%);
+.category-hero.porte-cartes {
+    background: linear-gradient(135deg, var(--solar-yellow) 0%, var(--solar-yellow-dark) 100%);
+    box-shadow: inset 0 0 100px rgba(255, 193, 7, 0.3);
 }
 
-.category-hero.porte-carte h1,
-.category-hero.porte-carte p {
+.category-hero.porte-cartes h1,
+.category-hero.porte-cartes p {
     color: var(--white);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-.category-hero.sac-cylindre {
-    background: linear-gradient(135deg, #F4A460 0%, #CD853F 100%);
+.category-hero.sacs-cylindre {
+    background: linear-gradient(135deg, var(--ochre-light) 0%, var(--ochre-dark) 100%);
+    box-shadow: inset 0 0 100px rgba(205, 133, 63, 0.3);
 }
 
-.category-hero.sac-cylindre h1,
-.category-hero.sac-cylindre p {
+.category-hero.sacs-cylindre h1,
+.category-hero.sacs-cylindre p {
     color: var(--white);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-.category-hero.sac-u {
-    background: linear-gradient(135deg, #FF8E53 0%, #FFAB4C 100%);
+.category-hero.sacs-u {
+    background: linear-gradient(135deg, var(--sunset-orange) 0%, var(--sunset-gold) 100%);
+    box-shadow: inset 0 0 100px rgba(255, 171, 76, 0.3);
 }
 
-.category-hero.sac-u h1,
-.category-hero.sac-u p {
+.category-hero.sacs-u h1,
+.category-hero.sacs-u p {
     color: var(--white);
     text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }

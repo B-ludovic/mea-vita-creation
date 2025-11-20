@@ -5,7 +5,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 // Import du CSS spécifique au Header
 import '../styles/Header.css';
@@ -17,6 +17,7 @@ import { useNotifications } from '../contexts/NotificationContext';
 // Composant Header (Navigation)
 export default function Header() {
     const router = useRouter();
+    const pathname = usePathname(); // Détecter la page active
 
     // État pour stocker l'utilisateur connecté
     const [user, setUser] = useState(null);
@@ -151,48 +152,48 @@ export default function Header() {
                 {/* Menu de navigation - s'ouvre/ferme en mode mobile */}
                 <ul className={`nav-menu ${isMenuOpen ? 'mobile-open' : ''}`}>
                     <li>
-                        <Link href="/" onClick={closeMenu}>Accueil</Link>
+                        <Link href="/" onClick={closeMenu} className={pathname === '/' ? 'active' : ''}>Accueil</Link>
                     </li>
                     <li>
-                        <Link href="/categories" onClick={closeMenu}>Catégories</Link>
+                        <Link href="/categories" onClick={closeMenu} className={pathname.startsWith('/categories') ? 'active' : ''}>Catégories</Link>
                     </li>
                     <li>
-                        <Link href="/apropos" onClick={closeMenu}>À Propos</Link>
+                        <Link href="/apropos" onClick={closeMenu} className={pathname === '/apropos' ? 'active' : ''}>À Propos</Link>
                     </li>
                     <li>
-                        <Link href="/contact" onClick={closeMenu}>Contact</Link>
+                        <Link href="/contact" onClick={closeMenu} className={pathname === '/contact' ? 'active' : ''}>Contact</Link>
                     </li>
                     <li>
-                        <Link href="/panier" className="cart-link mobile-only-link" onClick={closeMenu}>
+                        <Link href="/panier" className={`cart-link mobile-only-link ${pathname === '/panier' ? 'active' : ''}`} onClick={closeMenu}>
                             Panier ({isMounted ? getCartCount() : 0})
                         </Link>
                     </li>
                     {user && (
                         <>
                             <li className="mobile-only-link">
-                                <Link href="/mes-commandes" className="orders-link" onClick={closeMenu}>
+                                <Link href="/mes-commandes" className={`orders-link ${pathname === '/mes-commandes' ? 'active' : ''}`} onClick={closeMenu}>
                                     Mes commandes
                                 </Link>
                             </li>
                             <li className="mobile-only-link">
-                                <Link href="/ma-wishlist" className="wishlist-link" onClick={closeMenu}>
+                                <Link href="/ma-wishlist" className={`wishlist-link ${pathname === '/ma-wishlist' ? 'active' : ''}`} onClick={closeMenu}>
                                     Mes Favoris
                                 </Link>
                             </li>
                             <li className="mobile-only-link">
-                                <Link href="/mes-adresses" className="addresses-link" onClick={closeMenu}>
+                                <Link href="/mes-adresses" className={`addresses-link ${pathname === '/mes-adresses' ? 'active' : ''}`} onClick={closeMenu}>
                                     Mes adresses
                                 </Link>
                             </li>
                             {user.role === 'ADMIN' && (
                                 <>
                                     <li className="mobile-only-link">
-                                        <Link href="/admin/avis" className="admin-link" onClick={closeMenu}>
+                                        <Link href="/admin/avis" className={`admin-link ${pathname === '/admin/avis' ? 'active' : ''}`} onClick={closeMenu}>
                                             Avis clients
                                         </Link>
                                     </li>
                                     <li className="mobile-only-link">
-                                        <Link href="/admin/dashboard" className="admin-link" onClick={closeMenu}>
+                                        <Link href="/admin/dashboard" className={`admin-link ${pathname.startsWith('/admin') ? 'active' : ''}`} onClick={closeMenu}>
                                             Admin
                                         </Link>
                                     </li>

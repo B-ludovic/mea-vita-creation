@@ -1,13 +1,12 @@
 // Configuration des images pour chaque produit
 // Chaque produit a son propre ensemble de photos cohérentes
 
-// Fonction pour normaliser les slugs (pluriel → singulier)
+// Fonction pour normaliser les slugs (pluriel vers singulier)
 const normalizeSlug = (slug) => {
   const mappings = {
     'pochettes-unisexes': 'pochettes-unisexe',
     'sacs-cylindres': 'sacs-cylindre',
     'sacs-us': 'sacs-u',
-    // porte-cartes reste identique (déjà au pluriel)
   };
   return mappings[slug] || slug;
 };

@@ -1,7 +1,22 @@
-````markdown
 # 🎨 Mea Vita Création - François Maroquinerie
 
 Site e-commerce de maroquinerie artisanale avec paiement Stripe.
+
+## 📸 Aperçu du Site
+
+### Page d'Accueil
+![Page d'accueil](screenshot/home.png)
+
+### Page Inscription
+![Inscription](screenshot/inscription.png)
+
+### Panier
+![Panier](screenshot/panier.png)
+
+### Détail Produit
+![Détail produit](screenshot/detail-produit.png)
+
+---
 
 > ⚠️ **SÉCURITÉ** : Ne jamais commiter de fichiers `.env` ou `.env.local`. Toutes les clés ci-dessous sont des exemples génériques à remplacer par vos vraies clés.
 

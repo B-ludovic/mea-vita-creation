@@ -36,7 +36,7 @@ export default function Header() {
     // On vérifie si un utilisateur est connecté
     useEffect(() => {
         setIsMounted(true);
-        
+
         // Fonction pour charger les données utilisateur
         const loadUser = () => {
             const userData = localStorage.getItem('user');
@@ -58,7 +58,7 @@ export default function Header() {
         // Écouter les événements personnalisés pour la connexion
         window.addEventListener('userLoggedIn', handleStorageChange);
         window.addEventListener('userLoggedOut', handleStorageChange);
-        
+
         // Nettoyer les écouteurs à la destruction du composant
         return () => {
             window.removeEventListener('userLoggedIn', handleStorageChange);
@@ -70,13 +70,13 @@ export default function Header() {
     useEffect(() => {
         const handleClickOutside = (event) => {
             // Fermer le menu burger
-            if (isMenuOpen && 
-                !event.target.closest('.nav-menu') && 
+            if (isMenuOpen &&
+                !event.target.closest('.nav-menu') &&
                 !event.target.closest('.burger-button')) {
                 setIsMenuOpen(false);
             }
             // Fermer le dropdown user
-            if (isUserDropdownOpen && 
+            if (isUserDropdownOpen &&
                 !event.target.closest('.user-dropdown-container')) {
                 setIsUserDropdownOpen(false);
             }
@@ -99,13 +99,13 @@ export default function Header() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         setUser(null);
-        
+
         // Fermer le menu mobile si ouvert
         setIsMenuOpen(false);
-        
+
         // Déclencher un événement personnalisé pour notifier la déconnexion
         window.dispatchEvent(new Event('userLoggedOut'));
-        
+
         router.push('/');
     };
 
@@ -123,13 +123,13 @@ export default function Header() {
         <header className="header">
             {/* Overlay pour fermer le menu en cliquant en dehors */}
             {isMenuOpen && <div className="menu-overlay" onClick={closeMenu}></div>}
-            
+
             <nav className="nav">
                 {/* Logo et nom du site */}
                 <Link href="/" className="logo" onClick={closeMenu}>
-                    <Image 
-                        src="/Logo_Francois_sansfond.PNG" 
-                        alt="Mea Vita Création Logo" 
+                    <Image
+                        src="/Logo_Francois_sansfond.PNG"
+                        alt="Mea Vita Création Logo"
                         width={50}
                         height={50}
                         className="logo-img"
@@ -139,7 +139,7 @@ export default function Header() {
                 </Link>
 
                 {/* Bouton burger pour mobile (visible uniquement sur petit écran) */}
-                <button 
+                <button
                     className={`burger-button ${isMenuOpen ? 'active' : ''}`}
                     onClick={toggleMenu}
                     aria-label="Menu"
@@ -232,9 +232,9 @@ export default function Header() {
                 <div className="desktop-right-section">
                     {/* Icône panier desktop */}
                     <Link href="/panier" className="desktop-cart-icon">
-                        <Image 
-                            src="/icones/shopping.png" 
-                            alt="Panier" 
+                        <Image
+                            src="/icones/shopping.png"
+                            alt="Panier"
                             width={28}
                             height={28}
                         />
@@ -246,20 +246,20 @@ export default function Header() {
                     {user ? (
                         // Si connecté : afficher le dropdown user
                         <div className="user-dropdown-container">
-                            <button 
+                            <button
                                 className="user-greeting-button"
                                 onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
                             >
                                 Bonjour {user.firstName} !
-                                <Image 
-                                    src="/icones/down.png" 
-                                    alt="" 
-                                    width={12} 
+                                <Image
+                                    src="/icones/down.png"
+                                    alt=""
+                                    width={12}
                                     height={12}
                                     className={`dropdown-arrow ${isUserDropdownOpen ? 'open' : ''}`}
                                 />
                             </button>
-                            
+
                             {isUserDropdownOpen && (
                                 <div className="user-dropdown">
                                     <Link href="/mes-commandes" onClick={() => setIsUserDropdownOpen(false)}>

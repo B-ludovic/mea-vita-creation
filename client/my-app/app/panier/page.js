@@ -68,6 +68,52 @@ export default function CartPage() {
   // État pour stocker le code promo appliqué
   const [appliedPromo, setAppliedPromo] = useState(null);
 
+  // Fonction pour vérifier le stock en temps réel et mettre à jour la quantité
+  const handleUpdateQuantity = async (item, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(item.id);
+      return;
+    }
+
+    try {
+      // Vérifier le stock actuel en base de données
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${item.slug}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        const currentStock = data.product.stock;
+        
+        // Vérifier si on dépasse le stock
+        if (newQuantity > currentStock) {
+          if (currentStock === 0) {
+            showAlert(
+              'Ce produit est en rupture de stock.',
+              'Rupture de stock',
+              '/icones/help.png'
+            );
+          } else {
+            showAlert(
+              `Stock insuffisant ! Seulement ${currentStock} article(s) disponible(s).`,
+              'Stock limité',
+              '/icones/help.png'
+            );
+          }
+          return;
+        }
+        
+        // Si OK, mettre à jour la quantité
+        updateQuantity(item.id, newQuantity);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la vérification du stock:', error);
+      showAlert(
+        'Erreur lors de la vérification du stock',
+        'Erreur',
+        '/icones/help.png'
+      );
+    }
+  };
+
   // Charger les images depuis la BDD
   useEffect(() => {
     const loadImages = async () => {
@@ -300,14 +346,14 @@ export default function CartPage() {
                   <div className="cart-item-quantity">
                     <button
                       className="quantity-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
                     >
                       −
                     </button>
                     <span className="quantity-value">{item.quantity}</span>
                     <button
                       className="quantity-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
                     >
                       +
                     </button>

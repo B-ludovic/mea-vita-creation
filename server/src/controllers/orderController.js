@@ -185,6 +185,15 @@ const updateOrderStatus = async (req, res) => {
     const { orderId } = req.params;
     const { status, refundedAmount } = req.body;
 
+    // Valider le statut contre une liste autorisée
+    const validStatuses = ['PENDING', 'PAID', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'REFUNDED', 'PARTIALLY_REFUNDED'];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Statut invalide. Statuts autorisés : ${validStatuses.join(', ')}`
+      });
+    }
+
     // Préparer les données à mettre à jour
     const updateData = { status };
     

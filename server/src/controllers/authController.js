@@ -97,7 +97,7 @@ const register = async (req, res) => {
     }
 
     // 4. Crypter le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     // 5. Générer un token de vérification
     // SÉCURITÉ : on stocke le hash en DB, on envoie le token brut par email
@@ -333,7 +333,7 @@ const refreshAccessToken = async (req, res) => {
     }
 
     // Vérifier la signature du token
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, decoded) => {
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err) => {
       if (err) {
         return res.status(401).json({
           success: false,
@@ -341,16 +341,23 @@ const refreshAccessToken = async (req, res) => {
         });
       }
 
-      // Générer un nouveau access token
+      // SÉCURITÉ : Rotation — invalider l'ancien token, émettre un nouveau
+      await prisma.refreshToken.delete({
+        where: { id: storedToken.id }
+      });
+
       const newAccessToken = generateAccessToken(
         storedToken.user.id,
         storedToken.user.email,
         storedToken.user.role
       );
+      const newRefreshToken = generateRefreshToken(storedToken.user.id);
+      await saveRefreshToken(storedToken.user.id, newRefreshToken);
 
       res.json({
         success: true,
-        accessToken: newAccessToken
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken
       });
     });
 

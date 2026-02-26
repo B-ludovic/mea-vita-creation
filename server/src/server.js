@@ -138,10 +138,8 @@ app.use(helmet({
       ],
       
       // styleSrc: D'où peuvent venir les CSS
-      styleSrc: [
-        "'self'",                    // Tes CSS
-        "'unsafe-inline'"            // Autoriser les styles inline (pour React)
-      ]
+      // SÉCURITÉ : pas de 'unsafe-inline' — l'API ne sert que du JSON, pas de HTML avec styles
+      styleSrc: ["'self'"]
     }
   }
 }));

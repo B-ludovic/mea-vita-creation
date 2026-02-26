@@ -79,10 +79,10 @@ const validatePromoCode = async (req, res) => {
     }
 
     // Code valide !
+    // SÉCURITÉ : on ne retourne pas l'UUID interne (id), le code string suffit
     res.json({
       success: true,
       promoCode: {
-        id: promoCode.id,
         code: promoCode.code,
         description: promoCode.description,
         discountType: promoCode.discountType,

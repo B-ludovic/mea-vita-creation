@@ -16,6 +16,9 @@ const {
 // Importer les limiteurs de tentatives (protection anti brute-force)
 const { loginLimiter, registerLimiter, forgotPasswordLimiter, resetPasswordLimiter } = require('../middleware/rateLimiter');
 
+// Importer le middleware d'authentification
+const { authenticateToken } = require('../middleware/authMiddleware');
+
 // ROUTE D'INSCRIPTION
 // POST /api/auth/register
 // Le front-end envoie : { email, password, firstName, lastName }
@@ -42,7 +45,7 @@ router.post('/refresh', refreshAccessToken);
 // POST /api/auth/logout
 // Le front-end envoie : { refreshToken }
 // Supprime le refresh token de la BDD
-router.post('/logout', logout);
+router.post('/logout', authenticateToken, logout);
 
 // ROUTE POUR DEMANDER LA RÉINITIALISATION DU MOT DE PASSE
 // POST /api/auth/forgot-password

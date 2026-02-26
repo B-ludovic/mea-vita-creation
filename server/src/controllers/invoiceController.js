@@ -1,6 +1,5 @@
 // Controller pour les factures
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../config/prisma');
 
 // Récupérer toutes les factures (admin uniquement)
 const getAllInvoices = async (req, res) => {

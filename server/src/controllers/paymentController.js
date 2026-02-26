@@ -19,15 +19,10 @@ const { incrementPromoCodeUsage } = require('./promoCodeController');
 const createCheckoutSession = async (req, res) => {
     try {
         // Récupérer les données envoyées par le front-end (y compris addressId)
-        const { items, userId, addressId, promoCodeId, discountAmount } = req.body;
+        const { items, addressId, promoCodeId } = req.body;
 
-        // SÉCURITÉ 1 : VÉRIFIER QUE L'UTILISATEUR EST CONNECTÉ
-        if (!userId) {
-            return res.status(401).json({
-                success: false,
-                message: 'Vous devez être connecté pour passer commande'
-            });
-        }
+        // SÉCURITÉ 1 : userId provient du token JWT vérifié, jamais du body client
+        const userId = req.user.userId;
 
         // SÉCURITÉ 2 : VÉRIFIER QU'UNE ADRESSE DE LIVRAISON EST FOURNIE
         if (!addressId) {
@@ -249,12 +244,19 @@ const verifyPayment = async (req, res) => {
         // Récupérer la session depuis Stripe
         const session = await stripe.checkout.sessions.retrieve(sessionId);
 
+        // SÉCURITÉ : Vérifier que la session appartient à l'utilisateur connecté
+        const sessionUserId = session.metadata?.userId;
+        if (sessionUserId !== req.user.userId && req.user.role !== 'ADMIN') {
+            return res.status(403).json({
+                success: false,
+                message: 'Accès refusé'
+            });
+        }
+
         if (session.payment_status === 'paid') {
-            // Le paiement est réussi
             res.json({
                 success: true,
-                paymentStatus: 'paid',
-                session
+                paymentStatus: 'paid'
             });
         } else {
             res.json({

@@ -7,6 +7,11 @@ const prisma = require('../config/prisma');
 const { sendVerificationEmail, sendWelcomeEmail, sendPasswordResetEmail } = require('../services/emailService');
 
 
+// Fonction pour hasher un token avant stockage en DB (SHA-256)
+// On stocke le hash, on envoie le token brut au client
+// Si la DB est compromise, les tokens ne sont pas directement utilisables
+const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+
 // Fonction pour générer un Access Token (courte durée)
 const generateAccessToken = (userId, email, role) => {
   return jwt.sign(
@@ -26,13 +31,14 @@ const generateRefreshToken = (userId) => {
 };
 
 // Fonction pour sauvegarder le Refresh Token dans la base de données
+// SÉCURITÉ : on stocke le hash SHA-256, pas le token brut
 const saveRefreshToken = async (userId, token) => {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7); // 7 jours
 
   await prisma.refreshToken.create({
     data: {
-      token,
+      token: hashToken(token),
       userId,
       expiresAt
     }
@@ -94,6 +100,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 5. Générer un token de vérification
+    // SÉCURITÉ : on stocke le hash en DB, on envoie le token brut par email
     const verificationToken = crypto.randomBytes(32).toString('hex');
     const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
@@ -106,12 +113,12 @@ const register = async (req, res) => {
         lastName,
         role: 'CLIENT',
         isActive: false,
-        emailVerificationToken: verificationToken,
+        emailVerificationToken: hashToken(verificationToken),
         emailVerificationExpires: verificationExpires
       }
     });
 
-    // 7. Envoyer l'email de vérification
+    // 7. Envoyer l'email de vérification (token brut, pas le hash)
     const emailResult = await sendVerificationEmail(user.email, user.firstName, verificationToken);
     
     if (!emailResult.success) {
@@ -224,8 +231,9 @@ const verifyEmail = async (req, res) => {
       });
     }
 
+    // SÉCURITÉ : on cherche par le hash du token reçu par email
     const user = await prisma.user.findUnique({
-      where: { emailVerificationToken: token }
+      where: { emailVerificationToken: hashToken(token) }
     });
 
     if (!user) {
@@ -297,8 +305,9 @@ const refreshAccessToken = async (req, res) => {
     }
 
     // Vérifier que le refresh token existe dans la base de données
+    // SÉCURITÉ : on cherche par le hash du token, pas le token brut
     const storedToken = await prisma.refreshToken.findUnique({
-      where: { token: refreshToken },
+      where: { token: hashToken(refreshToken) },
       include: { user: true }
     });
 
@@ -361,9 +370,9 @@ const logout = async (req, res) => {
     const { refreshToken } = req.body;
 
     if (refreshToken) {
-      // Supprimer le refresh token de la base de données
+      // Supprimer le refresh token de la base de données (lookup par hash)
       await prisma.refreshToken.deleteMany({
-        where: { token: refreshToken }
+        where: { token: hashToken(refreshToken) }
       });
     }
 
@@ -405,19 +414,20 @@ const forgotPassword = async (req, res) => {
     }
 
     // Générer un token de réinitialisation
+    // SÉCURITÉ : on stocke le hash en DB, on envoie le token brut par email
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
 
-    // Sauvegarder le token dans la base
+    // Sauvegarder le hash du token dans la base
     await prisma.user.update({
       where: { id: user.id },
       data: {
-        resetPasswordToken: resetToken,
+        resetPasswordToken: hashToken(resetToken),
         resetPasswordExpires: resetExpires
       }
     });
 
-    // Envoyer l'email
+    // Envoyer l'email (token brut, pas le hash)
     const emailResult = await sendPasswordResetEmail(user.email, user.firstName, resetToken);
     
     if (!emailResult.success) {
@@ -473,9 +483,9 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    // Chercher l'utilisateur avec ce token
+    // Chercher l'utilisateur avec ce token (lookup par hash)
     const user = await prisma.user.findUnique({
-      where: { resetPasswordToken: token }
+      where: { resetPasswordToken: hashToken(token) }
     });
 
     if (!user) {

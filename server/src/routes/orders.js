@@ -108,7 +108,7 @@ router.get('/user/me', authenticateToken, async (req, res) => {
 
 // ROUTE POUR RÉCUPÉRER LES COMMANDES D'UN UTILISATEUR
 // GET /api/orders/user/:userId
-router.get('/user/:userId', getUserOrders);
+router.get('/user/:userId', authenticateToken, getUserOrders);
 
 // ROUTE POUR OBTENIR LA LISTE DES TRANSPORTEURS
 // GET /api/orders/carriers/list

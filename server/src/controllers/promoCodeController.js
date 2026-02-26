@@ -1,6 +1,5 @@
 // Contrôleur pour la gestion des codes promo
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../config/prisma');
 
 // FONCTION POUR VALIDER UN CODE PROMO (CLIENT)
 const validatePromoCode = async (req, res) => {

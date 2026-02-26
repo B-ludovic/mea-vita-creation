@@ -19,7 +19,10 @@ const {
 // Cette fonction est appelée après un paiement Stripe réussi
 const createOrder = async (req, res) => {
   try {
-    const { userId, items, totalAmount, stripeSessionId, addressId } = req.body;
+    const { items, totalAmount, stripeSessionId, addressId } = req.body;
+
+    // SÉCURITÉ : userId provient du token JWT vérifié, jamais du body client
+    const userId = req.user.userId;
 
     // Vérifier que les données sont présentes
     if (!items || items.length === 0) {
@@ -36,7 +39,7 @@ const createOrder = async (req, res) => {
     const order = await prisma.order.create({
       data: {
         orderNumber,
-        userId: userId || null,
+        userId,
         addressId: addressId || null,
         status: 'PENDING',
         subtotal: totalAmount,
@@ -82,6 +85,14 @@ const createOrder = async (req, res) => {
 const getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    // SÉCURITÉ : Vérifier que l'utilisateur demande ses propres commandes
+    if (req.user.userId !== userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
+      });
+    }
 
     // Récupérer toutes les commandes de l'utilisateur
     const orders = await prisma.order.findMany({
@@ -143,6 +154,14 @@ const getOrderById = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: 'Commande non trouvée'
+      });
+    }
+
+    // SÉCURITÉ : Vérifier que la commande appartient à l'utilisateur connecté
+    if (order.userId !== req.user.userId && req.user.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        message: 'Accès refusé'
       });
     }
 

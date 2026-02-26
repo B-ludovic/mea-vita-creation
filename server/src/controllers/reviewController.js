@@ -6,7 +6,10 @@ const { notifyNewReview } = require('../services/pusherService');
 // FONCTION POUR CRÉER UN AVIS
 const createReview = async (req, res) => {
   try {
-    const { productId, userId, rating, comment } = req.body;
+    const { productId, rating, comment } = req.body;
+
+    // SÉCURITÉ : userId provient du token JWT vérifié, jamais du body client
+    const userId = req.user.userId;
 
     // Vérifier que les champs obligatoires sont présents
     if (!productId || !userId || !rating) {

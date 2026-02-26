@@ -138,7 +138,7 @@ const sendContactEmail = async (name, email, subject, message) => {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Mea Vita Création <onboarding@resend.dev>',
-      to: ['ton-email@exemple.com'], // ← REMPLACE par ton vrai email
+      to: [process.env.ADMIN_EMAIL],
       replyTo: email, // Le client peut répondre directement
       subject: `Nouveau message de contact : ${subject}`,
       html: contactEmailTemplate(name, email, subject, message)

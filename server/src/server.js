@@ -10,10 +10,12 @@ require('dotenv').config();
 // Vérifier que toutes les variables importantes sont définies
 // Si une variable manque, le serveur s'arrête AVANT de démarrer (évite les bugs en prod)
 const requiredEnvVars = [
-  'JWT_SECRET',          // Pour signer les tokens
-  'DATABASE_URL',        // Pour se connecter à PostgreSQL
-  'STRIPE_SECRET_KEY',   // Pour les paiements
-  'CLIENT_URL'           // Pour configurer CORS
+  'JWT_SECRET',            // Pour signer les tokens
+  'JWT_REFRESH_SECRET',    // Pour signer les refresh tokens
+  'DATABASE_URL',          // Pour se connecter à PostgreSQL
+  'STRIPE_SECRET_KEY',     // Pour les paiements
+  'CLIENT_URL',            // Pour configurer CORS
+  'ADMIN_EMAIL'            // Pour recevoir les emails de contact
 ];
 
 // Parcourir chaque variable requise
@@ -218,7 +220,6 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       test: '/api/test',
-      testDatabase: '/api/test-db',
       auth: {
         register: '/api/auth/register',
         login: '/api/auth/login'
@@ -236,23 +237,6 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// ROUTE DE TEST DE PRISMA
-app.get('/api/test-db', async (req, res) => {
-  try {
-    // Compter le nombre d'utilisateurs dans la base
-    const userCount = await prisma.user.count();
-    
-    res.json({ 
-      message: '✅ Connexion à PostgreSQL avec Prisma réussie !',
-      userCount: userCount
-    });
-  } catch (error) {
-    res.status(500).json({ 
-      message: '❌ Erreur de connexion à PostgreSQL',
-      error: error.message
-    });
-  }
-});
 
 // DÉMARRER LE SERVEUR
 const server = app.listen(PORT, () => {

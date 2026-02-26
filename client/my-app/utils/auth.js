@@ -56,8 +56,11 @@ export const refreshAccessToken = async () => {
             const data = await response.json();
 
             if (data.success) {
-                // Mettre à jour uniquement l'Access Token
+                // Mettre à jour l'Access Token ET le nouveau Refresh Token (rotation)
                 localStorage.setItem('accessToken', data.accessToken);
+                if (data.refreshToken) {
+                    localStorage.setItem('refreshToken', data.refreshToken);
+                }
                 return data.accessToken;
             } else {
                 // Refresh token invalide ou expiré
@@ -129,10 +132,13 @@ export const logout = async () => {
 
         if (refreshToken) {
             // Appeler l'API pour supprimer le refresh token côté serveur
+            // Le header Authorization est requis depuis l'ajout de authenticateToken sur /logout
+            const accessToken = getAccessToken();
             await fetch(`${API_URL}/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 },
                 body: JSON.stringify({ refreshToken })
             });

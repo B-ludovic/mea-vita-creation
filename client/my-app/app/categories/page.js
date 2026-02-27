@@ -38,30 +38,46 @@ export default function CategoriesPage() {
     fetchCategories();
   }, []);
 
-  // Fonction pour déterminer la classe CSS selon le slug
-  const getCategoryClass = (slug) => {
-    if (slug === 'pochettes-unisexe') return 'pochettes';
-    if (slug === 'porte-cartes') return 'porte-cartes';
-    if (slug === 'sacs-cylindre') return 'sacs-cylindre';
-    if (slug === 'sacs-u') return 'sacs-u';
-    return 'pochettes'; // Par défaut
+  const CATEGORY_CONFIG = {
+    'pochettes-unisexe': { image: '/images/pochettes-unisexe/atlas-fogo-1.jpg',     className: 'pochettes' },
+    'porte-cartes':      { image: '/images/porte-cartes/eclat-amethyste-1.jpg',      className: 'porte-cartes' },
+    'sacs-cylindre':     { image: '/images/sacs-cylindre/tambour-amethyste-1.jpg',   className: 'sacs-cylindre' },
+    'sacs-u':            { image: '/images/sacs-u/arche-besace-fogo-1.jpg',           className: 'sacs-u' },
   };
 
-  // Fonction pour déterminer l'image selon le slug
-  const getCategoryImage = (slug) => {
-    if (slug === 'pochettes-unisexe') return '/images/pochettes-unisexe/atlas-fogo-1.jpg';
-    if (slug === 'porte-cartes') return '/images/porte-cartes/eclat-amethyste-1.jpg';
-    if (slug === 'sacs-cylindre') return '/images/sacs-cylindre/tambour-amethyste-1.jpg';
-    if (slug === 'sacs-u') return '/images/sacs-u/arche-besace-fogo-1.jpg';
-    return '/images/pochettes-unisexe/atlas-fogo-1.jpg'; // Par défaut
-  };
+  const getCategoryConfig = (slug) =>
+    CATEGORY_CONFIG[slug] ?? { image: '/images/pochettes-unisexe/atlas-fogo-1.jpg', className: 'pochettes' };
 
   // Si en cours de chargement
   if (loading) {
     return (
-      <div className="container categories-loading">
-        <h2>Chargement des catégories...</h2>
-      </div>
+      <>
+        <section className="categories-hero">
+          <div className="container">
+            <div className="categories-hero-content">
+              <h1>Nos Catégories</h1>
+              <p>Découvrez nos quatre collections uniques</p>
+            </div>
+          </div>
+        </section>
+        <section className="categories-section">
+          <div className="container">
+            <div className="categories-grid">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton-card">
+                  <div className="skeleton-image" />
+                  <div className="skeleton-info">
+                    <div className="skeleton-line short" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line short" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
     );
   }
 
@@ -89,11 +105,13 @@ export default function CategoriesPage() {
       <section className="categories-section">
         <div className="container">
           <div className="categories-grid">
-            {categories.map((category) => (
+            {categories.map((category) => {
+              const { image } = getCategoryConfig(category.slug);
+              return (
               <Link href={`/categories/${category.slug}`} key={category.id} className="category-card">
                 <div className="category-image">
                   <Image
-                    src={getCategoryImage(category.slug)}
+                    src={image}
                     alt={category.name}
                     width={300}
                     height={300}
@@ -125,7 +143,8 @@ export default function CategoriesPage() {
                   </span>
                 </div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

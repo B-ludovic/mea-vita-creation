@@ -456,19 +456,21 @@ return (
 
                 {/* Section Détails */}
                 <div className="product-details-section">
-                    <span className="product-category-badge">
+                    <Link href={`/categories/${product.Category.slug}`} className="product-category-badge">
                         {product.Category.name}
-                    </span>
+                    </Link>
 
-                    <h1 className="product-title">
-                        <Image
-                            src="/Logo_Francois_sansfond.PNG"
-                            alt="Logo"
-                            width={35}
-                            height={35}
-                            className="product-title-logo"
-                        />
-                        {product.name}
+                    <div className="product-title-row">
+                        <h1 className="product-title">
+                            <Image
+                                src="/Logo_Francois_sansfond.PNG"
+                                alt="Logo"
+                                width={35}
+                                height={35}
+                                className="product-title-logo"
+                            />
+                            {product.name}
+                        </h1>
                         <button
                             className="wishlist-btn"
                             onClick={handleWishlistToggle}
@@ -481,7 +483,7 @@ return (
                                 height={30}
                             />
                         </button>
-                    </h1>
+                    </div>
 
                     <div className="product-price-display">
                         {product.price.toFixed(2)}€
@@ -532,7 +534,7 @@ return (
                     <h2>Avis clients</h2>
 
                     <button
-                        className="admin-btn admin-btn-primary"
+                        className="btn-primary"
                         onClick={() => setShowReviewForm(!showReviewForm)}
                     >
                         <Image
@@ -590,7 +592,7 @@ return (
                         <div className="review-form-actions">
                             <button
                                 type="submit"
-                                className="admin-btn admin-btn-primary"
+                                className="btn-primary"
                                 disabled={reviewSubmitting}
                             >
                                 {reviewSubmitting ? (
@@ -610,7 +612,7 @@ return (
                             </button>
                             <button
                                 type="button"
-                                className="admin-btn admin-btn-secondary"
+                                className="btn-secondary"
                                 onClick={() => setShowReviewForm(false)}
                             >
                                 Annuler

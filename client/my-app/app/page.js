@@ -31,11 +31,20 @@ export default function HomePage() {
     <>
       {/* Section Hero */}
       <section className="hero">
+        <Image
+          src="/images/sac-u/arche-besace-mosaique-1.jpg"
+          alt="Maroquinerie artisanale Mea Vita Création"
+          fill
+          priority
+          className="hero-bg-image"
+          style={{ objectFit: 'cover' }}
+        />
+        <div className="hero-overlay" />
         <div className="hero-content">
           <h2>Créations Artisanales d'Exception</h2>
           <h3>L'Art de la Maroquinerie Africaine</h3>
           <p>
-            Découvrez notre univers unique où le cuir noble rencontre les tissus wax authentiques. 
+            Découvrez notre univers unique où le cuir noble rencontre les tissus wax authentiques.
             Chaque création raconte une histoire, chaque sac est une œuvre d'art portée.
           </p>
           <div className="hero-buttons">
@@ -49,21 +58,27 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Section Catégories avec Bannière */}
-      <section className="categories-hero" id="categories">
+      {/* Grille des Catégories */}
+      <section className="categories-section" id="categories">
         <div className="container">
-          <div className="categories-hero-content">
+          <div className="categories-section-header">
             <h2>Nos Catégories</h2>
             <p>Quatre univers, une même passion pour l'excellence</p>
           </div>
-        </div>
-      </section>
-
-      {/* Grille des Catégories */}
-      <section className="categories-section">
-        <div className="container">
           {loading ? (
-            <p>Chargement des catégories...</p>
+            <div className="categories-grid">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton-card">
+                  <div className="skeleton-image" />
+                  <div className="skeleton-info">
+                    <div className="skeleton-line short" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line short" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className="categories-grid">
               {categories.map((category) => (

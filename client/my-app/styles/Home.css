@@ -1,13 +1,7 @@
 /* Page d'accueil */
 
-/* Section Hero - Gradient de transition harmonieux */
+/* Section Hero */
 .hero {
-    background: linear-gradient(135deg, 
-        var(--warm-beige) 0%,           
-        var(--light-beige) 30%,          
-        var(--cream) 60%,                
-        rgba(218, 165, 32, 0.15) 100%   
-    );
     min-height: 80vh;
     display: flex;
     align-items: center;
@@ -15,28 +9,40 @@
     overflow: hidden;
 }
 
+.hero-bg-image {
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.35) 100%);
+    z-index: 1;
+}
+
 .hero-content {
     max-width: var(--container-width);
     margin: 0 auto;
     padding: 0 2rem;
     z-index: 2;
+    position: relative;
 }
 
 .hero h2 {
-    color: var(--text-dark);
+    color: var(--white);
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
 }
 
 .hero h3 {
-    color: var(--primary-orange);
+    color: #f5c842;
     margin-bottom: 2rem;
     font-weight: 400;
 }
 
 .hero p {
     font-size: 1.3rem;
-    color: var(--text-light);
+    color: rgba(255,255,255,0.9);
     max-width: 600px;
     margin-bottom: 2.5rem;
     line-height: 1.8;
@@ -48,23 +54,20 @@
     flex-wrap: wrap;
 }
 
-/* Bannière Catégories - Gradient Wax Chaleureux */
-.categories-hero {
-    background: linear-gradient(135deg, var(--wax-mustard), var(--wax-amber));
-    padding: 100px 0 60px;
+/* En-tête section Catégories */
+.categories-section-header {
     text-align: center;
-    color: var(--white);
-}
-
-.categories-hero-content h2 {
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    color: var(--white);
 }
 
-.categories-hero-content p {
-    font-size: 1.3rem;
-    opacity: 0.95;
+.categories-section-header h2 {
+    color: var(--text-dark);
+    margin-bottom: 0.75rem;
+}
+
+.categories-section-header p {
+    font-size: 1.2rem;
+    color: var(--text-light);
     font-weight: 300;
 }
 
@@ -72,12 +75,6 @@
 .categories-section {
     padding: var(--section-padding);
     background: var(--white);
-}
-
-.categories-section h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-    color: var(--text-dark);
 }
 
 .section-subtitle {
@@ -89,8 +86,8 @@
 
 .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
     margin-top: 3rem;
 }
 
@@ -227,10 +224,12 @@
 }
 
 .craft-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
     font-size: 1.1rem;
     color: var(--text-dark);
     margin-bottom: 1rem;
-    padding-left: 0.5rem;
 }
 
 /* --- RESPONSIVE BREAKPOINTS --- */
@@ -256,19 +255,10 @@
         justify-content: center;
     }
     
-    /* Réduire la marge de la bannière */
-    .categories-hero {
-        padding: 60px 0 40px;
-    }
-
-    .categories-hero-content p {
-        font-size: 1.1rem;
-    }
-
-    /* Passer la grille en 1 seule colonne */
+    /* Passer la grille en 2 colonnes sur tablette */
     .categories-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
     }
 
     .category-info {
@@ -314,6 +304,11 @@
     /* Réduire l'espacement des boutons sur très petit écran */
     .hero-buttons {
         gap: 1rem;
+    }
+
+    /* 1 colonne sur mobile */
+    .categories-grid {
+        grid-template-columns: 1fr;
     }
 
     /* Réduire le padding des sections */

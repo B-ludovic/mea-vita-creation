@@ -116,8 +116,7 @@
 .product-img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    /* 💥 Cohérence: Transition uniformisée */
+    object-fit: cover;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -139,11 +138,16 @@
     font-size: 1.4rem;
 }
 
-.product-info p {
+.product-info p:not(.product-price) {
     color: var(--text-light);
     margin-bottom: 1rem;
     line-height: 1.6;
     flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    overflow: hidden;
 }
 
 .product-price {

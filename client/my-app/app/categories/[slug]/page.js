@@ -41,26 +41,21 @@ export default function CategoryPage() {
     return categoryImages[index % categoryImages.length] || categoryImages[0];
   };
 
-  // Charger la catégorie et ses produits
+  // Charger la catégorie et ses produits en parallèle
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Récupérer les informations de la catégorie
-        const categoryResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}`);
-        const categoryData = await categoryResponse.json();
+        const [categoryData, productsData] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}`).then(r => r.json()),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${slug}`).then(r => r.json()),
+        ]);
 
         if (!categoryData.success) {
           setError('Catégorie non trouvée');
-          setLoading(false);
           return;
         }
 
         setCategory(categoryData.category);
-
-        // 2. Récupérer les produits de cette catégorie
-        const productsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/category/${slug}`);
-        const productsData = await productsResponse.json();
-
         if (productsData.success) {
           setProducts(productsData.products);
         }
@@ -85,9 +80,31 @@ export default function CategoryPage() {
   // Si en cours de chargement
   if (loading) {
     return (
-      <div className="container categories-loading">
-        <h2>Chargement...</h2>
-      </div>
+      <>
+        <section className="category-hero">
+          <div className="container">
+            <div className="skeleton-line short" style={{ height: '2.5rem', marginBottom: '1rem', maxWidth: '300px' }} />
+            <div className="skeleton-line long" style={{ maxWidth: '500px' }} />
+          </div>
+        </section>
+        <section className="products-section">
+          <div className="container">
+            <div className="products-grid">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="skeleton-card">
+                  <div className="skeleton-image" />
+                  <div className="skeleton-info">
+                    <div className="skeleton-line short" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line long" />
+                    <div className="skeleton-line short" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </>
     );
   }
 

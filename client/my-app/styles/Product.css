@@ -98,12 +98,27 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     width: fit-content;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.product-category-badge:hover {
+    background: var(--primary-orange);
+    color: var(--white);
+}
+
+.product-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 .product-title {
     font-size: 2.5rem;
     color: var(--text-dark);
     margin-bottom: 1rem;
+    flex: 1;
 }
 
 .product-price-display {

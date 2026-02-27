@@ -44,8 +44,83 @@ h3 {
     font-size: clamp(1.5rem, 3vw, 2rem); 
 }
 
-h4 { 
-    font-size: clamp(1.2rem, 2.5vw, 1.5rem); 
+h4 {
+    font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+}
+
+/* ------------------------------------------ */
+/* Skeleton loader (réutilisable partout) */
+/* ------------------------------------------ */
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.skeleton-image {
+    aspect-ratio: 4 / 3;
+    background: linear-gradient(90deg, #efefef 25%, #e0e0e0 50%, #efefef 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-info {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.skeleton-line {
+    height: 0.9rem;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #efefef 25%, #e0e0e0 50%, #efefef 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.short { width: 50%; }
+.skeleton-line.long  { width: 90%; }
+
+/* ------------------------------------------ */
+/* Fil d'Ariane (breadcrumb) */
+/* ------------------------------------------ */
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 0 0;
+    font-size: 0.95rem;
+    color: var(--text-light);
+    flex-wrap: wrap;
+}
+
+.breadcrumb a {
+    color: var(--text-light);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary-orange);
+}
+
+.breadcrumb-sep {
+    color: var(--text-light);
+    opacity: 0.5;
+}
+
+.breadcrumb span:last-child {
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
 /* ------------------------------------------ */
